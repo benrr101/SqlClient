@@ -12,8 +12,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
     {
         private readonly string masterKeyEncAlgo = "RSA_OAEP";
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void EmptyCertificateThumbprint()
         {
             string dummyPath = string.Format("CurrentUser/My/");
@@ -27,8 +26,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Matches(expectedMessage, e.Message);
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void CertificateNotFound()
         {
             string dummyPath = string.Format("CurrentUser/My/JunkThumbprint");
@@ -68,11 +66,9 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
         public static string thumbprint;
         public static byte[] cek;
         public static byte[] encryptedCek;
-#if NETFRAMEWORK
         public static X509Certificate2 masterKeyCertificateNPK; // no private key
         public static string thumbprintNPK; // No private key
         public static string masterKeyPathNPK;
-#endif
 
         public ExceptionCertFixture()
         {

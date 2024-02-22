@@ -298,8 +298,7 @@ namespace Microsoft.Data.SqlClient.Tests
             Assert.Equal(expected, builder.ConnectionString);
         }
 
-        [Theory]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyTheory]
         [InlineData(@"|DataDirectory|\attach.mdf",
                     @"AttachDbFilename=|DataDirectory|\attach.mdf",
                     @"C:\test\")]

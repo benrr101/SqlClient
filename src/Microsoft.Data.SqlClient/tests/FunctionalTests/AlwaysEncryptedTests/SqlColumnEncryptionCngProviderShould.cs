@@ -18,9 +18,8 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
         private const string INVALID_MASTER_KEY = "Microsoft Software Key Storage Provider/ASKLSAVASLDJAS";
         private const string ENCRYPTION_ALGORITHM = "RSA_OAEP";
 
-        [Theory]
+        [WindowsOnlyTheory]
         [InvalidDecryptionParameters]
-        [PlatformSpecific(TestPlatforms.Windows)]
         public void ThrowExceptionWithInvalidParameterWhileDecryptingColumnEncryptionKey(string errorMsg, Type exceptionType, string masterKeyPath, string encryptionAlgorithm, byte[] bytes)
         {
             var provider = new SqlColumnEncryptionCngProvider();
@@ -28,9 +27,8 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Matches(errorMsg, ex.Message);
         }
 
-        [Theory]
+        [WindowsOnlyTheory]
         [InvalidEncryptionParameters]
-        [PlatformSpecific(TestPlatforms.Windows)]
         public void ThrowExceptionWithInvalidParameterWhileEncryptingColumnEncryptionKey(string errorMsg, Type exceptionType, string masterKeyPath, string encryptionAlgorithm, byte[] bytes)
         {
             var provider = new SqlColumnEncryptionCngProvider();
@@ -38,27 +36,24 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Matches(errorMsg, ex.Message);
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void ThrowNotSupportedExceptionWhenCallingSignColumnMasterKeyMetadata()
         {
             var provider = new SqlColumnEncryptionCngProvider();
             Assert.Throws<NotSupportedException>(() => provider.SignColumnMasterKeyMetadata(MASTER_KEY_PATH, true));
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void ThrowNotSupportedExceptionWhenCallingVerifyColumnMasterKeyMetadata()
         {
             var provider = new SqlColumnEncryptionCngProvider();
             Assert.Throws<NotSupportedException>(() => provider.VerifyColumnMasterKeyMetadata(MASTER_KEY_PATH, true, GenerateTestEncryptedBytes(1, 0, 256, 256)));
         }
 
-        [Theory]
+        [WindowsOnlyTheory]
         [InlineData("RSA_OAEP")]
         [InlineData("rsa_oaep")]
         [InlineData("RsA_oAeP")]
-        [PlatformSpecific(TestPlatforms.Windows)]
         public void AcceptEncryptionAlgorithmRegardlessOfCase(string algorithm)
         {
             var provider = new SqlColumnEncryptionCngProvider();
@@ -66,11 +61,10 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.NotNull(ciphertext);
         }
 
-        [Theory]
+        [WindowsOnlyTheory]
         [InlineData(32)]
         [InlineData(64)]
         [InlineData(128)]
-        [PlatformSpecific(TestPlatforms.Windows)]
         public void EncryptKeyAndThenDecryptItSuccessfully(int dataSize)
         {
             var provider = new SqlColumnEncryptionCngProvider();
@@ -152,8 +146,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
 
     public class SqlColumnEncryptionCngProviderUnixShould
     {
-        [Fact]
-        [PlatformSpecific(TestPlatforms.AnyUnix)]
+        [UnixOnlyFact]
         public void ThrowPlatformNotSupportedExceptionInUnix()
         {
             var provider = new SqlColumnEncryptionCngProvider();

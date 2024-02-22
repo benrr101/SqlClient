@@ -65,8 +65,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             CheckConnectionFailure(builder.ConnectionString, TCP);
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]  // NP NonAzure connection fails correctly on Windows
+        [WindowsOnlyFact] // NP NonAzure connection fails correctly on Windows
         public static void NonAzureNpConnectionTest()
         {
             builder.DataSource = "np:\\\\" + InvalidHostname + "\\pipe\\sql\\query";
@@ -93,8 +92,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             }
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]  // NP Azure connection fails correctly on Windows
+        [WindowsOnlyFact] // NP Azure connection fails correctly on Windows
         public static void AzureNpConnectionTest()
         {
             foreach (string extension in AzureExtensions)

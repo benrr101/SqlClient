@@ -108,7 +108,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             }
         }
 
-        [Theory]
+        [WindowsOnlyTheory] // Named pipes with the given input strings are not supported on Unix
         [InlineData(@"np:\\.\pipe\sqlbad\query")]
         [InlineData(@"np:\\.\pipe\MSSQL$NonExistentInstance\sql\query")]
         [InlineData(@"\\.\pipe\sqlbad\query")]
@@ -117,7 +117,6 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         [InlineData(@"np:\\localhost\pipe\MSSQL$NonExistentInstance\sqlbad\query")]
         [InlineData(@"\\localhost\pipe\sqlbad\query")]
         [InlineData(@"\\localhost\pipe\MSSQL$NonExistentInstance\sqlbad\query")]
-        [PlatformSpecific(TestPlatforms.Windows)] // Named pipes with the given input strings are not supported on Unix
         public void NamedPipeTest(string dataSource)
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();

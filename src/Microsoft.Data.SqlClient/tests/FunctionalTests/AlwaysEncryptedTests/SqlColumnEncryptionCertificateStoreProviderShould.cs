@@ -92,9 +92,8 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
         /// </summary>
         private const int CipherTextStartIndex = IVStartIndex + IVLengthInBytes;
 
-        [Theory]
+        [WindowsOnlyTheory]
         [InvalidDecryptionParameters]
-        [PlatformSpecific(TestPlatforms.Windows)]
         public void ThrowExceptionWithInvalidParameterWhileDecryptingColumnEncryptionKey(string errorMsg, Type exceptionType, string masterKeyPath, string encryptionAlgorithm, byte[] bytes)
         {
             var provider = new SqlColumnEncryptionCertificateStoreProvider();
@@ -102,9 +101,8 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Matches(errorMsg, ex.Message);
         }
 
-        [Theory]
+        [WindowsOnlyTheory]
         [InvalidEncryptionParameters]
-        [PlatformSpecific(TestPlatforms.Windows)]
         public void ThrowExceptionWithInvalidParameterWhileEncryptingColumnEncryptionKey(string errorMsg, Type exceptionType, string masterKeyPath, string encryptionAlgorithm, byte[] bytes)
         {
             var provider = new SqlColumnEncryptionCertificateStoreProvider();
@@ -112,9 +110,8 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Matches(errorMsg, ex.Message);
         }
 
-        [Theory]
+        [WindowsOnlyTheory]
         [InvalidSigningParameters]
-        [PlatformSpecific(TestPlatforms.Windows)]
         public void ThrowExceptionWithInvalidParameterWhileSigningColumnMasterKeyMetadata(string errorMsg, Type exceptionType, string masterKeyPath)
         {
             var provider = new SqlColumnEncryptionCertificateStoreProvider();
@@ -122,11 +119,10 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Matches(errorMsg, ex.Message);
         }
 
-        [Theory]
+        [WindowsOnlyTheory]
         [InlineData("CurrentUser/My/C74D53B816A971E3FF9714FE1DD2E57E1710D946")]
         [InlineData("CURRENTUSER/My/C74D53B816A971E3FF9714FE1DD2E57E1710D946")]
         [InlineData("currentuser/My/C74D53B816A971E3FF9714FE1DD2E57E1710D946")]
-        [PlatformSpecific(TestPlatforms.Windows)]
         public void SetStoreLocationApproperiatelyFromMasterKeyPathRegardlessOfCase(string masterKeyPath)
         {
             var provider = new SqlColumnEncryptionCertificateStoreProvider();
@@ -134,11 +130,10 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.NotNull(ciphertext);
         }
 
-        [Theory]
+        [WindowsOnlyTheory]
         [InlineData("CurrentUser/my/C74D53B816A971E3FF9714FE1DD2E57E1710D946")]
         [InlineData("CurrentUser/MY/C74D53B816A971E3FF9714FE1DD2E57E1710D946")]
         [InlineData("CurrentUser/My/C74D53B816A971E3FF9714FE1DD2E57E1710D946")]
-        [PlatformSpecific(TestPlatforms.Windows)]
         public void SetStoreNameApproperiatelyFromMasterKeyPathRegardlessOfCase(string masterKeyPath)
         {
             var provider = new SqlColumnEncryptionCertificateStoreProvider();
@@ -146,11 +141,10 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.NotNull(ciphertext);
         }
 
-        [Theory]
+        [WindowsOnlyTheory]
         [InlineData("RSA_OAEP")]
         [InlineData("rsa_oaep")]
         [InlineData("RsA_oAeP")]
-        [PlatformSpecific(TestPlatforms.Windows)]
         public void AcceptEncryptionAlgorithmRegardlessOfCase(string algorithm)
         {
             var provider = new SqlColumnEncryptionCertificateStoreProvider();
@@ -158,11 +152,10 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.NotNull(ciphertext);
         }
 
-        [Theory]
+        [WindowsOnlyTheory]
         [InlineData(32)]
         [InlineData(64)]
         [InlineData(128)]
-        [PlatformSpecific(TestPlatforms.Windows)]
         public void EncryptKeyAndThenDecryptItSuccessfully(int dataSize)
         {
             var provider = new SqlColumnEncryptionCertificateStoreProvider();
@@ -175,10 +168,9 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Equal(columnEncryptionKey, decryptedData);
         }
 
-        [Theory]
+        [WindowsOnlyTheory]
         [InlineData(true)]
         [InlineData(false)]
-        [PlatformSpecific(TestPlatforms.Windows)]
         public void SignAndVerifyColumnMasterKeyMetadataSuccessfully(bool allowEnclaveComputations)
         {
             var provider = new SqlColumnEncryptionCertificateStoreProvider();
@@ -188,10 +180,9 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.False(provider.VerifyColumnMasterKeyMetadata(MASTER_KEY_PATH, !allowEnclaveComputations, signature));
         }
 
-        [Theory]
+        [WindowsOnlyTheory]
         [InlineData(true)]
         [InlineData(false)]
-        [PlatformSpecific(TestPlatforms.Windows)]
         public void FailToVerifyColumnMasterKeyMetadataWithWrongCertificate(bool allowEnclaveComputations)
         {
             var provider = new SqlColumnEncryptionCertificateStoreProvider();
@@ -202,8 +193,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
                 provider.VerifyColumnMasterKeyMetadata("CurrentUser/My/4281446463C6F7F5B8EDFFA4BD6E345E46857CAD", allowEnclaveComputations, signature));
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void EncryptAndDecryptDataSuccessfully()
         {
             var input = new byte[] { 1, 2, 3, 4, 5 };
@@ -215,9 +205,8 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Equal(input, output);
         }
 
-        [Theory]
+        [WindowsOnlyTheory]
         [CEKEncryptionReversalParameters]
-        [PlatformSpecific(TestPlatforms.Windows)]
         public void TestCEKEncryptionReversal(StoreLocation certificateStoreLocation, String certificateStoreNameAndLocation)
         {
             Assert.True(!string.IsNullOrWhiteSpace(certificateStoreNameAndLocation));
@@ -282,8 +271,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.True(decryptedCellData.SequenceEqual(plainTextInBytes), "Reversal was not successful.");
         }
 
-        [Theory]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyTheory]
         [AeadEncryptionParameters]
         public void TestAeadEncryptionReversal(string dataType, object data, Utility.CColumnEncryptionType encType)
         {
@@ -317,8 +305,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             TestEncryptionReversalUsingAead(plainText, rootKey, encType);
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void TestCustomKeyProviderListSetter()
         {
             lock (Utility.ClearSqlConnectionGlobalProvidersLock)
@@ -368,8 +355,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             }
         }
 
-        [Theory]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyTheory]
         [ValidCertificatePathsParameters]
         public void TestValidCertificatePaths(string certificateStoreNameAndLocation, object location)
         {
@@ -412,12 +398,11 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.True(cipherText1 != null);
         }
 
-        [Theory]
-        [PlatformSpecific(TestPlatforms.Windows)]
-        [InlineData(new object[3] { @"iv", Utility.CColumnEncryptionType.Randomized, @"Specified ciphertext has an invalid authentication tag.\s+\(?Parameter (name: )?'?cipherText('\))?" })]
-        [InlineData(new object[3] { @"tag", Utility.CColumnEncryptionType.Randomized, @"Specified ciphertext has an invalid authentication tag.\s+\(?Parameter (name: )?'?cipherText('\))?" })]
-        [InlineData(new object[3] { @"cipher", Utility.CColumnEncryptionType.Randomized, @"Specified ciphertext has an invalid authentication tag.\s+\(?Parameter (name: )?'?cipherText('\))?" })]
-        [InlineData(new object[3] { @"version", Utility.CColumnEncryptionType.Randomized, @"The specified ciphertext's encryption algorithm version '02' does not match the expected encryption algorithm version '01'.\s+\(?Parameter (name: )?'?cipherText('\))?" })]
+        [WindowsOnlyTheory]
+        [InlineData(@"iv", Utility.CColumnEncryptionType.Randomized, @"Specified ciphertext has an invalid authentication tag.\s+\(?Parameter (name: )?'?cipherText('\))?")]
+        [InlineData(@"tag", Utility.CColumnEncryptionType.Randomized, @"Specified ciphertext has an invalid authentication tag.\s+\(?Parameter (name: )?'?cipherText('\))?")]
+        [InlineData(@"cipher", Utility.CColumnEncryptionType.Randomized, @"Specified ciphertext has an invalid authentication tag.\s+\(?Parameter (name: )?'?cipherText('\))?")]
+        [InlineData(@"version", Utility.CColumnEncryptionType.Randomized, @"The specified ciphertext's encryption algorithm version '02' does not match the expected encryption algorithm version '01'.\s+\(?Parameter (name: )?'?cipherText('\))?")]
         public void TestEncryptedCellValueTampering(string parameterToTamper, Utility.CColumnEncryptionType encryptionType, string expectedErrorMessage)
         {
             Assert.True(!string.IsNullOrWhiteSpace(parameterToTamper));
@@ -616,8 +601,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
 
     public class SqlColumnEncryptionCertificateStoreProviderUnixShould
     {
-        [Fact]
-        [PlatformSpecific(TestPlatforms.AnyUnix)]
+        [UnixOnlyFact]
         public void ThrowPlatformNotSupportedExceptionInUnix()
         {
             var provider = new SqlColumnEncryptionCertificateStoreProvider();

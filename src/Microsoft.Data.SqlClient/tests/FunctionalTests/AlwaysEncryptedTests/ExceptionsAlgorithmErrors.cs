@@ -19,8 +19,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
         public static Type sqlClientSymmetricKey = systemData.GetType("Microsoft.Data.SqlClient.SqlClientSymmetricKey");
         public static ConstructorInfo sqlColumnEncryptionKeyConstructor = sqlClientSymmetricKey.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(byte[]) }, null);
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void TestNullCEK()
         {
             TargetInvocationException e = Assert.Throws<TargetInvocationException>(() => sqlColumnEncryptionKeyConstructor.Invoke(new object[] { new byte[] { } }));
@@ -30,8 +29,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Contains(expectedMessage, e.InnerException.Message);
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void TestInvalidKeySize()
         {
             const int keySize = 48;
@@ -46,8 +44,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Contains(expectedMessage, e.InnerException.Message);
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void TestInvalidEncryptionType()
         {
             const byte invalidEncryptionType = 3;
@@ -65,8 +62,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Contains(expectedMessage, e.InnerException.Message);
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void TestInvalidCipherText()
         {
             const int invalidCiphertextLength = 53;
@@ -78,8 +74,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Contains(expectedMessage, e.InnerException.Message);
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void TestInvalidAlgorithmVersion()
         {
             string expectedMessage = string.Format(SystemDataResourceManager.Instance.TCE_InvalidAlgorithmVersion,
@@ -92,8 +87,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Contains(expectedMessage, e.InnerException.Message);
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void TestInvalidAuthenticationTag()
         {
             string expectedMessage = SystemDataResourceManager.Instance.TCE_InvalidAuthenticationTag;
@@ -108,8 +102,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Contains(expectedMessage, e.InnerException.Message);
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void TestNullColumnEncryptionAlgorithm()
         {
             string expectedMessage = string.Format(SystemDataResourceManager.Instance.TCE_NullColumnEncryptionAlgorithm,
@@ -125,8 +118,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Contains(expectedMessage, e.InnerException.Message);
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void TestUnknownEncryptionAlgorithmId()
         {
             const byte unknownEncryptionAlgoId = 3;
@@ -144,8 +136,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Matches(expectedMessage, encryptEx.InnerException.Message);
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void TestUnknownCustomKeyStoreProvider()
         {
             lock (Utility.ClearSqlConnectionGlobalProvidersLock)
@@ -171,8 +162,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             }
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void TestTceUnknownEncryptionAlgorithm()
         {
             const string unknownEncryptionAlgorithm = "Dummy";
@@ -190,8 +180,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Contains(expectedMessage, encryptEx.InnerException.Message);
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void TestExceptionsFromCertStore()
         {
             byte[] corruptedCek = GenerateInvalidEncryptedCek(CertFixture.cek, ECEKCorruption.SIGNATURE);
@@ -208,8 +197,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.Matches(expectedMessage, decryptEx.InnerException.Message);
         }
 
-        [Fact]
-        [PlatformSpecific(TestPlatforms.Windows)]
+        [WindowsOnlyFact]
         public void TestExceptionsFromCustomKeyStore()
         {
             lock (Utility.ClearSqlConnectionGlobalProvidersLock)
