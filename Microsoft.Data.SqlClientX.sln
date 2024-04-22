@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{21E97476-C2D5-42CE-89C3-43653108DD6D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{3B966054-CBDD-4B7E-8CEA-72CF365A6FAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.SqlClientX", "src\Microsoft.Data.SqlClientX\Microsoft.Data.SqlClientX.csproj", "{D5B27C30-D156-4DC2-84D7-3E3BF3F2566C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.SqlClientX.UnitTests", "test\Microsoft.Data.SqlClientX.UnitTests\Microsoft.Data.SqlClientX.UnitTests.csproj", "{5EB1D6FF-3C3D-44A7-B678-7D8C513F0E20}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D5B27C30-D156-4DC2-84D7-3E3BF3F2566C} = {21E97476-C2D5-42CE-89C3-43653108DD6D}
+		{5EB1D6FF-3C3D-44A7-B678-7D8C513F0E20} = {3B966054-CBDD-4B7E-8CEA-72CF365A6FAB}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D5B27C30-D156-4DC2-84D7-3E3BF3F2566C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5B27C30-D156-4DC2-84D7-3E3BF3F2566C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5B27C30-D156-4DC2-84D7-3E3BF3F2566C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5B27C30-D156-4DC2-84D7-3E3BF3F2566C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EB1D6FF-3C3D-44A7-B678-7D8C513F0E20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EB1D6FF-3C3D-44A7-B678-7D8C513F0E20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EB1D6FF-3C3D-44A7-B678-7D8C513F0E20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EB1D6FF-3C3D-44A7-B678-7D8C513F0E20}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

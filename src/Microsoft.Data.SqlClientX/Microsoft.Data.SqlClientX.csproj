@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <TargetFrameworks>net8.0;net48</TargetFrameworks>
+        <LangVersion>10</LangVersion>
+        <RootNamespace />
+    </PropertyGroup>
+
+    <ItemGroup>
+      <InternalsVisibleTo Include="Microsoft.Data.SqlClientX.UnitTest" />
+    </ItemGroup>
+  
+</Project>
