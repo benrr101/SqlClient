@@ -59,11 +59,29 @@ namespace Microsoft.Data.SqlClientX.Handlers
         public ValueTask<TOutput> Handle(TParameters parameters, bool isAsync, CancellationToken ct) =>
             _exceptionBehavior switch
             {
+                ReturningHandlerChainExceptionBehavior.Halt => HandleHalt(parameters, isAsync, ct),
                 ReturningHandlerChainExceptionBehavior.ThrowCollected => HandleThrowCollected(parameters, isAsync, ct),
                 ReturningHandlerChainExceptionBehavior.ThrowFirst => HandleThrowFirst(parameters, isAsync, ct),
                 ReturningHandlerChainExceptionBehavior.ThrowLast => HandleThrowLast(parameters, isAsync, ct),
                 _ => throw new InvalidOperationException(),
             };
+
+        private async ValueTask<TOutput> HandleHalt(TParameters parameters, bool isAsync, CancellationToken ct)
+        {
+            foreach (IReturningHandler<TParameters, TOutput> handler in _handlerChain)
+            {
+                // If handle throws an exception, we let it bubble up higher.
+                TOutput result = await handler.Handle(parameters, isAsync, ct);
+                if (result is not null)
+                {
+                    return result;
+                }
+            }
+
+            // If we make it to here, none of the handlers successfully handled the message. Throw
+            // that no handlers found.
+            throw new NoSuitableHandlerFoundException();
+        }
 
         private async ValueTask<TOutput> HandleThrowCollected(TParameters parameters, bool isAsync, CancellationToken ct)
         {
@@ -96,18 +114,27 @@ namespace Microsoft.Data.SqlClientX.Handlers
 
         private async ValueTask<TOutput> HandleThrowFirst(TParameters parameters, bool isAsync, CancellationToken ct)
         {
+            Exception firstException = null;
             foreach (IReturningHandler<TParameters, TOutput> handler in _handlerChain)
             {
-                TOutput result = await handler.Handle(parameters, isAsync, ct);
-                if (result is not null)
+                try
                 {
-                    return result;
+                    TOutput result = await handler.Handle(parameters, isAsync, ct);
+                    if (result is not null)
+                    {
+                        return result;
+                    }
+                }
+                catch (Exception e)
+                {
+                    firstException ??= e;
                 }
             }
 
-            // If we make it to here, none of the handlers successfully handled the message. Throw
-            // that no handlers found.
-            throw new NoSuitableHandlerFoundException();
+            // If we make it to here, none of the handlers successfully handled the message. If we
+            // received an exception, the first one will be thrown. Otherwise, no handlers found
+            // exception will be thrown.
+            throw firstException ?? new NoSuitableHandlerFoundException();
         }
 
         private async ValueTask<TOutput> HandleThrowLast(TParameters parameters, bool isAsync, CancellationToken ct)
