@@ -1151,7 +1151,7 @@ namespace Microsoft.Data.SqlClient
             Debug.Assert(_stateObj != null, "TdsParserStateObject should not be null");
             Debug.Assert(_stateObj.Parser != null, "TdsParser class should not be null in Command.Execute!");
             Debug.Assert(_stateObj.Parser == _activeConnection.Parser, "stateobject parser not same as connection parser");
-            Debug.Assert(false == _inPrepare, "Already in Prepare cycle, this.inPrepare should be false!");
+            Debug.Assert(!_inPrepare, "Already in Prepare cycle, this.inPrepare should be false!");
 
             // remember that the user wants to do a prepare but don't actually do an rpc
             _execType = EXECTYPE.PREPAREPENDING;
@@ -1174,9 +1174,9 @@ namespace Microsoft.Data.SqlClient
                 return;
             }
 
-            Debug.Assert(true == IsPrepared, "Invalid attempt to Unprepare a non-prepared command!");
+            Debug.Assert(IsPrepared, "Invalid attempt to Unprepare a non-prepared command!");
             Debug.Assert(_activeConnection != null, "must have an open connection to UnPrepare");
-            Debug.Assert(false == _inPrepare, "_inPrepare should be false!");
+            Debug.Assert(!_inPrepare, "_inPrepare should be false!");
 
             // @devnote: we're always falling back to Prepare pending
             // @devnote: This seems broken because once the command is prepared it will - always - be a
