@@ -601,12 +601,12 @@ namespace Microsoft.Data.SqlClient.Tests
             cn = new SqlConnection();
             cn.ConnectionString = "MultipleActiveResultSets=true";
             builder = new SqlConnectionStringBuilder(cn.ConnectionString);
-            Assert.True(true == builder.MultipleActiveResultSets);
+            Assert.True(builder.MultipleActiveResultSets);
 
             cn = new SqlConnection();
             cn.ConnectionString = "Multiple Active Result Sets=true";
             builder = new SqlConnectionStringBuilder(cn.ConnectionString);
-            Assert.True(true == builder.MultipleActiveResultSets);
+            Assert.True(builder.MultipleActiveResultSets);
         }
 
         [Fact]

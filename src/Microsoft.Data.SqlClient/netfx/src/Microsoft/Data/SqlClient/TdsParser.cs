@@ -6880,7 +6880,7 @@ namespace Microsoft.Data.SqlClient
             int denormalizedLength = md.baseTI.length;
             byte denormalizedScale = md.baseTI.scale;
 
-            Debug.Assert(false == md.baseTI.isEncrypted, "Double encryption detected");
+            Debug.Assert(!md.baseTI.isEncrypted, "Double encryption detected");
             switch (tdsType)
             {
                 // We normalize to allow conversion across data types. All data types below are serialized into a BIGINT.
@@ -9797,7 +9797,7 @@ namespace Microsoft.Data.SqlClient
                         // Any other state is unknown.
                         if (_currentTransaction != transaction)
                         {
-                            Debug.Assert(_currentTransaction == null || true == _fResetConnection, "We should not have a current Tx at this point");
+                            Debug.Assert(_currentTransaction == null || _fResetConnection, "We should not have a current Tx at this point");
                             PendingTransaction = transaction;
                         }
 
@@ -13683,7 +13683,7 @@ namespace Microsoft.Data.SqlClient
                     stateObj.WriteByte((byte)size);
                 }
             }
-            else if (false == type.IsFixed)
+            else if (!type.IsFixed)
             { // non-long but variable length column, must be a BIG* type: 2 byte length
                 if (isNull)
                 {

@@ -66,7 +66,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                 SQLSetupStrategyCspExt sqlSetupStrategyCsp = null;
                 try
                 {
-                    if (false == CertificateUtilityWin.CertificateExists(certificateName, StoreLocation.CurrentUser))
+                    if (!CertificateUtilityWin.CertificateExists(certificateName, StoreLocation.CurrentUser))
                     {
                         Console.WriteLine(@"INFO: Certificate creation for provider {0} failed so skipping it.", providerName);
                         continue;
