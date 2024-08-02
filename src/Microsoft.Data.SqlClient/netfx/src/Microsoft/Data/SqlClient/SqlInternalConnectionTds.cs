@@ -1746,9 +1746,9 @@ namespace Microsoft.Data.SqlClient
         private bool IsDoNotRetryConnectError(SqlException exc)
         {
 
-            return (TdsEnums.LOGON_FAILED == exc.Number) // actual logon failed, i.e. bad password
-                || (TdsEnums.PASSWORD_EXPIRED == exc.Number) // actual logon failed, i.e. password isExpired
-                || (TdsEnums.IMPERSONATION_FAILED == exc.Number)  // Insuficient privelege for named pipe, among others
+            return exc.Number == TdsEnums.LOGON_FAILED // actual logon failed, i.e. bad password
+                || exc.Number == TdsEnums.PASSWORD_EXPIRED // actual logon failed, i.e. password isExpired
+                || exc.Number == TdsEnums.IMPERSONATION_FAILED  // Insuficient privelege for named pipe, among others
                 || exc._doNotReconnect; // Exception explicitly supressed reconnection attempts
         }
 
@@ -2983,7 +2983,7 @@ namespace Microsoft.Data.SqlClient
         {
             if (_routingInfo != null)
             {
-                if (TdsEnums.FEATUREEXT_SQLDNSCACHING != featureId)
+                if (TdsEnums.FEATUREEXT_SQLDNSCACHING == featureId)
                 {
                     return;
                 }

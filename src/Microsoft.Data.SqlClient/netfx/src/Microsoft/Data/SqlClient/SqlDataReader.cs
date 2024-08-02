@@ -621,16 +621,16 @@ namespace Microsoft.Data.SqlClient
                             schemaRow[Size] = TdsEnums.WHIDBEY_DATE_LENGTH;
                             break;
                         case SqlDbType.Time:
-                            Debug.Assert(TdsEnums.UNKNOWN_PRECISION_SCALE == col.scale || (col.scale >= 0 && col.scale <= 7), "Invalid scale for Time column: " + col.scale);
-                            schemaRow[Size] = TdsEnums.WHIDBEY_TIME_LENGTH[TdsEnums.UNKNOWN_PRECISION_SCALE != col.scale ? col.scale : col.metaType.Scale];
+                            Debug.Assert(col.scale == TdsEnums.UNKNOWN_PRECISION_SCALE || (col.scale >= 0 && col.scale <= 7), "Invalid scale for Time column: " + col.scale);
+                            schemaRow[Size] = TdsEnums.WHIDBEY_TIME_LENGTH[col.scale != TdsEnums.UNKNOWN_PRECISION_SCALE ? col.scale : col.metaType.Scale];
                             break;
                         case SqlDbType.DateTime2:
-                            Debug.Assert(TdsEnums.UNKNOWN_PRECISION_SCALE == col.scale || (col.scale >= 0 && col.scale <= 7), "Invalid scale for DateTime2 column: " + col.scale);
-                            schemaRow[Size] = TdsEnums.WHIDBEY_DATETIME2_LENGTH[TdsEnums.UNKNOWN_PRECISION_SCALE != col.scale ? col.scale : col.metaType.Scale];
+                            Debug.Assert(col.scale == TdsEnums.UNKNOWN_PRECISION_SCALE || (col.scale >= 0 && col.scale <= 7), "Invalid scale for DateTime2 column: " + col.scale);
+                            schemaRow[Size] = TdsEnums.WHIDBEY_DATETIME2_LENGTH[col.scale != TdsEnums.UNKNOWN_PRECISION_SCALE ? col.scale : col.metaType.Scale];
                             break;
                         case SqlDbType.DateTimeOffset:
-                            Debug.Assert(TdsEnums.UNKNOWN_PRECISION_SCALE == col.scale || (col.scale >= 0 && col.scale <= 7), "Invalid scale for DateTimeOffset column: " + col.scale);
-                            schemaRow[Size] = TdsEnums.WHIDBEY_DATETIMEOFFSET_LENGTH[TdsEnums.UNKNOWN_PRECISION_SCALE != col.scale ? col.scale : col.metaType.Scale];
+                            Debug.Assert(col.scale == TdsEnums.UNKNOWN_PRECISION_SCALE || (col.scale >= 0 && col.scale <= 7), "Invalid scale for DateTimeOffset column: " + col.scale);
+                            schemaRow[Size] = TdsEnums.WHIDBEY_DATETIMEOFFSET_LENGTH[col.scale != TdsEnums.UNKNOWN_PRECISION_SCALE ? col.scale : col.metaType.Scale];
                             break;
                     }
                 }
@@ -677,7 +677,7 @@ namespace Microsoft.Data.SqlClient
                 if (col.cipherMD != null)
                 {
                     Debug.Assert(col.baseTI != null, @"col.baseTI should not be null.");
-                    if (TdsEnums.UNKNOWN_PRECISION_SCALE != col.baseTI.precision)
+                    if (col.baseTI.precision != TdsEnums.UNKNOWN_PRECISION_SCALE)
                     {
                         schemaRow[Precision] = col.baseTI.precision;
                     }
@@ -686,7 +686,7 @@ namespace Microsoft.Data.SqlClient
                         schemaRow[Precision] = col.baseTI.metaType.Precision;
                     }
                 }
-                else if (TdsEnums.UNKNOWN_PRECISION_SCALE != col.precision)
+                else if (col.precision != TdsEnums.UNKNOWN_PRECISION_SCALE)
                 {
                     schemaRow[Precision] = col.precision;
                 }
@@ -702,7 +702,7 @@ namespace Microsoft.Data.SqlClient
                 else if (col.cipherMD != null)
                 {
                     Debug.Assert(col.baseTI != null, @"col.baseTI should not be null.");
-                    if (TdsEnums.UNKNOWN_PRECISION_SCALE != col.baseTI.scale)
+                    if (col.baseTI.scale != TdsEnums.UNKNOWN_PRECISION_SCALE)
                     {
                         schemaRow[Scale] = col.baseTI.scale;
                     }
@@ -711,7 +711,7 @@ namespace Microsoft.Data.SqlClient
                         schemaRow[Scale] = col.baseTI.metaType.Scale;
                     }
                 }
-                else if (TdsEnums.UNKNOWN_PRECISION_SCALE != col.scale)
+                else if (col.scale != TdsEnums.UNKNOWN_PRECISION_SCALE)
                 {
                     schemaRow[Scale] = col.scale;
                 }
@@ -3685,7 +3685,7 @@ namespace Microsoft.Data.SqlClient
 
         private bool IsRowToken(byte token)
         {
-            return TdsEnums.SQLROW == token || TdsEnums.SQLNBCROW == token;
+            return token == TdsEnums.SQLROW || token == TdsEnums.SQLNBCROW;
         }
 
         /// <include file='../../../../../../../doc/snippets/Microsoft.Data.SqlClient/SqlDataReader.xml' path='docs/members[@name="SqlDataReader"]/IsDBNull/*' />
@@ -4754,7 +4754,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     return result;
                 }
-                if (TdsEnums.SQLORDER == b)
+                if (b == TdsEnums.SQLORDER)
                 {
                     result = _parser.TryRun(RunBehavior.ReturnImmediately, _command, this, null, _stateObj, out _);
                     if (result != TdsOperationStatus.Done)
@@ -4893,7 +4893,7 @@ namespace Microsoft.Data.SqlClient
                             }
                         }
                         _hasRows = IsRowToken(b);
-                        if (TdsEnums.SQLALTMETADATA == b)
+                        if (b == TdsEnums.SQLALTMETADATA)
                         {
                             _metaDataConsumed = false;
                         }

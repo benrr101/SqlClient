@@ -801,7 +801,7 @@ namespace Microsoft.Data.SqlClient
 
                 case TdsEnums.SQLBINARY:
                 case TdsEnums.SQLBIGBINARY:
-                    return ((TdsEnums.SQLTIMESTAMP == userType) ? s_metaTimestamp : s_metaBinary);
+                    return userType == TdsEnums.SQLTIMESTAMP ? s_metaTimestamp : s_metaBinary;
 
                 case TdsEnums.SQLIMAGE:
                     return MetaImage;

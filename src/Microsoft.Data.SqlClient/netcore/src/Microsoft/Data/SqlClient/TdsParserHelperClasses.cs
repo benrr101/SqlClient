@@ -618,7 +618,7 @@ namespace Microsoft.Data.SqlClient
 
         internal string GetCommandTextOrRpcName()
         {
-            if (TdsEnums.RPC_PROCID_EXECUTESQL == ProcID)
+            if (ProcID == TdsEnums.RPC_PROCID_EXECUTESQL)
             {
                 // Param 0 is the actual sql executing
                 return (string)systemParams[0].Value;

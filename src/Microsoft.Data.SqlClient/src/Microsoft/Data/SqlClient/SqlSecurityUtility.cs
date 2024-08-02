@@ -138,7 +138,7 @@ namespace Microsoft.Data.SqlClient
         /// <returns></returns>
         private static string ValidateAndGetEncryptionAlgorithmName(byte cipherAlgorithmId, string cipherAlgorithmName)
         {
-            if (TdsEnums.CustomCipherAlgorithmId == cipherAlgorithmId)
+            if (cipherAlgorithmId == TdsEnums.CustomCipherAlgorithmId)
             {
                 if (cipherAlgorithmName == null)
                 {
@@ -147,7 +147,7 @@ namespace Microsoft.Data.SqlClient
 
                 return cipherAlgorithmName;
             }
-            else if (TdsEnums.AEAD_AES_256_CBC_HMAC_SHA256 == cipherAlgorithmId)
+            else if (cipherAlgorithmId == TdsEnums.AEAD_AES_256_CBC_HMAC_SHA256)
             {
                 return SqlAeadAes256CbcHmac256Algorithm.AlgorithmName;
             }

@@ -654,7 +654,7 @@ namespace Microsoft.Data.SqlClient
 
             _authenticationProvider?.Initialize(serverInfo, _physicalStateObj, this);
 
-            if (TdsEnums.SNI_SUCCESS != _physicalStateObj.Status)
+            if (_physicalStateObj.Status != TdsEnums.SNI_SUCCESS)
             {
                 _physicalStateObj.AddError(ProcessSNIError(_physicalStateObj));
 
@@ -761,7 +761,7 @@ namespace Microsoft.Data.SqlClient
 
                 _authenticationProvider?.Initialize(serverInfo, _physicalStateObj, this);
 
-                if (TdsEnums.SNI_SUCCESS != _physicalStateObj.Status)
+                if (_physicalStateObj.Status != TdsEnums.SNI_SUCCESS)
                 {
                     _physicalStateObj.AddError(ProcessSNIError(_physicalStateObj));
                     SqlClientEventSource.Log.TryTraceEvent("<sc.TdsParser.Connect|ERR|SEC> Login failure");
@@ -938,9 +938,9 @@ namespace Microsoft.Data.SqlClient
                     }
                 }
                 Debug.Assert(IntPtr.Zero == temp, "unexpected syncReadPacket without corresponding SNIPacketRelease");
-                if (TdsEnums.SNI_SUCCESS_IO_PENDING != error)
+                if (error != TdsEnums.SNI_SUCCESS_IO_PENDING)
                 {
-                    Debug.Assert(TdsEnums.SNI_SUCCESS != error, "Unexpected successful read async on physical connection before enabling MARS!");
+                    Debug.Assert(error != TdsEnums.SNI_SUCCESS, "Unexpected successful read async on physical connection before enabling MARS!");
                     _physicalStateObj.AddError(ProcessSNIError(_physicalStateObj));
                     ThrowExceptionAndWarning(_physicalStateObj);
                 }
@@ -2712,7 +2712,9 @@ namespace Microsoft.Data.SqlClient
                                             }
                                             else
                                             {
-                                                TransactionType transactionType = (TdsEnums.ENV_BEGINTRAN == env._type) ? TransactionType.LocalFromTSQL : TransactionType.Distributed;
+                                                TransactionType transactionType = env._type == TdsEnums.ENV_BEGINTRAN
+                                                    ? TransactionType.LocalFromTSQL
+                                                    : TransactionType.Distributed;
                                                 _currentTransaction = new SqlInternalTransaction(_connHandler, transactionType, null, env._newLongValue);
                                             }
                                             if (_statistics != null && !_statisticsIsInTransaction)
@@ -2743,11 +2745,11 @@ namespace Microsoft.Data.SqlClient
                                                 }
 #endif
 
-                                                if (TdsEnums.ENV_COMMITTRAN == env._type)
+                                                if (env._type == TdsEnums.ENV_COMMITTRAN)
                                                 {
                                                     _currentTransaction.Completed(TransactionState.Committed);
                                                 }
-                                                else if (TdsEnums.ENV_ROLLBACKTRAN == env._type)
+                                                else if (env._type == TdsEnums.ENV_ROLLBACKTRAN)
                                                 {
                                                     //  Hold onto transaction id if distributed tran is rolled back.  This must
                                                     //  be sent to the server on subsequent executions even though the transaction
@@ -2855,7 +2857,7 @@ namespace Microsoft.Data.SqlClient
                                 return result;
                             }
 
-                            if (TdsEnums.SQLDATACLASSIFICATION == peekedToken)
+                            if (peekedToken == TdsEnums.SQLDATACLASSIFICATION)
                             {
                                 byte dataClassificationToken;
                                 result = stateObj.TryReadByte(out dataClassificationToken);
@@ -2863,7 +2865,7 @@ namespace Microsoft.Data.SqlClient
                                 {
                                     return result;
                                 }
-                                Debug.Assert(TdsEnums.SQLDATACLASSIFICATION == dataClassificationToken);
+                                Debug.Assert(dataClassificationToken == TdsEnums.SQLDATACLASSIFICATION);
 
                                 SensitivityClassification sensitivityClassification;
                                 result = TryProcessDataClassification(stateObj, out sensitivityClassification);
@@ -2890,7 +2892,9 @@ namespace Microsoft.Data.SqlClient
 
                             if (dataStream != null)
                             {
-                                result = dataStream.TrySetMetaData(stateObj._cleanupMetaData, (TdsEnums.SQLTABNAME == peekedToken || TdsEnums.SQLCOLINFO == peekedToken));
+                                result = dataStream.TrySetMetaData(
+                                    stateObj._cleanupMetaData,
+                                    peekedToken == TdsEnums.SQLTABNAME || peekedToken == TdsEnums.SQLCOLINFO);
                                 if (result != TdsOperationStatus.Done)
                                 {
                                     return result;
@@ -3049,7 +3053,9 @@ namespace Microsoft.Data.SqlClient
                                 {
                                     return result;
                                 }
-                                result = dataStream.TrySetAltMetaDataSet(cleanupAltMetaDataSet, (TdsEnums.SQLALTMETADATA != metadataConsumedByte));
+                                result = dataStream.TrySetAltMetaDataSet(
+                                    cleanupAltMetaDataSet,
+                                    metadataConsumedByte != TdsEnums.SQLALTMETADATA);
                                 if (result != TdsOperationStatus.Done)
                                 {
                                     return result;
@@ -3647,14 +3653,14 @@ namespace Microsoft.Data.SqlClient
             }
 
             // We get a done token with the attention bit set
-            if (TdsEnums.DONE_ATTN == (status & TdsEnums.DONE_ATTN))
+            if ((status & TdsEnums.DONE_ATTN) == TdsEnums.DONE_ATTN)
             {
-                Debug.Assert(TdsEnums.DONE_MORE != (status & TdsEnums.DONE_MORE), "Not expecting DONE_MORE when receiving DONE_ATTN");
+                Debug.Assert((status & TdsEnums.DONE_MORE) != TdsEnums.DONE_MORE, "Not expecting DONE_MORE when receiving DONE_ATTN");
                 Debug.Assert(stateObj._attentionSent, "Received attention done without sending one!");
                 stateObj.HasReceivedAttention = true;
                 Debug.Assert(stateObj._inBytesUsed == stateObj._inBytesRead && stateObj._inBytesPacket == 0, "DONE_ATTN received with more data left on wire");
             }
-            if (cmd != null && (TdsEnums.DONE_COUNT == (status & TdsEnums.DONE_COUNT)))
+            if (cmd != null && (status & TdsEnums.DONE_COUNT) == TdsEnums.DONE_COUNT)
             {
                 if (curCmd != TdsEnums.SELECT)
                 {
@@ -3684,8 +3690,10 @@ namespace Microsoft.Data.SqlClient
             // and the server refused our connection, and the case where we are trying to log in but
             // the server has reached its max connection limit.  Bottom line, we need to throw general
             // error in the cases where we did not receive a error token along with the DONE_ERROR.
-            if ((TdsEnums.DONE_ERROR == (TdsEnums.DONE_ERROR & status)) && stateObj.ErrorCount == 0 &&
-                  stateObj.HasReceivedError == false && (RunBehavior.Clean != (RunBehavior.Clean & run)))
+            if ((TdsEnums.DONE_ERROR & status) == TdsEnums.DONE_ERROR && 
+                stateObj.ErrorCount == 0 &&
+                stateObj.HasReceivedError == false &&
+                (RunBehavior.Clean != (RunBehavior.Clean & run)))
             {
                 stateObj.AddError(new SqlError(0, 0, TdsEnums.MIN_ERROR_CLASS, _server, SQLMessage.SevereError(), "", 0, exception: null, batchIndex: cmd?.GetCurrentBatchIndex() ?? -1));
 
@@ -3701,7 +3709,7 @@ namespace Microsoft.Data.SqlClient
             // Similar to above, only with a more severe error.  In this case, if we received
             // the done_srverror, this exception will be added to the collection regardless.
             // MDAC #93896.  Also, per Ashwin, the server will always break the connection in this case.
-            if ((TdsEnums.DONE_SRVERROR == (TdsEnums.DONE_SRVERROR & status)) && (RunBehavior.Clean != (RunBehavior.Clean & run)))
+            if ((TdsEnums.DONE_SRVERROR & status) == TdsEnums.DONE_SRVERROR && (RunBehavior.Clean != (RunBehavior.Clean & run)))
             {
                 stateObj.AddError(new SqlError(0, 0, TdsEnums.FATAL_ERROR_CLASS, _server, SQLMessage.SevereError(), "", 0, exception: null, batchIndex: cmd?.GetCurrentBatchIndex() ?? -1));
 
@@ -3717,7 +3725,7 @@ namespace Microsoft.Data.SqlClient
             ProcessSqlStatistics(curCmd, status, count);
 
             // stop if the DONE_MORE bit isn't set (see above for attention handling)
-            if (TdsEnums.DONE_MORE != (status & TdsEnums.DONE_MORE))
+            if ((status & TdsEnums.DONE_MORE) != TdsEnums.DONE_MORE)
             {
                 stateObj.HasReceivedError = false;
                 if (stateObj._inBytesUsed >= stateObj._inBytesRead)
@@ -3757,7 +3765,7 @@ namespace Microsoft.Data.SqlClient
                 }
 
                 // clear row count DONE_COUNT flag is not set
-                if (!(TdsEnums.DONE_COUNT == (status & TdsEnums.DONE_COUNT)))
+                if ((status & TdsEnums.DONE_COUNT) != TdsEnums.DONE_COUNT)
                 {
                     count = 0;
                 }
@@ -4767,7 +4775,7 @@ namespace Microsoft.Data.SqlClient
             // Check if the column is encrypted.
             if (_serverSupportsColumnEncryption)
             {
-                rec.isEncrypted = (TdsEnums.IsEncrypted == (flags & TdsEnums.IsEncrypted));
+                rec.isEncrypted = (flags & TdsEnums.IsEncrypted) == TdsEnums.IsEncrypted;
             }
 
             // read the type
@@ -5051,7 +5059,7 @@ namespace Microsoft.Data.SqlClient
             }
 
             string cipherAlgorithmName = null;
-            if (TdsEnums.CustomCipherAlgorithmId == cipherAlgorithmId)
+            if (cipherAlgorithmId == TdsEnums.CustomCipherAlgorithmId)
             {
                 // Custom encryption algorithm, read the name
                 byte nameSize;
@@ -5745,7 +5753,7 @@ namespace Microsoft.Data.SqlClient
 
             if (_is2005)
             {
-                if (TdsEnums.SQLUDT == tdsType)
+                if (tdsType == TdsEnums.SQLUDT)
                 {
                     result = TryProcessUDTMetaData((SqlMetaDataPriv)col, stateObj);
                     if (result != TdsOperationStatus.Done)
@@ -5941,8 +5949,8 @@ namespace Microsoft.Data.SqlClient
             }
 
             col.Updatability = (byte)((flags & TdsEnums.Updatability) >> 2);
-            col.IsNullable = (TdsEnums.Nullable == (flags & TdsEnums.Nullable));
-            col.IsIdentity = (TdsEnums.Identity == (flags & TdsEnums.Identity));
+            col.IsNullable = (flags & TdsEnums.Nullable) == TdsEnums.Nullable;
+            col.IsIdentity = (flags & TdsEnums.Identity) == TdsEnums.Identity;
 
             // read second byte of column metadata flags
             result = stateObj.TryReadByte(out flags);
@@ -5951,10 +5959,10 @@ namespace Microsoft.Data.SqlClient
                 return result;
             }
 
-            col.IsColumnSet = (TdsEnums.IsColumnSet == (flags & TdsEnums.IsColumnSet));
+            col.IsColumnSet = (flags & TdsEnums.IsColumnSet) == TdsEnums.IsColumnSet;
             if (fColMD && _serverSupportsColumnEncryption)
             {
-                col.isEncrypted = (TdsEnums.IsEncrypted == (flags & TdsEnums.IsEncrypted));
+                col.isEncrypted = (flags & TdsEnums.IsEncrypted) == TdsEnums.IsEncrypted;
             }
 
             // Read TypeInfo
@@ -6327,10 +6335,10 @@ namespace Microsoft.Data.SqlClient
                     return result;
                 }
 
-                col.IsDifferentName = (TdsEnums.SQLDifferentName == (status & TdsEnums.SQLDifferentName));
-                col.IsExpression = (TdsEnums.SQLExpression == (status & TdsEnums.SQLExpression));
-                col.IsKey = (TdsEnums.SQLKey == (status & TdsEnums.SQLKey));
-                col.IsHidden = (TdsEnums.SQLHidden == (status & TdsEnums.SQLHidden));
+                col.IsDifferentName = (status & TdsEnums.SQLDifferentName) == TdsEnums.SQLDifferentName;
+                col.IsExpression = (status & TdsEnums.SQLExpression) == TdsEnums.SQLExpression;
+                col.IsKey = (status & TdsEnums.SQLKey) == TdsEnums.SQLKey;
+                col.IsHidden = (status & TdsEnums.SQLHidden) == TdsEnums.SQLHidden;
 
                 // read off the base table name if it is different than the select list column name
                 if (col.IsDifferentName)
@@ -6776,11 +6784,11 @@ namespace Microsoft.Data.SqlClient
             // null bin and char types have a length of -1 to represent null
             if (mt.IsPlp)
             {
-                return (TdsEnums.SQL_PLP_NULL == length);
+                return length == TdsEnums.SQL_PLP_NULL;
             }
 
             // HOTFIX #50000415: for image/text, 0xFFFF is the length, not representing null
-            if ((TdsEnums.VARNULL == length) && !mt.IsLong)
+            if (length == TdsEnums.VARNULL && !mt.IsLong)
             {
                 return true;
             }
@@ -6788,7 +6796,7 @@ namespace Microsoft.Data.SqlClient
             // other types have a length of 0 to represent null
             // long and non-PLP types will always return false because these types are either char or binary
             // this is expected since for long and non-plp types isnull is checked based on textptr field and not the length
-            return ((TdsEnums.FIXEDNULL == length) && !mt.IsCharType && !mt.IsBinType);
+            return length == TdsEnums.FIXEDNULL && !mt.IsCharType && !mt.IsBinType;
         }
 
         private TdsOperationStatus TryReadSqlStringValue(SqlBuffer value, byte type, int length, Encoding encoding, bool isPlp, TdsParserStateObject stateObj)
@@ -7683,7 +7691,6 @@ namespace Microsoft.Data.SqlClient
 
                 case TdsEnums.SQLBIGBINARY:
                 case TdsEnums.SQLBIGVARBINARY:
-                    //Debug.Assert(TdsEnums.VARNULL == lenData, "SqlVariant: data length for Binary indicates null?");
                     Debug.Assert(cbPropsExpected == 2, "SqlVariant: invalid PropBytes for binary type!");
 
                     result = stateObj.TryReadUInt16(out lenMax);
@@ -7812,7 +7819,7 @@ namespace Microsoft.Data.SqlClient
             MetaType mt = MetaType.GetMetaTypeFromValue(value);
 
             // Special case data type correction for SqlMoney inside a SqlVariant.
-            if ((TdsEnums.SQLNUMERICN == mt.TDSType) && length == 8)
+            if (mt.TDSType == TdsEnums.SQLNUMERICN && length == 8)
             {
                 // The caller will coerce all SqlTypes to native CLR types, which means SqlMoney will
                 // coerce to decimal/SQLNUMERICN (via SqlMoney.Value call).  In the case where the original
@@ -11548,7 +11555,7 @@ namespace Microsoft.Data.SqlClient
             // Write Encryption Algo
             stateObj.WriteByte(md.cipherMD.CipherAlgorithmId);
 
-            if (TdsEnums.CustomCipherAlgorithmId == md.cipherMD.CipherAlgorithmId)
+            if (md.cipherMD.CipherAlgorithmId == TdsEnums.CustomCipherAlgorithmId)
             {
                 // Write the algorithm name
                 Debug.Assert(md.cipherMD.CipherAlgorithmName.Length < 256);
@@ -12186,7 +12193,7 @@ namespace Microsoft.Data.SqlClient
             // For Xml fields, there is no token length field. For MAX fields it is 0xffff.
             if (_is2005)
             {     // Handle 2005 specific exceptions
-                if (TdsEnums.SQLUDT == token)
+                if (token == TdsEnums.SQLUDT)
                 {
                     tokenLength = 8;
                 }

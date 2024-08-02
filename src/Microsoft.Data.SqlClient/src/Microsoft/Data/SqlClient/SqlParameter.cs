@@ -605,7 +605,7 @@ namespace Microsoft.Data.SqlClient
                 // middle of the valid range.  To prevent folks from setting 
                 // this invalid value we have to have this code here until we
                 // can take the time to fix it later.
-                if (TdsEnums.SmallVarBinary == value)
+                if (value == TdsEnums.SmallVarBinary)
                 {
                     throw SQL.InvalidSqlDbType(value);
                 }
@@ -2312,7 +2312,7 @@ namespace Microsoft.Data.SqlClient
                     }
 #endif
                     else if (
-                        TdsEnums.SQLTABLE == destinationType.TDSType &&
+                        destinationType.TDSType == TdsEnums.SQLTABLE &&
                         (
                             value is DataTable ||
                             value is DbDataReader ||

@@ -709,7 +709,7 @@ namespace Microsoft.Data.SqlClient
 
             if (_fResetEventOwned)
             {
-                if (callbackType == CallbackType.Read && TdsEnums.SNI_SUCCESS == error)
+                if (callbackType == CallbackType.Read && error == TdsEnums.SNI_SUCCESS)
                 {
                     // RESET SUCCEEDED!
                     // If we are on read callback and no error occurred (and we own reset event) -
@@ -721,7 +721,7 @@ namespace Microsoft.Data.SqlClient
                     Debug.Assert(!_fResetEventOwned, "Invalid AutoResetEvent state!");
                 }
 
-                if (TdsEnums.SNI_SUCCESS != error)
+                if (error != TdsEnums.SNI_SUCCESS)
                 {
                     // RESET FAILED!
 
@@ -2092,7 +2092,7 @@ namespace Microsoft.Data.SqlClient
                     CheckSetResetConnectionState(error, CallbackType.Read);
                 }
 
-                if (TdsEnums.SNI_SUCCESS == error)
+                if (error == TdsEnums.SNI_SUCCESS)
                 { // Success - process results!
 
                     Debug.Assert(!IsPacketEmpty(readPacket), "ReadNetworkPacket cannot be null in synchronous operation!");
@@ -2400,7 +2400,7 @@ namespace Microsoft.Data.SqlClient
 
                         readPacket = ReadAsync(handle, out error);
 
-                        if (!(TdsEnums.SNI_SUCCESS == error || TdsEnums.SNI_SUCCESS_IO_PENDING == error))
+                        if (!(error == TdsEnums.SNI_SUCCESS || error == TdsEnums.SNI_SUCCESS_IO_PENDING))
                         {
                             DecrementPendingCallbacks(false); // Failure - we won't receive callback!
                         }
@@ -2414,7 +2414,7 @@ namespace Microsoft.Data.SqlClient
                     throw ADP.ClosedConnectionError();
                 }
 
-                if (TdsEnums.SNI_SUCCESS == error)
+                if (error == TdsEnums.SNI_SUCCESS)
                 { // Success - process results!
                     Debug.Assert(IsValidPacket(readPacket), "ReadNetworkPacket should not have been null on this async operation!");
                     // Evaluate this condition for MANAGED_SNI. This may not be needed because the network call is happening Async and only the callback can receive a success.
@@ -2426,7 +2426,7 @@ namespace Microsoft.Data.SqlClient
                         ReleasePacket(readPacket);
                     }
                 }
-                else if (TdsEnums.SNI_SUCCESS_IO_PENDING != error)
+                else if (error != TdsEnums.SNI_SUCCESS_IO_PENDING)
                 { // FAILURE!
                     Debug.Assert(IsPacketEmpty(readPacket), "unexpected readPacket without corresponding SNIPacketRelease");
 
