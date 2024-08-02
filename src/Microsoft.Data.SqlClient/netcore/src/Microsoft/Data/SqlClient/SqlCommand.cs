@@ -5639,7 +5639,7 @@ namespace Microsoft.Data.SqlClient
                     object v = parameter.Value;
 
                     // if the user bound a sqlint32 (the only valid one for status, use it)
-                    if (v != null && (v.GetType() == typeof(SqlInt32)))
+                    if (v is SqlInt32)
                     {
                         parameter.Value = new SqlInt32(status); // value type
                     }

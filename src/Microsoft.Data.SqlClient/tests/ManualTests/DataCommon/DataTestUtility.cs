@@ -852,17 +852,17 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
         public static string GetValueString(object paramValue)
         {
-            if (paramValue.GetType() == typeof(DateTimeOffset))
+            if (paramValue is DateTimeOffset dateTimeOffset)
             {
-                return ((DateTimeOffset)paramValue).ToString("M/d/yyyy hh:mm:ss tt zzz");
+                return dateTimeOffset.ToString("M/d/yyyy hh:mm:ss tt zzz");
             }
-            else if (paramValue.GetType() == typeof(DateTime))
+            else if (paramValue is DateTime dateTime)
             {
-                return ((DateTime)paramValue).ToString("M/d/yyyy hh:mm:ss tt");
+                return dateTime.ToString("M/d/yyyy hh:mm:ss tt");
             }
-            else if (paramValue.GetType() == typeof(SqlDateTime))
+            else if (paramValue is SqlDateTime sqlDateTime)
             {
-                return ((SqlDateTime)paramValue).Value.ToString("M/d/yyyy hh:mm:ss tt");
+                return sqlDateTime.Value.ToString("M/d/yyyy hh:mm:ss tt");
             }
 
             return paramValue.ToString();

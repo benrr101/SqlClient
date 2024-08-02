@@ -80,10 +80,11 @@ namespace Microsoft.Data.SqlClient
 
             public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
             {
-                if (typeof(InstanceDescriptor) == destinationType)
+                if (destinationType == typeof(InstanceDescriptor))
                 {
                     return true;
                 }
+
                 return base.CanConvertTo(context, destinationType);
             }
 
@@ -93,7 +94,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     throw ADP.ArgumentNull(nameof(destinationType));
                 }
-                if ((typeof(InstanceDescriptor) == destinationType) && (value is SqlParameter))
+                if (destinationType == typeof(InstanceDescriptor) && value is SqlParameter)
                 {
                     return ConvertToInstanceDescriptor(value as SqlParameter);
                 }

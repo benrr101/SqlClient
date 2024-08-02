@@ -366,14 +366,14 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 xsql(conn, string.Format("create table {0} (f1 {1})", OutputTableName, expectedBaseTypeName));
 
                 string value = string.Empty;
-                if (paramValue.GetType() == typeof(DateTimeOffset))
+                if (paramValue is DateTimeOffset dateTimeOffset)
                 {
-                    DateTime dt = ((DateTimeOffset)paramValue).UtcDateTime;
+                    DateTime dt = dateTimeOffset.UtcDateTime;
                     value = dt.ToString("M/d/yyyy") + " " + dt.TimeOfDay;
                 }
-                else if (paramValue.GetType() == typeof(TimeSpan))
+                else if (paramValue is TimeSpan timeSpan)
                 {
-                    value = ((TimeSpan)paramValue).ToString();
+                    value = timeSpan.ToString();
                 }
                 else
                 {
@@ -447,14 +447,14 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 xsql(conn, string.Format("create table {0} (f1 sql_variant)", OutputTableName));
 
                 string value = string.Empty;
-                if (paramValue.GetType() == typeof(DateTimeOffset))
+                if (paramValue is DateTimeOffset dateTimeOffset)
                 {
-                    DateTime dt = ((DateTimeOffset)paramValue).UtcDateTime;
+                    DateTime dt = dateTimeOffset.UtcDateTime;
                     value = dt.ToString("M/d/yyyy") + " " + dt.TimeOfDay;
                 }
-                else if (paramValue.GetType() == typeof(TimeSpan))
+                else if (paramValue is TimeSpan timeSpan)
                 {
-                    value = ((TimeSpan)paramValue).ToString();
+                    value = timeSpan.ToString();
                 }
                 else
                 {
@@ -522,14 +522,14 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 DropStoredProcedure(conn, procName);
 
                 string value = string.Empty;
-                if (paramValue.GetType() == typeof(DateTimeOffset))
+                if (paramValue is DateTimeOffset dateTimeOffset)
                 {
-                    DateTime dt = ((DateTimeOffset)paramValue).UtcDateTime;
+                    DateTime dt = dateTimeOffset.UtcDateTime;
                     value = dt.ToString("M/d/yyyy") + " " + dt.TimeOfDay;
                 }
-                else if (paramValue.GetType() == typeof(TimeSpan))
+                else if (paramValue is TimeSpan timeSpan)
                 {
-                    value = ((TimeSpan)paramValue).ToString();
+                    value = timeSpan.ToString();
                 }
                 else
                 {
@@ -578,14 +578,14 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 DropStoredProcedure(conn, procName);
 
                 string value = string.Empty;
-                if (paramValue.GetType() == typeof(DateTimeOffset))
+                if (paramValue is DateTimeOffset dateTimeOffset)
                 {
-                    DateTime dt = ((DateTimeOffset)paramValue).UtcDateTime;
+                    DateTime dt = dateTimeOffset.UtcDateTime;
                     value = dt.ToString("M/d/yyyy") + " " + dt.TimeOfDay;
                 }
-                else if (paramValue.GetType() == typeof(TimeSpan))
+                else if (paramValue is TimeSpan timeSpan)
                 {
-                    value = ((TimeSpan)paramValue).ToString();
+                    value = timeSpan.ToString();
                 }
                 else
                 {
@@ -636,14 +636,14 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 DropTable(conn, bulkCopySrcTableName);
                 xsql(conn, string.Format("create table {0} (f1 {1})", bulkCopySrcTableName, expectedBaseTypeName));
                 string value = string.Empty;
-                if (paramValue.GetType() == typeof(DateTimeOffset))
+                if (paramValue is DateTimeOffset dateTimeOffset)
                 {
-                    DateTime dt = ((DateTimeOffset)paramValue).UtcDateTime;
+                    DateTime dt = dateTimeOffset.UtcDateTime;
                     value = dt.ToString("M/d/yyyy") + " " + dt.TimeOfDay;
                 }
-                else if (paramValue.GetType() == typeof(TimeSpan))
+                else if (paramValue is TimeSpan timeSpan)
                 {
-                    value = ((TimeSpan)paramValue).ToString();
+                    value = timeSpan.ToString();
                 }
                 else
                 {
@@ -710,14 +710,14 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 DropTable(conn, bulkCopySrcTableName);
                 xsql(conn, string.Format("create table {0} (f1 {1})", bulkCopySrcTableName, expectedBaseTypeName));
                 string value = string.Empty;
-                if (paramValue.GetType() == typeof(DateTimeOffset))
+                if (paramValue is DateTimeOffset dateTimeOffset)
                 {
-                    DateTime dt = ((DateTimeOffset)paramValue).UtcDateTime;
+                    DateTime dt = dateTimeOffset.UtcDateTime;
                     value = dt.ToString("M/d/yyyy") + " " + dt.TimeOfDay;
                 }
-                else if (paramValue.GetType() == typeof(TimeSpan))
+                else if (paramValue is TimeSpan timeSpan)
                 {
-                    value = ((TimeSpan)paramValue).ToString();
+                    value = timeSpan.ToString();
                 }
                 else
                 {
@@ -1121,51 +1121,51 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
         private static bool IsExpectedException(Exception e, object paramValue, string expectedTypeName, string expectedBaseTypeName)
         {
-            if ((e.GetType() == typeof(System.Data.SqlTypes.SqlTypeException)) &&
-                                (expectedBaseTypeName == "datetime") &&
-                                (e.Message.Contains("1753")) &&
-                                (((DateTime)paramValue).Year < 1753))
+            if (e is System.Data.SqlTypes.SqlTypeException &&
+                expectedBaseTypeName == "datetime" &&
+                e.Message.Contains("1753") &&
+                ((DateTime)paramValue).Year < 1753)
             {
                 return true;
             }
-            else if ((e.GetType() == typeof(SqlException)) &&
-                                (expectedBaseTypeName == "datetime") &&
-                                (e.Message.Contains("conversion of a varchar data type to a datetime data type")) &&
-                                (((DateTime)paramValue).Year < 1753))
+
+            if (e is SqlException &&
+                expectedBaseTypeName == "datetime" &&
+                e.Message.Contains("conversion of a varchar data type to a datetime data type") &&
+                ((DateTime)paramValue).Year < 1753)
             {
                 return true;
             }
-            else if ((e.GetType() == typeof(SqlException)) &&
-                                (expectedBaseTypeName == "datetime") &&
-                                (e.Message.Contains("converting date and/or time from character string")) &&
-                                (((DateTime)paramValue) == DateTime.MaxValue))
+
+            if (e is SqlException &&
+                expectedBaseTypeName == "datetime" &&
+                e.Message.Contains("converting date and/or time from character string") &&
+                (DateTime)paramValue == DateTime.MaxValue)
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         private static bool IsExpectedInvalidOperationException(Exception e, string expectedBaseTypeName)
         {
-            return ((e.GetType() == typeof(InvalidOperationException)) &&
-                    (expectedBaseTypeName == "time") &&
-                    (e.Message.Contains("The given value ")));
+            return e is InvalidOperationException &&
+                   expectedBaseTypeName == "time" &&
+                   e.Message.Contains("The given value ");
         }
 
         private static string AmendTheGivenMessageDateValueException(string message, object paramValue)
         {
             string value;
-            if (paramValue.GetType() == typeof(DateTimeOffset))
+            if (paramValue is DateTimeOffset dateTimeOffset)
             {
-                DateTime dt = ((DateTimeOffset)paramValue).UtcDateTime;
+                DateTime dt = dateTimeOffset.UtcDateTime;
                 value = dt.ToString("M/d/yyyy") + " " + dt.TimeOfDay;
             }
-            else if (paramValue.GetType() == typeof(TimeSpan))
+            else if (paramValue is TimeSpan timeSpan)
             {
-                value = ((TimeSpan)paramValue).ToString();
+                value = timeSpan.ToString();
             }
             else
             {
@@ -1180,14 +1180,13 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         {
             Console.WriteLine("");
             string value;
-            if (paramValue.GetType() == typeof(DateTimeOffset))
+            if (paramValue is DateTimeOffset dateTimeOffset)
             {
-                DateTimeOffset dt = (DateTimeOffset)paramValue;
-                value = dt.DateTime.ToString("M/d/yyyy") + " " + dt.DateTime.TimeOfDay + " " + dt.Offset;
+                value = dateTimeOffset.DateTime.ToString("M/d/yyyy") + " " + dateTimeOffset.DateTime.TimeOfDay + " " + dateTimeOffset.Offset;
             }
-            else if (paramValue.GetType() == typeof(TimeSpan))
+            else if (paramValue is TimeSpan timeSpan)
             {
-                value = ((TimeSpan)paramValue).ToString();
+                value = timeSpan.ToString();
             }
             else
             {

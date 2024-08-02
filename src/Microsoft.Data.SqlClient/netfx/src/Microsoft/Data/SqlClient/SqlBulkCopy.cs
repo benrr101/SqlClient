@@ -1232,17 +1232,17 @@ namespace Microsoft.Data.SqlClient
                         break;
                 }
 
-                if (typeof(SqlDecimal) == t || typeof(decimal) == t)
+                if (t == typeof(SqlDecimal) || t == typeof(decimal))
                 {
                     isSqlType = true;
                     method = ValueMethod.SqlTypeSqlDecimal;  // Source Type Decimal
                 }
-                else if (typeof(SqlDouble) == t || typeof(double) == t)
+                else if (t == typeof(SqlDouble) || t == typeof(double))
                 {
                     isSqlType = true;
                     method = ValueMethod.SqlTypeSqlDouble;  // Source Type SqlDouble
                 }
-                else if (typeof(SqlSingle) == t || typeof(float) == t)
+                else if (t == typeof(SqlSingle) || t == typeof(float))
                 {
                     isSqlType = true;
                     method = ValueMethod.SqlTypeSqlSingle;  // Source Type SqlSingle

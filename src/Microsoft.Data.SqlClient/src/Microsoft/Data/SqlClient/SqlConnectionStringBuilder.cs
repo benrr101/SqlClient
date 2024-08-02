@@ -737,7 +737,7 @@ namespace Microsoft.Data.SqlClient
 
             public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
             {
-                if (typeof(InstanceDescriptor) == destinationType)
+                if (destinationType == typeof(InstanceDescriptor))
                 {
                     return true;
                 }
@@ -750,7 +750,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     throw ADP.ArgumentNull(nameof(destinationType));
                 }
-                if (typeof(InstanceDescriptor) == destinationType)
+                if (destinationType == typeof(InstanceDescriptor))
                 {
                     SqlConnectionStringBuilder obj = (value as SqlConnectionStringBuilder);
                     if (obj is not null)
@@ -836,9 +836,9 @@ namespace Microsoft.Data.SqlClient
             // converter classes should have public ctor
             public NetworkLibraryConverter() { }
 
-            public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+            public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) =>
                 // Only know how to convert from a string
-                => (typeof(string) == sourceType) || base.CanConvertFrom(context, sourceType);
+                sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
 
             public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
             {
@@ -870,8 +870,8 @@ namespace Microsoft.Data.SqlClient
                 return base.ConvertFrom(context, culture, value);
             }
 
-            public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
-                => (typeof(string) == destinationType) || base.CanConvertTo(context, destinationType);
+            public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType) =>
+                destinationType == typeof(string) || base.CanConvertTo(context, destinationType);
 
             public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
             {

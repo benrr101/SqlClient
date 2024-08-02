@@ -1426,10 +1426,12 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             else if (expectedType == typeof(string))
             {
                 // special handling for strings, only in variant
-                if (actual.GetType() == typeof(string))
-                    return string.Equals((string)expected, (string)actual, StringComparison.Ordinal);
-                else
-                    return false;
+                if (actual is string s)
+                {
+                    return string.Equals((string)expected, s, StringComparison.Ordinal);
+                }
+
+                return false;
             }
             else
             {

@@ -722,17 +722,17 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
             // turn result into a string
             string resultStr = null;
-            if (result.GetType() == typeof(string))
+            if (result is string s)
             {
-                resultStr = (string)result;
+                resultStr = s;
             }
-            else if (result.GetType() == typeof(char[]))
+            else if (result is char[] c)
             {
-                resultStr = new string((char[])result);
+                resultStr = new string(c);
             }
-            else if (result.GetType() == typeof(SqlChars))
+            else if (result is SqlChars sqlChars)
             {
-                resultStr = new string(((SqlChars)result).Value);
+                resultStr = new string(sqlChars.Value);
             }
 
             if (resultStr != null)
@@ -772,13 +772,13 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
             // turn result into byte array
             byte[] resultBytes = null;
-            if (result.GetType() == typeof(byte[]))
+            if (result is byte[] bytes)
             {
-                resultBytes = (byte[])result;
+                resultBytes = bytes;
             }
-            else if (result.GetType() == typeof(SqlBytes))
+            else if (result is SqlBytes sqlBytes)
             {
-                resultBytes = ((SqlBytes)result).Value;
+                resultBytes = sqlBytes.Value;
             }
 
             if (resultBytes != null)
@@ -818,17 +818,17 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
             // turn result into SqlDecimal
             SqlDecimal resultValue = SqlDecimal.Null;
-            if (result.GetType() == typeof(SqlDecimal))
+            if (result is SqlDecimal sqlDecimal)
             {
-                resultValue = (SqlDecimal)result;
+                resultValue = sqlDecimal;
             }
-            else if (result.GetType() == typeof(decimal))
+            else if (result is decimal dec)
             {
-                resultValue = new SqlDecimal((decimal)result);
+                resultValue = new SqlDecimal(dec);
             }
-            else if (result.GetType() == typeof(SqlMoney))
+            else if (result is SqlMoney sqlMoney)
             {
-                resultValue = new SqlDecimal(((SqlMoney)result).Value);
+                resultValue = new SqlDecimal(sqlMoney.Value);
             }
 
             if (!resultValue.IsNull)

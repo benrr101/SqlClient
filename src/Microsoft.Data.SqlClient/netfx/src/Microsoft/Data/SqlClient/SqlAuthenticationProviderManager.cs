@@ -197,17 +197,16 @@ namespace Microsoft.Data.SqlClient
 
         private static T FetchConfigurationSection<T>(string name)
         {
-            Type t = typeof(T);
             object section = ConfigurationManager.GetSection(name);
             if (section != null)
             {
-                if (section is ConfigurationSection configSection && configSection.GetType() == t)
+                if (section is ConfigurationSection and T)
                 {
                     return (T)section;
                 }
                 else
                 {
-                    SqlClientEventSource.Log.TraceEvent("Found a custom {0} configuration but it is not of type {1}.", name, t.FullName);
+                    SqlClientEventSource.Log.TraceEvent("Found a custom {0} configuration but it is not of type {1}.", name, typeof(T).FullName);
                 }
             }
             return default;
