@@ -1893,7 +1893,7 @@ namespace Microsoft.Data.SqlClient
             {
                 return _metaType;
             }
-            if (_value != null && DBNull.Value != _value)
+            if (_value != null && _value != DBNull.Value)
             {
                 // We have a value set by the user then just use that value
                 // char and char[] are not directly supported so we convert those values to string

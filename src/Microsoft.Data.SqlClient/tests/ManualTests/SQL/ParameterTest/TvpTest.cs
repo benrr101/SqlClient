@@ -1034,7 +1034,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             {
                 object value = row[i];
                 Type t;
-                if (value == null || DBNull.Value == value)
+                if (value == null || value == DBNull.Value)
                 {
                     if (lastRowTypes[i] == null)
                     {
@@ -1226,7 +1226,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             {
                 for (int i = 0; i < row.Length; i++)
                 {
-                    if (row[i] != null && DBNull.Value != row[i] && row[i].GetType() != table.Columns[i].DataType)
+                    if (row[i] != null && row[i] != DBNull.Value && row[i].GetType() != table.Columns[i].DataType)
                     {
                         result = false;
                     }
@@ -1346,7 +1346,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         private bool IsNull(object value)
         {
             return value == null ||
-                   DBNull.Value == value ||
+                   value == DBNull.Value ||
                    (value is INullable nullable && nullable.IsNull);
         }
 

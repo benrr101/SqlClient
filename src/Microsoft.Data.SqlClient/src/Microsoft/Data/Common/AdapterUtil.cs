@@ -108,7 +108,7 @@ namespace Microsoft.Data.Common
 
         internal static bool IsNull(object value)
         {
-            if ((value is null) || (DBNull.Value == value))
+            if ((value is null) || value == DBNull.Value)
             {
                 return true;
             }
