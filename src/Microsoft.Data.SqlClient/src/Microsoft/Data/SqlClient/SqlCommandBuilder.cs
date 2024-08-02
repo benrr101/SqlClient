@@ -208,14 +208,14 @@ namespace Microsoft.Data.SqlClient
             }
 
             object bvalue = datarow[SchemaTableColumn.NumericPrecision];
-            if (DBNull.Value != bvalue)
+            if (bvalue != DBNull.Value)
             {
                 byte bval = (byte)(short)bvalue;
                 p.PrecisionInternal = ((0xff != bval) ? bval : (byte)0);
             }
 
             bvalue = datarow[SchemaTableColumn.NumericScale];
-            if (DBNull.Value != bvalue)
+            if (bvalue != DBNull.Value)
             {
                 byte bval = (byte)(short)bvalue;
                 p.ScaleInternal = ((0xff != bval) ? bval : (byte)0);

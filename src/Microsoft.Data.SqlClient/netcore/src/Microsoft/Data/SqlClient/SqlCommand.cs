@@ -6435,7 +6435,7 @@ namespace Microsoft.Data.SqlClient
                         string s = null;
 
                         // deal with the sql types
-                        if (val != null && (DBNull.Value != val))
+                        if (val != null && val != DBNull.Value)
                         {
                             s = (val as string);
                             if (s == null)

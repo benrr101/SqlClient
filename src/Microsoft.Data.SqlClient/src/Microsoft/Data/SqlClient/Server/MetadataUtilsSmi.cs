@@ -203,7 +203,7 @@ namespace Microsoft.Data.SqlClient.Server
             {
                 extendedCode = ExtendedClrTypeCode.Empty;
             }
-            else if (DBNull.Value == value)
+            else if (value == DBNull.Value)
             {
                 extendedCode = ExtendedClrTypeCode.DBNull;
             }
@@ -831,14 +831,14 @@ namespace Microsoft.Data.SqlClient.Server
         {
             string colName = "";
             object temp = schemaRow[SchemaTableColumn.ColumnName];
-            if (DBNull.Value != temp)
+            if (temp != DBNull.Value)
             {
                 colName = (string)temp;
             }
 
             // Determine correct SqlDbType.
             temp = schemaRow[SchemaTableColumn.DataType];
-            if (DBNull.Value == temp)
+            if (temp == DBNull.Value)
             {
                 throw SQL.NullSchemaTableDataTypeNotSupported(colName);
             }
@@ -889,7 +889,7 @@ namespace Microsoft.Data.SqlClient.Server
                 case SqlDbType.VarBinary:
                     // These types need a binary max length
                     temp = schemaRow[SchemaTableColumn.ColumnSize];
-                    if (DBNull.Value == temp)
+                    if (temp == DBNull.Value)
                     {
                         // source isn't specifying a size, so assume the worst
                         if (SqlDbType.Binary == colDbType)
@@ -925,7 +925,7 @@ namespace Microsoft.Data.SqlClient.Server
                 case SqlDbType.VarChar:
                     // These types need an ANSI max length
                     temp = schemaRow[SchemaTableColumn.ColumnSize];
-                    if (DBNull.Value == temp)
+                    if (temp == DBNull.Value)
                     {
                         // source isn't specifying a size, so assume the worst
                         if (SqlDbType.Char == colDbType)
@@ -961,7 +961,7 @@ namespace Microsoft.Data.SqlClient.Server
                 case SqlDbType.NVarChar:
                     // These types need a unicode max length
                     temp = schemaRow[SchemaTableColumn.ColumnSize];
-                    if (DBNull.Value == temp)
+                    if (temp == DBNull.Value)
                     {
                         // source isn't specifying a size, so assume the worst
                         if (SqlDbType.NChar == colDbType)
@@ -996,7 +996,7 @@ namespace Microsoft.Data.SqlClient.Server
                 case SqlDbType.Decimal:
                     // Decimal requires precision and scale
                     temp = schemaRow[SchemaTableColumn.NumericPrecision];
-                    if (DBNull.Value == temp)
+                    if (temp == DBNull.Value)
                     {
                         precision = SmiMetaData.DefaultDecimal.Precision;
                     }
@@ -1006,7 +1006,7 @@ namespace Microsoft.Data.SqlClient.Server
                     }
 
                     temp = schemaRow[SchemaTableColumn.NumericScale];
-                    if (DBNull.Value == temp)
+                    if (temp == DBNull.Value)
                     {
                         scale = SmiMetaData.DefaultDecimal.Scale;
                     }
@@ -1029,7 +1029,7 @@ namespace Microsoft.Data.SqlClient.Server
                 case SqlDbType.DateTimeOffset:
                     // requires scale
                     temp = schemaRow[SchemaTableColumn.NumericScale];
-                    if (DBNull.Value == temp)
+                    if (temp == DBNull.Value)
                     {
                         scale = SmiMetaData.DefaultTime.Scale;
                     }

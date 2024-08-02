@@ -7978,7 +7978,7 @@ namespace Microsoft.Data.SqlClient
             Debug.Assert(_is2000 == true, "Shouldn't be dealing with sql_variant in pre-SQL2000 server!");
 
             // handle null values
-            if (value == null || (DBNull.Value == value))
+            if (value == null || value == DBNull.Value)
             {
                 WriteInt(TdsEnums.FIXEDNULL, stateObj);
                 return null;
@@ -13014,7 +13014,7 @@ namespace Microsoft.Data.SqlClient
         // chunk writes needed, please use WritePlpBytes/WritePlpChars
         private Task WriteUnterminatedValue(object value, MetaType type, byte scale, int actualLength, int encodingByteSize, int offset, TdsParserStateObject stateObj, int paramSize, bool isDataFeed)
         {
-            Debug.Assert(value != null && (DBNull.Value != value), "unexpected missing or empty object");
+            Debug.Assert(value != null && value != DBNull.Value, "unexpected missing or empty object");
 
             // parameters are always sent over as BIG or N types
             switch (type.NullableType)
@@ -13287,7 +13287,7 @@ namespace Microsoft.Data.SqlClient
         // chunk writes needed, please use WritePlpBytes/WritePlpChars
         private byte[] SerializeUnencryptedValue(object value, MetaType type, byte scale, int actualLength, int offset, bool isDataFeed, byte normalizationVersion, TdsParserStateObject stateObj)
         {
-            Debug.Assert(value != null && (DBNull.Value != value), "unexpected missing or empty object");
+            Debug.Assert(value != null && value != DBNull.Value, "unexpected missing or empty object");
 
             if (normalizationVersion != 0x01)
             {
