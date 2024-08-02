@@ -430,7 +430,7 @@ namespace Microsoft.Data.SqlClient
         {
             TdsParser.ReliabilitySection.Assert("unreliable call to ReadSniSyncError");  // you need to setup for a thread abort somewhere before you call this method
 
-            if (TdsEnums.SNI_WAIT_TIMEOUT == error)
+            if (error == TdsEnums.SNI_WAIT_TIMEOUT)
             {
                 Debug.Assert(_syncOverAsync, "Should never reach here with async on!");
                 bool fail = false;
@@ -464,7 +464,7 @@ namespace Microsoft.Data.SqlClient
                                 Interlocked.Decrement(ref _readingCount);
                                 shouldDecrement = false;
 
-                                if (TdsEnums.SNI_SUCCESS == error)
+                                if (error == TdsEnums.SNI_SUCCESS)
                                 {
                                     // We will end up letting the run method deal with the expected done:done_attn token stream.
                                     stateObj.ProcessSniPacket(syncReadPacket, TdsEnums.SNI_SUCCESS);
@@ -1063,12 +1063,12 @@ namespace Microsoft.Data.SqlClient
                 status = TdsEnums.ST_EOM | TdsEnums.ST_IGNORE;
                 ResetPacketCounters();
             }
-            else if (TdsEnums.HARDFLUSH == flushMode)
+            else if (flushMode == TdsEnums.HARDFLUSH)
             {
                 status = TdsEnums.ST_EOM;
                 ResetPacketCounters();
             }
-            else if (TdsEnums.SOFTFLUSH == flushMode)
+            else if (flushMode == TdsEnums.SOFTFLUSH)
             {
                 status = TdsEnums.ST_BATCH;
                 _outputPacketNumber++;

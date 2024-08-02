@@ -42,7 +42,7 @@ namespace Microsoft.Data.SqlClient
                 IsUnique = false;
             }
 
-            if (TdsEnums.UNKNOWN_PRECISION_SCALE != _metadata.precision)
+            if (_metadata.precision != TdsEnums.UNKNOWN_PRECISION_SCALE)
             {
                 NumericPrecision = _metadata.precision;
             }

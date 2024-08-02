@@ -49,7 +49,7 @@ namespace Microsoft.Data.SqlClient
                 if (_clientOSEncryptionSupport is null)
                 {
                     // VSDevDiv 479597: If initialize fails, don't call QueryInfo.
-                    if (TdsEnums.SNI_SUCCESS == _sniStatus)
+                    if (_sniStatus == TdsEnums.SNI_SUCCESS)
                     {
                         try
                         {
@@ -74,7 +74,7 @@ namespace Microsoft.Data.SqlClient
         {
             if (base.handle != IntPtr.Zero)
             {
-                if (TdsEnums.SNI_SUCCESS == _sniStatus)
+                if (_sniStatus == TdsEnums.SNI_SUCCESS)
                 {
                     LocalDBAPI.ReleaseDLLHandles();
                     SNINativeMethodWrapper.SNITerminate();
