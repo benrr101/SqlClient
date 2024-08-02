@@ -35,8 +35,7 @@ namespace Microsoft.Data.SqlClient
             }
             if (section != null )
             {
-                Type t = typeof(T);
-                if (section is ConfigurationSection configSection && configSection.GetType() == t)
+                if (section is ConfigurationSection and T)
                 {
                     SqlClientEventSource.Log.TryTraceEvent("<sc.{0}.{1}|INFO> Successfully loaded the configurable retry logic settings from the configuration file's section '{2}'.",
                                                            TypeName, methodName, name);
@@ -45,7 +44,7 @@ namespace Microsoft.Data.SqlClient
                 else
                 {
                     SqlClientEventSource.Log.TraceEvent("<sc.{0}.{1}|INFO>: Found a custom {2} configuration but it is not of type {3}.",
-                                                        TypeName, methodName, name, t.FullName);
+                                                        TypeName, methodName, name, typeof(T).FullName);
                 }
             }
             SqlClientEventSource.Log.TryTraceEvent("<sc.{0}.{1}|INFO>: Unable to load custom `{2}`. Default value of `{3}` type returns.",

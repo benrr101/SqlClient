@@ -303,12 +303,12 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                         DataRow row = rows[i];
                         object value = row[1];
 
-                        if (_values[i].GetType() == typeof(byte[]) || _values[i].GetType() == typeof(Guid))
+                        if (_values[i] is byte[] or Guid)
                         {
                             byte[] bsrc;
                             byte[] bdst;
 
-                            if (_values[i].GetType() == typeof(Guid))
+                            if (_values[i] is Guid)
                             {
                                 bsrc = ((Guid)value).ToByteArray();
                                 bdst = ((Guid)(_values[i])).ToByteArray();
@@ -321,7 +321,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
                             Assert.True(ByteArraysEqual(bsrc, bdst), "FAILED: Byte arrays are unequal");
                         }
-                        else if (_values[i].GetType() == typeof(bool))
+                        else if (_values[i] is bool)
                         {
                             Assert.True(Convert.ToBoolean(value) == (bool)_values[i], "FAILED:  " + DBConvertToString(value) + " is not equal to " + DBConvertToString(_values[i]));
                         }

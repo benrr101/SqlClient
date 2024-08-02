@@ -390,15 +390,15 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
         private static string GetUdtName(Type udtClrType)
         {
-            if (typeof(SqlHierarchyId) == udtClrType)
+            if (udtClrType == typeof(SqlHierarchyId))
             {
                 return "hierarchyid";
             }
-            if (typeof(SqlGeography) == udtClrType)
+            if (udtClrType == typeof(SqlGeography))
             {
                 return "geography";
             }
-            if (typeof(SqlGeometry) == udtClrType)
+            if (udtClrType == typeof(SqlGeometry))
             {
                 return "geometry";
             }
