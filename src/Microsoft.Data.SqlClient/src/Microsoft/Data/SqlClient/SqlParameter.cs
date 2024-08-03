@@ -122,11 +122,11 @@ namespace Microsoft.Data.SqlClient
                     flags |= 8;
                 }
                 if (
-                    (ParameterDirection.Input != p.Direction) ||
+                    ParameterDirection.Input != p.Direction ||
                     p.IsNullable ||
                     p.ShouldSerializePrecision() ||
                     p.ShouldSerializeScale() ||
-                    (DataRowVersion.Current != p.SourceVersion)
+                    DataRowVersion.Current != p.SourceVersion
                 )
                 {
                     flags |= 16; // v1.0 everything
@@ -466,7 +466,7 @@ namespace Microsoft.Data.SqlClient
             set
             {
                 MetaType metatype = _metaType;
-                if (metatype == null || (metatype.DbType != value))
+                if (metatype == null || metatype.DbType != value)
                 {
                     PropertyTypeChanging();
                     _metaType = MetaType.GetMetaTypeFromDbType(value);
@@ -486,10 +486,10 @@ namespace Microsoft.Data.SqlClient
             {
                 if (
                     string.IsNullOrEmpty(value) ||
-                    (value.Length < TdsEnums.MAX_PARAMETER_NAME_LENGTH) ||
+                    value.Length < TdsEnums.MAX_PARAMETER_NAME_LENGTH ||
                     (
-                        (value[0] == '@') &&
-                        (value.Length <= TdsEnums.MAX_PARAMETER_NAME_LENGTH)
+                        value[0] == '@' &&
+                        value.Length <= TdsEnums.MAX_PARAMETER_NAME_LENGTH
                     )
                 )
                 {
@@ -566,7 +566,7 @@ namespace Microsoft.Data.SqlClient
             {
                 byte scale = _scale;
                 SqlDbType dbtype = GetMetaSqlDbTypeOnly();
-                if ((scale == 0) && (dbtype == SqlDbType.Decimal))
+                if (scale == 0 && dbtype == SqlDbType.Decimal)
                 {
                     scale = ValueScale(SqlValue);
                 }
@@ -609,7 +609,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     throw SQL.InvalidSqlDbType(value);
                 }
-                if (metatype == null || (metatype.SqlDbType != value))
+                if (metatype == null || metatype.SqlDbType != value)
                 {
                     PropertyTypeChanging();
                     _metaType = MetaType.GetMetaTypeFromSqlDbType(value, value == SqlDbType.Structured);
@@ -666,7 +666,7 @@ namespace Microsoft.Data.SqlClient
                         }
                     }
 
-                    return (MetaType.GetSqlValueFromComVariant(_value));
+                    return MetaType.GetSqlValueFromComVariant(_value);
                 }
                 else if (_sqlBufferReturnValue != null)
                 {
@@ -742,7 +742,7 @@ namespace Microsoft.Data.SqlClient
                 _coercedValue = null;
                 _valueAsINullable = _value as INullable;
                 SetFlag(SqlParameterFlags.IsSqlParameterSqlType, _valueAsINullable != null);
-                SetFlag(SqlParameterFlags.IsNull, _value == null || (_value == DBNull.Value) || (HasFlag(SqlParameterFlags.IsSqlParameterSqlType) && _valueAsINullable.IsNull));
+                SetFlag(SqlParameterFlags.IsNull, _value == null || _value == DBNull.Value || (HasFlag(SqlParameterFlags.IsSqlParameterSqlType) && _valueAsINullable.IsNull));
                 _udtLoadError = null;
                 _actualSize = -1;
             }
@@ -865,7 +865,7 @@ namespace Microsoft.Data.SqlClient
             get
             {
                 DataRowVersion sourceVersion = _sourceVersion;
-                return (sourceVersion != 0) ? sourceVersion : DataRowVersion.Current;
+                return sourceVersion != 0 ? sourceVersion : DataRowVersion.Current;
             }
             set
             {
@@ -941,7 +941,7 @@ namespace Microsoft.Data.SqlClient
                 // NOTE: Udts can change their value any time
                 if (_internalMetaType.SqlDbType == SqlDbType.Udt)
                 {
-                    SetFlag(SqlParameterFlags.IsNull, (_value == null) || (_value == DBNull.Value) || (HasFlag(SqlParameterFlags.IsSqlParameterSqlType) && _valueAsINullable.IsNull));
+                    SetFlag(SqlParameterFlags.IsNull, _value == null || _value == DBNull.Value || (HasFlag(SqlParameterFlags.IsSqlParameterSqlType) && _valueAsINullable.IsNull));
                 }
                 return HasFlag(SqlParameterFlags.IsNull);
             }
@@ -963,7 +963,7 @@ namespace Microsoft.Data.SqlClient
             {
                 byte precision = _precision;
                 SqlDbType dbtype = GetMetaSqlDbTypeOnly();
-                if (precision == 0 && (SqlDbType.Decimal == dbtype))
+                if (precision == 0 && SqlDbType.Decimal == dbtype)
                 {
                     precision = ValuePrecision(SqlValue);
                 }
@@ -993,7 +993,7 @@ namespace Microsoft.Data.SqlClient
         internal string GetPrefixedParameterName()
         {
             string parameterName = ParameterName;
-            if ((parameterName.Length > 0) && (parameterName[0] != '@'))
+            if (parameterName.Length > 0 && parameterName[0] != '@')
             {
                 parameterName = "@" + parameterName;
             }
@@ -1526,7 +1526,7 @@ namespace Microsoft.Data.SqlClient
             MetaType mt = InternalMetaType;
             SqlDbType actualType = mt.SqlDbType;
             // NOTE: Users can change the Udt at any time, so we may need to recalculate
-            if ((_actualSize == -1) || (actualType == SqlDbType.Udt))
+            if (_actualSize == -1 || actualType == SqlDbType.Udt)
             {
                 _actualSize = 0;
                 object val = GetCoercedValue();
@@ -1565,9 +1565,15 @@ namespace Microsoft.Data.SqlClient
                         case SqlDbType.NText:
                         case SqlDbType.Xml:
                             {
-                                coercedSize = ((!HasFlag(SqlParameterFlags.IsNull)) && (!HasFlag(SqlParameterFlags.CoercedValueIsDataFeed))) ? StringSize(val, HasFlag(SqlParameterFlags.CoercedValueIsSqlType)) : 0;
-                                _actualSize = (ShouldSerializeSize() ? Size : 0);
-                                _actualSize = (ShouldSerializeSize() && (_actualSize <= coercedSize)) ? _actualSize : coercedSize;
+                                coercedSize = !HasFlag(SqlParameterFlags.IsNull) && !HasFlag(SqlParameterFlags.CoercedValueIsDataFeed)
+                                    ? StringSize(val, HasFlag(SqlParameterFlags.CoercedValueIsSqlType))
+                                    : 0;
+                                _actualSize = ShouldSerializeSize()
+                                    ? Size
+                                    : 0;
+                                _actualSize = ShouldSerializeSize() && _actualSize <= coercedSize
+                                    ? _actualSize
+                                    : coercedSize;
                                 if (_actualSize == -1)
                                 {
                                     _actualSize = coercedSize;
@@ -1580,9 +1586,15 @@ namespace Microsoft.Data.SqlClient
                         case SqlDbType.Text:
                             {
                                 // for these types, ActualSize is the num of chars, not actual bytes - since non-unicode chars are not always uniform size
-                                coercedSize = (!HasFlag(SqlParameterFlags.IsNull) && (!HasFlag(SqlParameterFlags.CoercedValueIsDataFeed))) ? (StringSize(val, HasFlag(SqlParameterFlags.CoercedValueIsSqlType))) : 0;
-                                _actualSize = (ShouldSerializeSize() ? Size : 0);
-                                _actualSize = (ShouldSerializeSize() && (_actualSize <= coercedSize)) ? _actualSize : coercedSize;
+                                coercedSize = !HasFlag(SqlParameterFlags.IsNull) && !HasFlag(SqlParameterFlags.CoercedValueIsDataFeed)
+                                    ? StringSize(val, HasFlag(SqlParameterFlags.CoercedValueIsSqlType))
+                                    : 0;
+                                _actualSize = ShouldSerializeSize()
+                                    ? Size
+                                    : 0;
+                                _actualSize = ShouldSerializeSize() && _actualSize <= coercedSize
+                                    ? _actualSize
+                                    : coercedSize;
                                 if (_actualSize == -1)
                                 {
                                     _actualSize = coercedSize;
@@ -1593,9 +1605,15 @@ namespace Microsoft.Data.SqlClient
                         case SqlDbType.VarBinary:
                         case SqlDbType.Image:
                         case SqlDbType.Timestamp:
-                            coercedSize = (!HasFlag(SqlParameterFlags.IsNull) && (!HasFlag(SqlParameterFlags.CoercedValueIsDataFeed))) ? (BinarySize(val, HasFlag(SqlParameterFlags.CoercedValueIsSqlType))) : 0;
-                            _actualSize = (ShouldSerializeSize() ? Size : 0);
-                            _actualSize = ((ShouldSerializeSize() && (_actualSize <= coercedSize)) ? _actualSize : coercedSize);
+                            coercedSize = !HasFlag(SqlParameterFlags.IsNull) && !HasFlag(SqlParameterFlags.CoercedValueIsDataFeed)
+                                ? BinarySize(val, HasFlag(SqlParameterFlags.CoercedValueIsSqlType))
+                                : 0;
+                            _actualSize = ShouldSerializeSize()
+                                ? Size
+                                : 0;
+                            _actualSize = ShouldSerializeSize() && _actualSize <= coercedSize 
+                                ? _actualSize
+                                : coercedSize;
                             if (_actualSize == -1)
                             {
                                 _actualSize = coercedSize;
@@ -1632,7 +1650,7 @@ namespace Microsoft.Data.SqlClient
                     }
 
                     // don't even send big values over to the variant
-                    if (isSqlVariant && (coercedSize > TdsEnums.TYPE_SIZE_LIMIT))
+                    if (isSqlVariant && coercedSize > TdsEnums.TYPE_SIZE_LIMIT)
                     {
                         throw SQL.ParameterInvalidVariant(ParameterName);
                     }
@@ -1650,7 +1668,7 @@ namespace Microsoft.Data.SqlClient
         internal object GetCoercedValue()
         {
             // NOTE: User can change the Udt at any time
-            if ((_coercedValue == null) || (_internalMetaType.SqlDbType == SqlDbType.Udt))
+            if (_coercedValue == null || _internalMetaType.SqlDbType == SqlDbType.Udt)
             {  // will also be set during parameter Validation
                 bool isDataFeed = Value is DataFeed;
                 if (IsNull || isDataFeed)
@@ -1665,7 +1683,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     _coercedValue = CoerceValue(Value, _internalMetaType, out bool coercedValueIsDataFeed, out bool typeChanged);
                     SetFlag(SqlParameterFlags.CoercedValueIsDataFeed, coercedValueIsDataFeed);
-                    SetFlag(SqlParameterFlags.CoercedValueIsSqlType, HasFlag(SqlParameterFlags.IsSqlParameterSqlType) && (!typeChanged));  // Type changed always results in a CLR type
+                    SetFlag(SqlParameterFlags.CoercedValueIsSqlType, HasFlag(SqlParameterFlags.IsSqlParameterSqlType) && !typeChanged);  // Type changed always results in a CLR type
                     _actualSize = -1;
                 }
             }
@@ -1870,9 +1888,9 @@ namespace Microsoft.Data.SqlClient
         [Conditional("DEBUG")]
         internal void AssertPropertiesAreValid(object value, bool? isSqlType = null, bool? isDataFeed = null, bool? isNull = null)
         {
-            Debug.Assert(!isSqlType.HasValue || (isSqlType.Value == (value is INullable)), "isSqlType is incorrect");
-            Debug.Assert(!isDataFeed.HasValue || (isDataFeed.Value == (value is DataFeed)), "isDataFeed is incorrect");
-            Debug.Assert(!isNull.HasValue || (isNull.Value == ADP.IsNull(value)), "isNull is incorrect");
+            Debug.Assert(!isSqlType.HasValue || isSqlType.Value == value is INullable, "isSqlType is incorrect");
+            Debug.Assert(!isDataFeed.HasValue || isDataFeed.Value == value is DataFeed, "isDataFeed is incorrect");
+            Debug.Assert(!isNull.HasValue || isNull.Value == ADP.IsNull(value), "isNull is incorrect");
         }
 
         private SqlDbType GetMetaSqlDbTypeOnly()
@@ -1931,7 +1949,7 @@ namespace Microsoft.Data.SqlClient
             {
                 throw ADP.PrepareParameterSize(cmd);
             }
-            else if ((!ShouldSerializePrecision() && !ShouldSerializeScale()) && (_metaType.SqlDbType == SqlDbType.Decimal))
+            else if (!ShouldSerializePrecision() && !ShouldSerializeScale() && _metaType.SqlDbType == SqlDbType.Decimal)
             {
                 throw ADP.PrepareParameterScale(cmd, SqlDbType.ToString());
             }
@@ -1976,14 +1994,14 @@ namespace Microsoft.Data.SqlClient
             if (
                 ADP.IsDirection(this, ParameterDirection.Output) &&
                 !ADP.IsDirection(this, ParameterDirection.ReturnValue) &&
-                (!metaType.IsFixed) &&
+                !metaType.IsFixed &&
                 !ShouldSerializeSize() &&
                 (_value == null || Convert.IsDBNull(_value)) &&
-                (SqlDbType != SqlDbType.Timestamp) &&
-                (SqlDbType != SqlDbType.Udt) &&
+                SqlDbType != SqlDbType.Timestamp &&
+                SqlDbType != SqlDbType.Udt &&
                 // BUG: (VSTFDevDiv - 479609): Output parameter with size 0 throws for XML, TEXT, NTEXT, IMAGE.
                 // NOTE: (VSTFDevDiv - 479609): Not Fixed for TEXT, NTEXT, IMAGE as these are deprecated LOB types.
-                (SqlDbType != SqlDbType.Xml) &&
+                SqlDbType != SqlDbType.Xml &&
                 !metaType.IsVarTime
             )
             {
@@ -2042,7 +2060,7 @@ namespace Microsoft.Data.SqlClient
             // byte sizeInCharacters > 8000 bytes, we promote the parameter to image, text, or ntext.  This
             // allows the user to specify a parameter type using a COM+ datatype and be able to
             // use that parameter against a BLOB column.
-            if ((mt.SqlDbType != SqlDbType.Udt) && !mt.IsFixed && !mt.IsLong)
+            if (mt.SqlDbType != SqlDbType.Udt && !mt.IsFixed && !mt.IsLong)
             { // if type has 2 byte length
                 long actualSizeInBytes = GetActualSize();
                 long sizeInCharacters = Size;
@@ -2068,21 +2086,23 @@ namespace Microsoft.Data.SqlClient
                 long maxSizeInBytes;
                 if (mt.IsNCharType)
                 {
-                    maxSizeInBytes = ((sizeInCharacters * sizeof(char)) > actualSizeInBytes) ? sizeInCharacters * sizeof(char) : actualSizeInBytes;
+                    maxSizeInBytes = sizeInCharacters * sizeof(char) > actualSizeInBytes 
+                        ? sizeInCharacters * sizeof(char)
+                        : actualSizeInBytes;
                 }
                 else
                 {
                     // Notes:
                     // Elevation from (n)(var)char (4001+) to (n)text succeeds without failure only with 2005 and greater.
                     // it fails in sql server 2000
-                    maxSizeInBytes = (sizeInCharacters > actualSizeInBytes) ? sizeInCharacters : actualSizeInBytes;
+                    maxSizeInBytes = sizeInCharacters > actualSizeInBytes ? sizeInCharacters : actualSizeInBytes;
                 }
 
                 if (
-                    (maxSizeInBytes > TdsEnums.TYPE_SIZE_LIMIT) ||
+                    maxSizeInBytes > TdsEnums.TYPE_SIZE_LIMIT ||
                     HasFlag(SqlParameterFlags.CoercedValueIsDataFeed) ||
-                    (sizeInCharacters == -1) ||
-                    (actualSizeInBytes == -1)
+                    sizeInCharacters == -1 ||
+                    actualSizeInBytes == -1
                    )
                 {
                     mt = MetaType.GetMaxMetaTypeFromMetaType(mt);
@@ -2167,7 +2187,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     return 0;
                 }
-                return (int)(sqlBytes.Length);
+                return (int)sqlBytes.Length;
             }
             if (value is DataFeed)
             {
@@ -2228,11 +2248,11 @@ namespace Microsoft.Data.SqlClient
             Type currentType = value.GetType();
 
             if (
-                (destinationType.ClassType != typeof(object)) &&
-                (destinationType.ClassType != currentType) &&
+                destinationType.ClassType != typeof(object) &&
+                destinationType.ClassType != currentType &&
                 (
-                    (destinationType.SqlType != currentType) ||
-                    (destinationType.SqlDbType == SqlDbType.Xml)
+                    destinationType.SqlType != currentType ||
+                    destinationType.SqlDbType == SqlDbType.Xml
                 )
             )
             {   // Special case for Xml types (since we need to convert SqlXml into a string)
@@ -2245,7 +2265,7 @@ namespace Microsoft.Data.SqlClient
                         // For Xml data, destination Type is always string
                         if (currentType == typeof(SqlXml))
                         {
-                            value = MetaType.GetStringFromXml((XmlReader)(((SqlXml)value).CreateReader()));
+                            value = MetaType.GetStringFromXml((XmlReader)((SqlXml)value).CreateReader());
                         }
                         else if (currentType == typeof(SqlString))
                         {
@@ -2281,32 +2301,32 @@ namespace Microsoft.Data.SqlClient
                             value = Convert.ChangeType(value, destinationType.ClassType, null);
                         }
                     }
-                    else if ((destinationType.DbType == DbType.Currency) && (currentType == typeof(string)))
+                    else if (destinationType.DbType == DbType.Currency && currentType == typeof(string))
                     {
                         value = decimal.Parse((string)value, NumberStyles.Currency, null);
                     }
-                    else if ((currentType == typeof(SqlBytes)) && (destinationType.ClassType == typeof(byte[])))
+                    else if (currentType == typeof(SqlBytes) && destinationType.ClassType == typeof(byte[]))
                     {
                         typeChanged = false;    // Do nothing
                     }
-                    else if ((currentType == typeof(string)) && (destinationType.SqlDbType == SqlDbType.Time))
+                    else if (currentType == typeof(string) && destinationType.SqlDbType == SqlDbType.Time)
                     {
                         value = TimeSpan.Parse((string)value);
                     }
-                    else if ((currentType == typeof(string)) && (destinationType.SqlDbType == SqlDbType.DateTimeOffset))
+                    else if (currentType == typeof(string) && destinationType.SqlDbType == SqlDbType.DateTimeOffset)
                     {
                         value = DateTimeOffset.Parse((string)value, (IFormatProvider)null);
                     }
-                    else if ((currentType == typeof(DateTime)) && (destinationType.SqlDbType == SqlDbType.DateTimeOffset))
+                    else if (currentType == typeof(DateTime) && destinationType.SqlDbType == SqlDbType.DateTimeOffset)
                     {
                         value = new DateTimeOffset((DateTime)value);
                     }
 #if NET6_0_OR_GREATER
-                    else if ((currentType == typeof(DateOnly)) && (destinationType.SqlDbType == SqlDbType.Date))
+                    else if (currentType == typeof(DateOnly) && destinationType.SqlDbType == SqlDbType.Date)
                     {
                         value = ((DateOnly)value).ToDateTime(new TimeOnly(0, 0));
                     }
-                    else if ((currentType == typeof(TimeOnly)) && (destinationType.SqlDbType == SqlDbType.Time))
+                    else if (currentType == typeof(TimeOnly) && destinationType.SqlDbType == SqlDbType.Time)
                     {
                         value = ((TimeOnly)value).ToTimeSpan();
                     }

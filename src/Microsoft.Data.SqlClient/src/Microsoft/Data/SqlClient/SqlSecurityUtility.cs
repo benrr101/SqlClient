@@ -86,7 +86,7 @@ namespace Microsoft.Data.SqlClient
             }
 
             Debug.Assert(buffer2Index > -1 && buffer2Index < buffer2.Length, "invalid index");// bounds on buffer2Index
-            if ((buffer2.Length - buffer2Index) < lengthToCompare)
+            if (buffer2.Length - buffer2Index < lengthToCompare)
             {
                 return false;
             }
@@ -191,7 +191,7 @@ namespace Microsoft.Data.SqlClient
         /// </summary>
         internal static string GetBytesAsString(byte[] buff, bool fLast, int countOfBytes)
         {
-            int count = (buff.Length > countOfBytes) ? countOfBytes : buff.Length;
+            int count = buff.Length > countOfBytes ? countOfBytes : buff.Length;
             int startIndex = 0;
             if (fLast)
             {

@@ -34,9 +34,9 @@ namespace Microsoft.Data.SqlTypes
         {
             Debug.Assert(closeInput || !async, "Currently we do not have pre-created settings for !closeInput+async");
 
-            XmlReaderSettings settingsToUse = closeInput ?
-                (async ? s_defaultXmlReaderSettingsAsyncCloseInput : s_defaultXmlReaderSettingsCloseInput) :
-                s_defaultXmlReaderSettings;
+            XmlReaderSettings settingsToUse = closeInput
+                ? async ? s_defaultXmlReaderSettingsAsyncCloseInput : s_defaultXmlReaderSettingsCloseInput
+                : s_defaultXmlReaderSettings;
 
             return XmlReader.Create(stream, settingsToUse);
         }
@@ -45,9 +45,9 @@ namespace Microsoft.Data.SqlTypes
         {
             Debug.Assert(closeInput || !async, "Currently we do not have pre-created settings for !closeInput+async");
 
-            XmlReaderSettings settingsToUse = closeInput ?
-               (async ? s_defaultXmlReaderSettingsAsyncCloseInput : s_defaultXmlReaderSettingsCloseInput) :
-               s_defaultXmlReaderSettings;
+            XmlReaderSettings settingsToUse = closeInput
+                ? async ? s_defaultXmlReaderSettingsAsyncCloseInput : s_defaultXmlReaderSettingsCloseInput
+                : s_defaultXmlReaderSettings;
 
             return XmlReader.Create(textReader, settingsToUse);
         }
@@ -70,7 +70,7 @@ namespace Microsoft.Data.SqlTypes
 
             // casting to uint wraps negative values to large positive ones above the valid 
             // ranges so the lower bound doesn't need to be checked
-            if ((uint)(daypart + MinDayOffset) > (MaxDay + MinDayOffset) || (uint)timepart > MaxTime)
+            if ((uint)(daypart + MinDayOffset) > MaxDay + MinDayOffset || (uint)timepart > MaxTime)
             {
                 ThrowOverflowException();
             }
@@ -78,7 +78,7 @@ namespace Microsoft.Data.SqlTypes
             long dayticks = daypart * TimeSpan.TicksPerDay;
             double timePartPerMs = timepart / SQLTicksPerMillisecond;
             timePartPerMs += 0.5;
-            long timeTicks = ((long)timePartPerMs) * TimeSpan.TicksPerMillisecond;
+            long timeTicks = (long)timePartPerMs * TimeSpan.TicksPerMillisecond;
             long totalTicks = BaseDateTicks + dayticks + timeTicks;
             return new DateTime(totalTicks);
         }

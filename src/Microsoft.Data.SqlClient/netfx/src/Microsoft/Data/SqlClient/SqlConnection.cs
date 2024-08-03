@@ -481,7 +481,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                return (_collectstats);
+                return _collectstats;
             }
             set
             {
@@ -535,7 +535,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                return (_AsyncCommandInProgress);
+                return _AsyncCommandInProgress;
             }
             [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
             set
@@ -655,7 +655,7 @@ namespace Microsoft.Data.SqlClient
             bool result = false;
             if (opt != null)
             {
-                result = (!ADP.IsEmpty(opt.UserID) || !ADP.IsEmpty(opt.Password));
+                result = !ADP.IsEmpty(opt.UserID) || !ADP.IsEmpty(opt.Password);
             }
             return result;
         }
@@ -895,7 +895,7 @@ namespace Microsoft.Data.SqlClient
             // just return what the connection string had.
             get
             {
-                SqlInternalConnection innerConnection = (InnerConnection as SqlInternalConnection);
+                SqlInternalConnection innerConnection = InnerConnection as SqlInternalConnection;
                 string result;
 
                 if (innerConnection != null)
@@ -919,7 +919,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                SqlInternalConnectionTds innerConnection = (InnerConnection as SqlInternalConnectionTds);
+                SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
                 string result;
 
                 if (innerConnection != null)
@@ -943,7 +943,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                SqlInternalConnectionTds innerConnection = (InnerConnection as SqlInternalConnectionTds);
+                SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
                 string result;
 
                 if (innerConnection != null)
@@ -969,7 +969,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                SqlInternalConnection innerConnection = (InnerConnection as SqlInternalConnection);
+                SqlInternalConnection innerConnection = InnerConnection as SqlInternalConnection;
                 string result;
 
                 if (innerConnection != null)
@@ -1003,7 +1003,7 @@ namespace Microsoft.Data.SqlClient
                     throw SQL.NotAvailableOnContextConnection();
                 }
 
-                SqlInternalConnectionTds innerConnection = (InnerConnection as SqlInternalConnectionTds);
+                SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
                 int result;
 
                 if (innerConnection != null)
@@ -1030,7 +1030,7 @@ namespace Microsoft.Data.SqlClient
             get
             {
 
-                SqlInternalConnectionTds innerConnection = (InnerConnection as SqlInternalConnectionTds);
+                SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
 
                 if (innerConnection != null)
                 {
@@ -1040,7 +1040,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     Task reconnectTask = _currentReconnectionTask;
                     // Connection closed but previously open should return the correct ClientConnectionId
-                    DbConnectionClosedPreviouslyOpened innerConnectionClosed = (InnerConnection as DbConnectionClosedPreviouslyOpened);
+                    DbConnectionClosedPreviouslyOpened innerConnectionClosed = InnerConnection as DbConnectionClosedPreviouslyOpened;
                     if ((reconnectTask != null && !reconnectTask.IsCompleted) || innerConnectionClosed != null)
                     {
                         return _originalConnectionId;
@@ -1524,7 +1524,7 @@ namespace Microsoft.Data.SqlClient
         /// <include file='../../../../../../../doc/snippets/Microsoft.Data.SqlClient/SqlConnection.xml' path='docs/members[@name="SqlConnection"]/ClearAllPools/*' />
         static public void ClearAllPools()
         {
-            (new SqlClientPermission(PermissionState.Unrestricted)).Demand();
+            new SqlClientPermission(PermissionState.Unrestricted).Demand();
             SqlConnectionFactory.SingletonInstance.ClearAllPools();
         }
 
@@ -1678,11 +1678,11 @@ namespace Microsoft.Data.SqlClient
                 // http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/457934
                 // For non-pooled connections we need to make sure that if the SqlConnection was not closed, then we release the GCHandle on the stateObject to allow it to be GCed
                 // For pooled connections, we will rely on the pool reclaiming the connection
-                var innerConnection = (InnerConnection as SqlInternalConnectionTds);
-                if ((innerConnection != null) && (!innerConnection.ConnectionOptions.Pooling))
+                var innerConnection = InnerConnection as SqlInternalConnectionTds;
+                if (innerConnection != null && !innerConnection.ConnectionOptions.Pooling)
                 {
                     var parser = innerConnection.Parser;
-                    if ((parser != null) && (parser._physicalStateObj != null))
+                    if (parser != null && parser._physicalStateObj != null)
                     {
                         parser._physicalStateObj.DecrementPendingCallbacks(release: false);
                     }
@@ -2145,7 +2145,9 @@ namespace Microsoft.Data.SqlClient
 
             bool result = false;
 
-            _applyTransientFaultHandling = (!overrides.HasFlag(SqlConnectionOverrides.OpenWithoutRetry) && connectionOptions != null && connectionOptions.ConnectRetryCount > 0);
+            _applyTransientFaultHandling = !overrides.HasFlag(SqlConnectionOverrides.OpenWithoutRetry) && 
+                                           connectionOptions != null && 
+                                           connectionOptions.ConnectRetryCount > 0;
 
             if (connectionOptions != null &&
                 (connectionOptions.Authentication == SqlAuthenticationMethod.SqlPassword ||
@@ -2228,10 +2230,10 @@ namespace Microsoft.Data.SqlClient
                     // GetBestEffortCleanup must happen AFTER OpenConnection to get the correct target.
                     bestEffortCleanupTarget = SqlInternalConnection.GetBestEffortCleanupTarget(this);
 
-                    var tdsInnerConnection = (InnerConnection as SqlInternalConnectionTds);
+                    var tdsInnerConnection = InnerConnection as SqlInternalConnectionTds;
                     if (tdsInnerConnection == null)
                     {
-                        SqlInternalConnectionSmi innerConnection = (InnerConnection as SqlInternalConnectionSmi);
+                        SqlInternalConnectionSmi innerConnection = InnerConnection as SqlInternalConnectionSmi;
                         innerConnection.AutomaticEnlistment();
                     }
                     else
@@ -2350,7 +2352,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                SqlInternalConnectionTds tdsConnection = (GetOpenConnection() as SqlInternalConnectionTds);
+                SqlInternalConnectionTds tdsConnection = GetOpenConnection() as SqlInternalConnectionTds;
                 if (tdsConnection == null)
                 {
                     throw SQL.NotAvailableOnContextConnection();
@@ -2417,7 +2419,7 @@ namespace Microsoft.Data.SqlClient
             // the parser is broken, then we should be closed.  Changed to passing in
             // TdsParserState, not ConnectionState.
 
-            if (breakConnection && (ConnectionState.Open == State))
+            if (breakConnection && State == ConnectionState.Open)
             {
 
                 if (wrapCloseInAction != null)
@@ -2495,7 +2497,7 @@ namespace Microsoft.Data.SqlClient
 
         internal SqlInternalConnection GetOpenConnection()
         {
-            SqlInternalConnection innerConnection = (InnerConnection as SqlInternalConnection);
+            SqlInternalConnection innerConnection = InnerConnection as SqlInternalConnection;
             if (innerConnection == null)
             {
                 throw ADP.ClosedConnectionError();
@@ -2506,7 +2508,7 @@ namespace Microsoft.Data.SqlClient
         internal SqlInternalConnection GetOpenConnection(string method)
         {
             DbConnectionInternal innerConnection = InnerConnection;
-            SqlInternalConnection innerSqlConnection = (innerConnection as SqlInternalConnection);
+            SqlInternalConnection innerSqlConnection = innerConnection as SqlInternalConnection;
             if (innerSqlConnection == null)
             {
                 throw ADP.OpenConnectionRequired(method, innerConnection.State);
@@ -2516,7 +2518,7 @@ namespace Microsoft.Data.SqlClient
 
         internal SqlInternalConnectionTds GetOpenTdsConnection()
         {
-            SqlInternalConnectionTds innerConnection = (InnerConnection as SqlInternalConnectionTds);
+            SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
             if (innerConnection == null)
             {
                 throw ADP.ClosedConnectionError();
@@ -2526,7 +2528,7 @@ namespace Microsoft.Data.SqlClient
 
         internal SqlInternalConnectionTds GetOpenTdsConnection(string method)
         {
-            SqlInternalConnectionTds innerConnection = (InnerConnection as SqlInternalConnectionTds);
+            SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
             if (innerConnection == null)
             {
                 throw ADP.OpenConnectionRequired(method, InnerConnection.State);
@@ -2936,7 +2938,7 @@ namespace Microsoft.Data.SqlClient
             // copy memory mapped file contents into managed types
             MEMMAP memMap = (MEMMAP)Marshal.PtrToStructure(sdc.pMemMap, typeof(MEMMAP));
             sdc.dbgpid = memMap.dbgpid;
-            sdc.fOption = (memMap.fOption == 1) ? true : false;
+            sdc.fOption = memMap.fOption == 1 ? true : false;
             // xlate ansi byte[] -> managed strings
             Encoding cp = System.Text.Encoding.GetEncoding(TdsEnums.DEFAULT_ENGLISH_CODE_PAGE_VALUE);
             sdc.machineName = cp.GetString(memMap.rgbMachineName, 0, memMap.rgbMachineName.Length);
@@ -3132,28 +3134,28 @@ namespace Microsoft.Data.SqlClient
     {
 
         // Security stuff
-        const int STANDARD_RIGHTS_REQUIRED = (0x000F0000);
-        const int DELETE = (0x00010000);
-        const int READ_CONTROL = (0x00020000);
-        const int WRITE_DAC = (0x00040000);
-        const int WRITE_OWNER = (0x00080000);
-        const int SYNCHRONIZE = (0x00100000);
-        const int FILE_ALL_ACCESS = (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | 0x000001FF);
-        const uint GENERIC_READ = (0x80000000);
-        const uint GENERIC_WRITE = (0x40000000);
-        const uint GENERIC_EXECUTE = (0x20000000);
-        const uint GENERIC_ALL = (0x10000000);
+        const int STANDARD_RIGHTS_REQUIRED = 0x000F0000;
+        const int DELETE = 0x00010000;
+        const int READ_CONTROL = 0x00020000;
+        const int WRITE_DAC = 0x00040000;
+        const int WRITE_OWNER = 0x00080000;
+        const int SYNCHRONIZE = 0x00100000;
+        const int FILE_ALL_ACCESS = STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | 0x000001FF;
+        const uint GENERIC_READ = 0x80000000;
+        const uint GENERIC_WRITE = 0x40000000;
+        const uint GENERIC_EXECUTE = 0x20000000;
+        const uint GENERIC_ALL = 0x10000000;
 
-        const int SECURITY_DESCRIPTOR_REVISION = (1);
-        const int ACL_REVISION = (2);
+        const int SECURITY_DESCRIPTOR_REVISION = 1;
+        const int ACL_REVISION = 2;
 
-        const int SECURITY_AUTHENTICATED_USER_RID = (0x0000000B);
-        const int SECURITY_LOCAL_SYSTEM_RID = (0x00000012);
-        const int SECURITY_BUILTIN_DOMAIN_RID = (0x00000020);
-        const int SECURITY_WORLD_RID = (0x00000000);
+        const int SECURITY_AUTHENTICATED_USER_RID = 0x0000000B;
+        const int SECURITY_LOCAL_SYSTEM_RID = 0x00000012;
+        const int SECURITY_BUILTIN_DOMAIN_RID = 0x00000020;
+        const int SECURITY_WORLD_RID = 0x00000000;
         const byte SECURITY_NT_AUTHORITY = 5;
-        const int DOMAIN_GROUP_RID_ADMINS = (0x00000200);
-        const int DOMAIN_ALIAS_RID_ADMINS = (0x00000220);
+        const int DOMAIN_GROUP_RID_ADMINS = 0x00000200;
+        const int DOMAIN_ALIAS_RID_ADMINS = 0x00000220;
 
         const int sizeofSECURITY_ATTRIBUTES = 12; // sizeof(SECURITY_ATTRIBUTES);
         const int sizeofSECURITY_DESCRIPTOR = 20; // sizeof(SECURITY_DESCRIPTOR);
@@ -3173,88 +3175,114 @@ namespace Microsoft.Data.SqlClient
 
             pNtAuthority = Marshal.AllocHGlobal(sizeofSID_IDENTIFIER_AUTHORITY);
             if (pNtAuthority == IntPtr.Zero)
+            {
+                // @TODO: REMOVE GOTO!!!!
                 goto cleanup;
+            }
             Marshal.WriteInt32(pNtAuthority, 0, 0);
             Marshal.WriteByte(pNtAuthority, 4, 0);
             Marshal.WriteByte(pNtAuthority, 5, SECURITY_NT_AUTHORITY);
 
-            status =
-            NativeMethods.AllocateAndInitializeSid(
-            pNtAuthority,
-            (byte)1,
-            SECURITY_AUTHENTICATED_USER_RID,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            ref pUserSid);
+            status = NativeMethods.AllocateAndInitializeSid(
+                pNtAuthority,
+                (byte)1,
+                SECURITY_AUTHENTICATED_USER_RID,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                ref pUserSid);
 
             if (!status || pUserSid == IntPtr.Zero)
             {
+                // @TODO: REMOVE GOTO!!!!
                 goto cleanup;
             }
-            status =
-            NativeMethods.AllocateAndInitializeSid(
-            pNtAuthority,
-            (byte)2,
-            SECURITY_BUILTIN_DOMAIN_RID,
-            DOMAIN_ALIAS_RID_ADMINS,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            ref pAdminSid);
+
+            status = NativeMethods.AllocateAndInitializeSid(
+                pNtAuthority,
+                (byte)2,
+                SECURITY_BUILTIN_DOMAIN_RID,
+                DOMAIN_ALIAS_RID_ADMINS,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                ref pAdminSid);
 
             if (!status || pAdminSid == IntPtr.Zero)
             {
+                // @TODO: REMOVE GOTO!!!!
                 goto cleanup;
             }
             status = false;
             pSecurityDescriptor = Marshal.AllocHGlobal(sizeofSECURITY_DESCRIPTOR);
             if (pSecurityDescriptor == IntPtr.Zero)
             {
+                // @TODO: REMOVE GOTO!!!!
                 goto cleanup;
             }
             for (int i = 0; i < sizeofSECURITY_DESCRIPTOR; i++)
+            {
                 Marshal.WriteByte(pSecurityDescriptor, i, (byte)0);
+            }
+
             cbAcl = sizeofACL
-            + (2 * (sizeofACCESS_ALLOWED_ACE))
-            + sizeofACCESS_DENIED_ACE
-            + NativeMethods.GetLengthSid(pUserSid)
-            + NativeMethods.GetLengthSid(pAdminSid);
+                    + 2 * sizeofACCESS_ALLOWED_ACE
+                    + sizeofACCESS_DENIED_ACE
+                    + NativeMethods.GetLengthSid(pUserSid)
+                    + NativeMethods.GetLengthSid(pAdminSid);
 
             pDacl = Marshal.AllocHGlobal(cbAcl);
             if (pDacl == IntPtr.Zero)
             {
+                // @TODO: REMOVE GOTO!!!!
                 goto cleanup;
             }
+            
             // rights must be added in a certain order.  Namely, deny access first, then add access
             if (NativeMethods.InitializeAcl(pDacl, cbAcl, ACL_REVISION))
+            {
                 if (NativeMethods.AddAccessDeniedAce(pDacl, ACL_REVISION, WRITE_DAC, pUserSid))
+                {
                     if (NativeMethods.AddAccessAllowedAce(pDacl, ACL_REVISION, GENERIC_READ, pUserSid))
+                    {
                         if (NativeMethods.AddAccessAllowedAce(pDacl, ACL_REVISION, GENERIC_ALL, pAdminSid))
+                        {
                             if (NativeMethods.InitializeSecurityDescriptor(pSecurityDescriptor, SECURITY_DESCRIPTOR_REVISION))
+                            {
                                 if (NativeMethods.SetSecurityDescriptorDacl(pSecurityDescriptor, true, pDacl, false))
                                 {
                                     status = true;
                                 }
+                            }
+                        }
+                    }
+                }
+            }
 
-                            cleanup:
+            cleanup:
             if (pNtAuthority != IntPtr.Zero)
             {
                 Marshal.FreeHGlobal(pNtAuthority);
             }
             if (pAdminSid != IntPtr.Zero)
+            {
                 NativeMethods.FreeSid(pAdminSid);
+            }
             if (pUserSid != IntPtr.Zero)
+            {
                 NativeMethods.FreeSid(pUserSid);
+            }
             if (status)
+            {
                 return pSecurityDescriptor;
+            }
             else
             {
                 if (pSecurityDescriptor != IntPtr.Zero)
@@ -3318,8 +3346,10 @@ namespace Microsoft.Data.SqlClient
             // Create Security Descriptor
             pSecurityDescriptor = CreateSD(ref pDacl);
             pSecurityAttributes = Marshal.AllocHGlobal(sizeofSECURITY_ATTRIBUTES);
-            if ((pSecurityDescriptor == IntPtr.Zero) || (pSecurityAttributes == IntPtr.Zero))
+            if (pSecurityDescriptor == IntPtr.Zero || pSecurityAttributes == IntPtr.Zero)
+            {
                 return false;
+            }
 
             Marshal.WriteInt32(pSecurityAttributes, 0, sizeofSECURITY_ATTRIBUTES); // nLength = sizeof(SECURITY_ATTRIBUTES)
             Marshal.WriteIntPtr(pSecurityAttributes, 4, pSecurityDescriptor); // lpSecurityDescriptor = pSecurityDescriptor

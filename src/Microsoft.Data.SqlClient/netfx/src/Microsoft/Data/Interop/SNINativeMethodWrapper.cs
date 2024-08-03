@@ -79,7 +79,7 @@ namespace Microsoft.Data.SqlClient
         internal unsafe static byte[] GetData()
         {
             int size;
-            IntPtr ptr = (IntPtr)(SqlDependencyProcessDispatcherStorage.NativeGetData(out size));
+            IntPtr ptr = (IntPtr)SqlDependencyProcessDispatcherStorage.NativeGetData(out size);
             byte[] result = null;
 
             if (ptr != IntPtr.Zero)
@@ -1142,13 +1142,13 @@ namespace Microsoft.Data.SqlClient
 
                 switch (transparentNetworkResolutionStateNo)
                 {
-                    case (0):
+                    case 0:
                         clientConsumerInfo.transparentNetworkResolution = TransparentNetworkResolutionMode.DisabledMode;
                         break;
-                    case (1):
+                    case 1:
                         clientConsumerInfo.transparentNetworkResolution = TransparentNetworkResolutionMode.SequentialMode;
                         break;
-                    case (2):
+                    case 2:
                         clientConsumerInfo.transparentNetworkResolution = TransparentNetworkResolutionMode.ParallelMode;
                         break;
                 };
@@ -1312,7 +1312,7 @@ namespace Microsoft.Data.SqlClient
                                     {
 
                                         char* pwChar = (char*)clearPassword.ToPointer();
-                                        byte* pByte = (byte*)(clearPassword.ToPointer());
+                                        byte* pByte = (byte*)clearPassword.ToPointer();
 
 
 

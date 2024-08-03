@@ -413,9 +413,9 @@ namespace Microsoft.Data.SqlClient
             catch (OperationCanceledException)
             {
                 SqlClientEventSource.Log.TryTraceEvent("AcquireTokenInteractiveDeviceFlowAsync | Operation timed out while acquiring access token.");
-                throw (authenticationMethod == SqlAuthenticationMethod.ActiveDirectoryInteractive) ?
-                    SQL.ActiveDirectoryInteractiveTimeout() :
-                    SQL.ActiveDirectoryDeviceFlowTimeout();
+                throw authenticationMethod == SqlAuthenticationMethod.ActiveDirectoryInteractive
+                    ? SQL.ActiveDirectoryInteractiveTimeout()
+                    : SQL.ActiveDirectoryDeviceFlowTimeout();
             }
         }
 
@@ -647,13 +647,11 @@ namespace Microsoft.Data.SqlClient
             {
                 if (obj != null && obj is PublicClientAppKey pcaKey)
                 {
-                    return (string.CompareOrdinal(_authority, pcaKey._authority) == 0
-                        && string.CompareOrdinal(_redirectUri, pcaKey._redirectUri) == 0
-                        && string.CompareOrdinal(_applicationClientId, pcaKey._applicationClientId) == 0
+                    return string.CompareOrdinal(_authority, pcaKey._authority) == 0
+                           && string.CompareOrdinal(_redirectUri, pcaKey._redirectUri) == 0
+                           && string.CompareOrdinal(_applicationClientId, pcaKey._applicationClientId) == 0
 #if NETFRAMEWORK
-                        && pcaKey._iWin32WindowFunc == _iWin32WindowFunc
-#endif
-                    );
+                           && pcaKey._iWin32WindowFunc == _iWin32WindowFunc;
                 }
                 return false;
             }

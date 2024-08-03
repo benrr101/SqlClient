@@ -59,7 +59,7 @@ namespace Microsoft.Data.SqlClient
                 }
                 do
                 {
-                    int cb = (plplength > (ulong)MaxChunkSize) ? MaxChunkSize : (int)plplength;
+                    int cb = plplength > (ulong)MaxChunkSize ? MaxChunkSize : (int)plplength;
                     byteArr = new byte[cb];
                     result = stateObj.TryReadPlpBytes(ref byteArr, 0, cb, out cb);
                     if (result != TdsOperationStatus.Done)
@@ -94,7 +94,7 @@ namespace Microsoft.Data.SqlClient
             // We need to add this if we are getting ntext xml, not if we are getting binary xml
             // Binary Xml always begins with the bytes 0xDF and 0xFF
             // If we aren't getting these, then we are getting Unicode xml
-            if ((byteArr.Length < 2) || (byteArr[0] != 0xDF) || (byteArr[1] != 0xFF))
+            if (byteArr.Length < 2 || byteArr[0] != 0xDF || byteArr[1] != 0xFF)
             {
                 Debug.Assert(cachedBytes.Count == 0);
                 cachedBytes.Add(TdsEnums.XMLUNICODEBOMBYTES);

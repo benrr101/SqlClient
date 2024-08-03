@@ -117,7 +117,7 @@ namespace Microsoft.Data.SqlClient
             get
             {
                 SqlDelegatedTransaction delegatedTransaction = DelegatedTransaction;
-                return delegatedTransaction != null && (delegatedTransaction.IsActive);
+                return delegatedTransaction != null && delegatedTransaction.IsActive;
             }
         }
 
@@ -789,7 +789,7 @@ namespace Microsoft.Data.SqlClient
         {
             if (connection != null)
             {
-                SqlInternalConnectionTds innerConnection = (connection.InnerConnection as SqlInternalConnectionTds);
+                SqlInternalConnectionTds innerConnection = connection.InnerConnection as SqlInternalConnectionTds;
                 if (innerConnection != null)
                 {
                     return innerConnection.Parser;

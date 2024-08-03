@@ -268,7 +268,7 @@ namespace Microsoft.Data.ProviderBase
                                 {
                                     ADP.SetCurrentTransaction(retry.Task.AsyncState as System.Transactions.Transaction);
                                     var newConnection = CreateNonPooledConnection(owningConnection, poolGroup, userOptions);
-                                    if ((oldConnection != null) && (oldConnection.State == ConnectionState.Open))
+                                    if (oldConnection != null && oldConnection.State == ConnectionState.Open)
                                     {
                                         oldConnection.PrepareForReplaceConnection();
                                         oldConnection.Dispose();

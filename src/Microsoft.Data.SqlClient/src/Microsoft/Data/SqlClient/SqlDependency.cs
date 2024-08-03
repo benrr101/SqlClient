@@ -250,8 +250,8 @@ namespace Microsoft.Data.SqlClient
         private static SqlDependencyProcessDispatcher s_processDispatcher = null;
 #if NETFRAMEWORK
         // The following two strings are used for AppDomain.CreateInstance.
-        private static readonly string s_assemblyName = (typeof(SqlDependencyProcessDispatcher)).Assembly.FullName;
-        private static readonly string s_typeName = (typeof(SqlDependencyProcessDispatcher)).FullName;
+        private static readonly string s_assemblyName = typeof(SqlDependencyProcessDispatcher).Assembly.FullName;
+        private static readonly string s_typeName = typeof(SqlDependencyProcessDispatcher).FullName;
 #endif 
 
         // EventSource members

@@ -141,13 +141,13 @@ namespace Microsoft.Data.SqlClient
                 {
                     // deep clone the parameter value if byte[] or char[]
                     object obj = p.Value;
-                    byte[] byteValues = (obj as byte[]);
+                    byte[] byteValues = obj as byte[];
                     if (byteValues != null)
                     {
                         int offset = p.Offset;
                         int size = p.Size;
                         int countOfBytes = byteValues.Length - offset;
-                        if ((size > 0) && (size < countOfBytes))
+                        if (size > 0 && size < countOfBytes)
                         {
                             countOfBytes = size;
                         }
@@ -158,13 +158,13 @@ namespace Microsoft.Data.SqlClient
                     }
                     else
                     {
-                        char[] charValues = (obj as char[]);
+                        char[] charValues = obj as char[];
                         if (charValues != null)
                         {
                             int offset = p.Offset;
                             int size = p.Size;
                             int countOfChars = charValues.Length - offset;
-                            if (size != 0 && (size < countOfChars))
+                            if (size != 0 && size < countOfChars)
                             {
                                 countOfChars = size;
                             }
@@ -175,7 +175,7 @@ namespace Microsoft.Data.SqlClient
                         }
                         else
                         {
-                            ICloneable cloneable = (obj as ICloneable);
+                            ICloneable cloneable = obj as ICloneable;
                             if (cloneable != null)
                             {
                                 p.Value = cloneable.Clone();

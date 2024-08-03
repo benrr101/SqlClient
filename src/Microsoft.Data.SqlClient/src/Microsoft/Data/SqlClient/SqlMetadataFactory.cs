@@ -73,13 +73,13 @@ namespace Microsoft.Data.SqlClient
             DataColumn typeName = dataTypesTable.Columns[DbMetaDataColumnNames.TypeName];
             DataColumn isNullable = dataTypesTable.Columns[DbMetaDataColumnNames.IsNullable];
 
-            if ((providerDbtype == null) ||
-                (columnSize == null) ||
-                (isFixedLength == null) ||
-                (isSearchable == null) ||
-                (isLiteralSupported == null) ||
-                (typeName == null) ||
-                (isNullable == null))
+            if (providerDbtype == null ||
+                columnSize == null ||
+                isFixedLength == null ||
+                isSearchable == null ||
+                isLiteralSupported == null ||
+                typeName == null ||
+                isNullable == null)
             {
                 throw ADP.InvalidXml();
             }
@@ -126,12 +126,12 @@ namespace Microsoft.Data.SqlClient
                         newRow[isNullable] = values[isNullableIndex];
                     }
 
-                    if ((values[assemblyNameIndex] != DBNull.Value) &&
-                        (values[assemblyClassIndex] != DBNull.Value) &&
-                        (values[versionMajorIndex] != DBNull.Value) &&
-                        (values[versionMinorIndex] != DBNull.Value) &&
-                        (values[versionBuildIndex] != DBNull.Value) &&
-                        (values[versionRevisionIndex] != DBNull.Value))
+                    if (values[assemblyNameIndex] != DBNull.Value &&
+                        values[assemblyClassIndex] != DBNull.Value &&
+                        values[versionMajorIndex] != DBNull.Value &&
+                        values[versionMinorIndex] != DBNull.Value &&
+                        values[versionBuildIndex] != DBNull.Value &&
+                        values[versionRevisionIndex] != DBNull.Value)
                     {
 
                         StringBuilder nameString = new();
@@ -205,12 +205,12 @@ namespace Microsoft.Data.SqlClient
             DataColumn typeName = dataTypesTable.Columns[DbMetaDataColumnNames.TypeName];
             DataColumn isNullable = dataTypesTable.Columns[DbMetaDataColumnNames.IsNullable];
 
-            if ((providerDbtype == null) ||
-                (columnSize == null) ||
-                (isSearchable == null) ||
-                (isLiteralSupported == null) ||
-                (typeName == null) ||
-                (isNullable == null))
+            if (providerDbtype == null ||
+                columnSize == null ||
+                isSearchable == null ||
+                isLiteralSupported == null ||
+                typeName == null ||
+                isNullable == null)
             {
                 throw ADP.InvalidXml();
             }

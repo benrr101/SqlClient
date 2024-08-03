@@ -193,7 +193,7 @@ namespace Microsoft.Data.SqlClient
                 throw ADP.ArgumentNull(nameof(values));
             }
 
-            int copyLength = (values.Length < _visibleColumnCount) ? values.Length : _visibleColumnCount;
+            int copyLength = values.Length < _visibleColumnCount ? values.Length : _visibleColumnCount;
             for (int i = 0; i < copyLength; i++)
             {
                 values[_indexMap[i]] = GetValue(i);
@@ -384,7 +384,7 @@ namespace Microsoft.Data.SqlClient
                     {
                         _isOpen = false;
 
-                        if ((closeConnection) && (Connection != null))
+                        if (closeConnection && Connection != null)
                         {
                             Connection.Close();
                         }
@@ -609,7 +609,9 @@ namespace Microsoft.Data.SqlClient
                     if (SmiMetaData.UnlimitedMaxLengthIndicator == maxLength)
                     {
                         metaType = MetaType.GetMaxMetaTypeFromMetaType(metaType);
-                        maxLength = (metaType.IsSizeInCharacters && !metaType.IsPlp) ? (0x7fffffff / 2) : 0x7fffffff;
+                        maxLength = metaType.IsSizeInCharacters && !metaType.IsPlp 
+                            ? 0x7fffffff / 2
+                            : 0x7fffffff;
                     }
 
                     DataRow schemaRow = schemaTable.NewRow();
@@ -698,22 +700,22 @@ namespace Microsoft.Data.SqlClient
                     }
 
                     schemaRow[AllowDBNull] = colMetaData.AllowsDBNull;
-                    if (!(colMetaData.IsAliased.IsNull))
+                    if (!colMetaData.IsAliased.IsNull)
                     {
                         schemaRow[IsAliased] = colMetaData.IsAliased.Value;
                     }
 
-                    if (!(colMetaData.IsKey.IsNull))
+                    if (!colMetaData.IsKey.IsNull)
                     {
                         schemaRow[IsKey] = colMetaData.IsKey.Value;
                     }
 
-                    if (!(colMetaData.IsHidden.IsNull))
+                    if (!colMetaData.IsHidden.IsNull)
                     {
                         schemaRow[IsHidden] = colMetaData.IsHidden.Value;
                     }
 
-                    if (!(colMetaData.IsExpression.IsNull))
+                    if (!colMetaData.IsExpression.IsNull)
                     {
                         schemaRow[IsExpression] = colMetaData.IsExpression.Value;
                     }
@@ -933,7 +935,7 @@ namespace Microsoft.Data.SqlClient
                 throw ADP.ArgumentNull(nameof(values));
             }
 
-            int copyLength = (values.Length < _visibleColumnCount) ? values.Length : _visibleColumnCount;
+            int copyLength = values.Length < _visibleColumnCount ? values.Length : _visibleColumnCount;
             for (int i = 0; i < copyLength; i++)
             {
                 values[_indexMap[i]] = GetSqlValue(i);
@@ -960,7 +962,9 @@ namespace Microsoft.Data.SqlClient
             SmiQueryMetaData metaData = _currentMetaData[ordinal];
 
             // For non-null, non-variant types with sequential access, we support proper streaming
-            if ((metaData.SqlDbType != SqlDbType.Variant) && (IsCommandBehavior(CommandBehavior.SequentialAccess)) && (!ValueUtilsSmi.IsDBNull(_readerEventSink, _currentColumnValuesV3, ordinal)))
+            if (metaData.SqlDbType != SqlDbType.Variant &&
+                IsCommandBehavior(CommandBehavior.SequentialAccess) &&
+                !ValueUtilsSmi.IsDBNull(_readerEventSink, _currentColumnValuesV3, ordinal))
             {
                 if (HasActiveStreamOrTextReaderOnColumn(ordinal))
                 {
@@ -982,7 +986,9 @@ namespace Microsoft.Data.SqlClient
             SmiQueryMetaData metaData = _currentMetaData[ordinal];
 
             // For non-variant types with sequential access, we support proper streaming
-            if ((metaData.SqlDbType != SqlDbType.Variant) && (IsCommandBehavior(CommandBehavior.SequentialAccess)) && (!ValueUtilsSmi.IsDBNull(_readerEventSink, _currentColumnValuesV3, ordinal)))
+            if (metaData.SqlDbType != SqlDbType.Variant &&
+                IsCommandBehavior(CommandBehavior.SequentialAccess) &&
+                !ValueUtilsSmi.IsDBNull(_readerEventSink, _currentColumnValuesV3, ordinal))
             {
                 if (HasActiveStreamOrTextReaderOnColumn(ordinal))
                 {
@@ -1008,7 +1014,7 @@ namespace Microsoft.Data.SqlClient
             }
 
             Stream stream;
-            if ((IsCommandBehavior(CommandBehavior.SequentialAccess)) && (!ValueUtilsSmi.IsDBNull(_readerEventSink, _currentColumnValuesV3, ordinal)))
+            if (IsCommandBehavior(CommandBehavior.SequentialAccess) && !ValueUtilsSmi.IsDBNull(_readerEventSink, _currentColumnValuesV3, ordinal))
             {
                 if (HasActiveStreamOrTextReaderOnColumn(ordinal))
                 {
@@ -1182,7 +1188,7 @@ namespace Microsoft.Data.SqlClient
 
         private bool FNotInResults()
         {
-            return (PositionState.AfterResults == _currentPosition || PositionState.BeforeResults == _currentPosition);
+            return PositionState.AfterResults == _currentPosition || PositionState.BeforeResults == _currentPosition;
         }
 
         private void MetaDataAvailable(SmiQueryMetaData[] md, bool nextEventIsRow)
@@ -1214,8 +1220,8 @@ namespace Microsoft.Data.SqlClient
         {
             bool active = false;
 
-            active |= (_currentStream != null) && (_currentStream.ColumnIndex == columnIndex);
-            active |= (_currentTextReader != null) && (_currentTextReader.ColumnIndex == columnIndex);
+            active |= _currentStream != null && _currentStream.ColumnIndex == columnIndex;
+            active |= _currentTextReader != null && _currentTextReader.ColumnIndex == columnIndex;
 
             return active;
         }
@@ -1278,7 +1284,7 @@ namespace Microsoft.Data.SqlClient
 
             internal override void MetaDataAvailable(SmiQueryMetaData[] md, bool nextEventIsRow)
             {
-                var mdLength = (md != null) ? md.Length : -1;
+                var mdLength = md != null ? md.Length : -1;
                 SqlClientEventSource.Log.TryAdvancedTraceEvent("<sc.SqlDataReaderSmi.ReaderEventSink.MetaDataAvailable|ADV> {0}, md.Length={1} nextEventIsRow={2}.", _reader.ObjectID, mdLength, nextEventIsRow);
 
                 if (SqlClientEventSource.Log.IsAdvancedTraceOn())

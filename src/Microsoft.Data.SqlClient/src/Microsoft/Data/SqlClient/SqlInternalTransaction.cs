@@ -67,11 +67,11 @@ namespace Microsoft.Data.SqlClient
         }
 
         internal bool HasParentTransaction =>
-                // Return true if we are an API started local transaction, or if we were a TSQL
-                // started local transaction and were then wrapped with a parent transaction as
-                // a result of a later API begin transaction.
-                (_transactionType == TransactionType.LocalFromAPI) ||
-                                (_transactionType == TransactionType.LocalFromTSQL && _parent != null);
+            // Return true if we are an API started local transaction, or if we were a TSQL
+            // started local transaction and were then wrapped with a parent transaction as
+            // a result of a later API begin transaction.
+            _transactionType == TransactionType.LocalFromAPI ||
+            (_transactionType == TransactionType.LocalFromTSQL && _parent != null);
 
         internal bool IsAborted => _transactionState == TransactionState.Aborted;
 
@@ -304,7 +304,7 @@ namespace Microsoft.Data.SqlClient
         /// <returns></returns>
         private int GetServerTransactionLevel()
         {
-            using (SqlCommand transactionLevelCommand = new SqlCommand("set @out = @@trancount", (SqlConnection)(_innerConnection.Owner)))
+            using (SqlCommand transactionLevelCommand = new SqlCommand("set @out = @@trancount", (SqlConnection)_innerConnection.Owner))
             {
                 transactionLevelCommand.Transaction = Parent;
 

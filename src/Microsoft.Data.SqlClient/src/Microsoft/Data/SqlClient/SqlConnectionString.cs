@@ -384,7 +384,7 @@ namespace Microsoft.Data.SqlClient
                 throw ADP.InvalidMinMaxPoolSizeValues();
             }
 
-            if ((_packetSize < TdsEnums.MIN_PACKET_SIZE) || (TdsEnums.MAX_PACKET_SIZE < _packetSize))
+            if (_packetSize < TdsEnums.MIN_PACKET_SIZE || TdsEnums.MAX_PACKET_SIZE < _packetSize)
             {
                 throw SQL.InvalidPacketSizeValue();
             }
@@ -447,7 +447,7 @@ namespace Microsoft.Data.SqlClient
                 const string value = "Encrypt";
 
                 object obj = ADP.LocalMachineRegistryValue(folder, value);
-                if ((obj is int iObj) && (iObj == 1))
+                if (obj is int iObj && iObj == 1)
                 {         // If the registry key exists
                     _encrypt = SqlConnectionEncryptOption.Mandatory;
                 }
@@ -581,12 +581,12 @@ namespace Microsoft.Data.SqlClient
                 throw SQL.ROR_FailoverNotSupportedConnString();
             }
 
-            if ((_connectRetryCount < 0) || (_connectRetryCount > 255))
+            if (_connectRetryCount < 0 || _connectRetryCount > 255)
             {
                 throw ADP.InvalidConnectRetryCountValue();
             }
 
-            if ((_connectRetryInterval < 1) || (_connectRetryInterval > 60))
+            if (_connectRetryInterval < 1 || _connectRetryInterval > 60)
             {
                 throw ADP.InvalidConnectRetryIntervalValue();
             }
@@ -972,7 +972,8 @@ namespace Microsoft.Data.SqlClient
                 if (!CompareHostName(ref host, name, fixup))
                 {
                     int separatorPos = name.IndexOf('.'); // to compare just 'machine' part
-                    if ((separatorPos <= 0) || !CompareHostName(ref host, name.Substring(0, separatorPos), fixup))
+                    if (separatorPos <= 0 || 
+                        !CompareHostName(ref host, name.Substring(0, separatorPos), fixup))
                     {
                         if (enforceLocalHost)
                         {
@@ -990,7 +991,9 @@ namespace Microsoft.Data.SqlClient
                 var domainName = "." + IPGlobalProperties.GetIPGlobalProperties().DomainName;
                 var hostName = Dns.GetHostName();
                 if (domainName != "." && !hostName.EndsWith(domainName, StringComparison.Ordinal))
+                {
                     hostName += domainName;
+                }
                 return hostName;
             }
             catch (System.Net.Sockets.SocketException)

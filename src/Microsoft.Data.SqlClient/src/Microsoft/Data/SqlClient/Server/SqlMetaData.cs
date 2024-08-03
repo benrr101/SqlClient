@@ -32,8 +32,8 @@ namespace Microsoft.Data.SqlClient.Server
 
         private const SqlCompareOptions DefaultStringCompareOptions = SqlCompareOptions.IgnoreCase | SqlCompareOptions.IgnoreKanaType | SqlCompareOptions.IgnoreWidth;
 
-        private static readonly SqlMoney s_smallMoneyMax = new SqlMoney(((decimal)int.MaxValue) / 10000);
-        private static readonly SqlMoney s_smallMoneyMin = new SqlMoney(((decimal)int.MinValue) / 10000);
+        private static readonly SqlMoney s_smallMoneyMax = new SqlMoney((decimal)int.MaxValue / 10000);
+        private static readonly SqlMoney s_smallMoneyMin = new SqlMoney((decimal)int.MinValue / 10000);
 
         private static readonly DateTime s_smallDateTimeMax = new DateTime(2079, 06, 06, 23, 59, 29, 998);
         private static readonly DateTime s_smallDateTimeMin = new DateTime(1899, 12, 31, 23, 59, 29, 999);
@@ -1751,7 +1751,7 @@ namespace Microsoft.Data.SqlClient.Server
                     else if (dataType == typeof(SqlBinary))
                     {
                         long maxLen;
-                        SqlBinary sb = ((SqlBinary)value);
+                        SqlBinary sb = (SqlBinary)value;
                         if (!sb.IsNull)
                         {
                             maxLen = sb.Length;
@@ -2120,14 +2120,14 @@ namespace Microsoft.Data.SqlClient.Server
 
         private long InternalAdjustTimeTicks(long ticks)
         {
-            return (ticks / s_unitTicksFromScale[Scale] * s_unitTicksFromScale[Scale]);
+            return ticks / s_unitTicksFromScale[Scale] * s_unitTicksFromScale[Scale];
         }
 
         private static byte InferScaleFromTimeTicks(long ticks)
         {
             for (byte scale = 0; scale < MaxTimeScale; ++scale)
             {
-                if ((ticks / s_unitTicksFromScale[scale] * s_unitTicksFromScale[scale]) == ticks)
+                if (ticks / s_unitTicksFromScale[scale] * s_unitTicksFromScale[scale] == ticks)
                 {
                     return scale;
                 }

@@ -287,7 +287,7 @@ namespace Microsoft.Data.SqlClient
                 { DbConnectionStringSynonyms.ServerSPN, Keywords.ServerSPN },
                 { DbConnectionStringSynonyms.FailoverPartnerSPN, Keywords.FailoverPartnerSPN },
             };
-            Debug.Assert((KeywordsCount + SqlConnectionString.SynonymCount) == pairs.Count, "initial expected size is incorrect");
+            Debug.Assert(KeywordsCount + SqlConnectionString.SynonymCount == pairs.Count, "initial expected size is incorrect");
             return pairs;
         }
 
@@ -671,7 +671,7 @@ namespace Microsoft.Data.SqlClient
                 bool flag = false;
                 if (context is not null)
                 {
-                    SqlConnectionStringBuilder constr = (context.Instance as SqlConnectionStringBuilder);
+                    SqlConnectionStringBuilder constr = context.Instance as SqlConnectionStringBuilder;
                     if (constr is not null)
                     {
                         if (constr.DataSource.Length > 0 && (constr.IntegratedSecurity || constr.UserID.Length > 0))
@@ -752,7 +752,7 @@ namespace Microsoft.Data.SqlClient
                 }
                 if (destinationType == typeof(InstanceDescriptor))
                 {
-                    SqlConnectionStringBuilder obj = (value as SqlConnectionStringBuilder);
+                    SqlConnectionStringBuilder obj = value as SqlConnectionStringBuilder;
                     if (obj is not null)
                     {
                         return ConvertToInstanceDescriptor(obj);
@@ -800,7 +800,7 @@ namespace Microsoft.Data.SqlClient
                     {
                         string server = rows[i][serverName] as string;
                         string instance = rows[i][instanceName] as string;
-                        if ((instance is null) || instance.Length == 0 || ("MSSQLSERVER" == instance))
+                        if (instance is null || instance.Length == 0 || "MSSQLSERVER" == instance)
                         {
                             serverNames[i] = server;
                         }
@@ -842,7 +842,7 @@ namespace Microsoft.Data.SqlClient
 
             public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
             {
-                string svalue = (value as string);
+                string svalue = value as string;
                 if (svalue is not null)
                 {
                     svalue = svalue.Trim();
@@ -875,7 +875,7 @@ namespace Microsoft.Data.SqlClient
 
             public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
             {
-                if ((value is string svalue) && (destinationType == typeof(string)))
+                if (value is string svalue && destinationType == typeof(string))
                 {
                     return svalue.Trim().ToLower(CultureInfo.InvariantCulture) switch
                     {
@@ -1529,7 +1529,7 @@ namespace Microsoft.Data.SqlClient
             get => _connectRetryCount;
             set
             {
-                if ((value < 0) || (value > 255))
+                if (value < 0 || value > 255)
                 {
                     throw ADP.InvalidConnectionOptionValue(DbConnectionStringKeywords.ConnectRetryCount);
                 }
@@ -1548,7 +1548,7 @@ namespace Microsoft.Data.SqlClient
             get => _connectRetryInterval;
             set
             {
-                if ((value < 1) || (value > 60))
+                if (value < 1 || value > 60)
                 {
                     throw ADP.InvalidConnectionOptionValue(DbConnectionStringKeywords.ConnectRetryInterval);
                 }
@@ -1618,7 +1618,7 @@ namespace Microsoft.Data.SqlClient
             get => _packetSize;
             set
             {
-                if ((value < TdsEnums.MIN_PACKET_SIZE) || (TdsEnums.MAX_PACKET_SIZE < value))
+                if (value < TdsEnums.MIN_PACKET_SIZE || TdsEnums.MAX_PACKET_SIZE < value)
                 {
                     throw SQL.InvalidPacketSizeValue();
                 }

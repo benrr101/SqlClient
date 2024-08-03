@@ -600,11 +600,15 @@ namespace Microsoft.Data.SqlClient
                 if (col.cipherMD != null)
                 {
                     Debug.Assert(col.baseTI != null && col.baseTI.metaType != null, "col.baseTI and col.baseTI.metaType should not be null.");
-                    schemaRow[Size] = (col.baseTI.metaType.IsSizeInCharacters && (col.baseTI.length != 0x7fffffff)) ? (col.baseTI.length / 2) : col.baseTI.length;
+                    schemaRow[Size] = col.baseTI.metaType.IsSizeInCharacters && col.baseTI.length != 0x7fffffff 
+                        ? col.baseTI.length / 2
+                        : col.baseTI.length;
                 }
                 else
                 {
-                    schemaRow[Size] = (col.metaType.IsSizeInCharacters && (col.length != 0x7fffffff)) ? (col.length / 2) : col.length;
+                    schemaRow[Size] = col.metaType.IsSizeInCharacters && col.length != 0x7fffffff
+                        ? col.length / 2
+                        : col.length;
                 }
 
                 schemaRow[DataType] = GetFieldTypeInternal(col);
@@ -972,7 +976,7 @@ namespace Microsoft.Data.SqlClient
                     // Request that the current task is stopped
                     _cancelAsyncOnCloseTokenSource.Cancel();
                     var currentTask = _currentTask;
-                    if ((currentTask != null) && (!currentTask.IsCompleted))
+                    if (currentTask != null && !currentTask.IsCompleted)
                     {
                         try
                         {
@@ -1057,7 +1061,7 @@ namespace Microsoft.Data.SqlClient
         {
             TdsParser parser = _parser;
             TdsParserStateObject stateObj = _stateObj;
-            bool closeConnection = (IsCommandBehavior(CommandBehavior.CloseConnection));
+            bool closeConnection = IsCommandBehavior(CommandBehavior.CloseConnection);
             bool aborting = false;
             bool cleanDataFailed = false;
             TdsOperationStatus result;
@@ -1074,7 +1078,7 @@ namespace Microsoft.Data.SqlClient
 #else
                 {
 #endif //DEBUG
-                    if ((!_isClosed) && (parser != null) && (stateObj != null) && (stateObj.HasPendingData))
+                    if (!_isClosed && parser != null && stateObj != null && stateObj.HasPendingData)
                     {
 
                         // It is possible for this to be called during connection close on a
@@ -1302,7 +1306,7 @@ namespace Microsoft.Data.SqlClient
         {
             var parser = _parser;
             Debug.Assert(parser == null || parser.State != TdsParserState.OpenNotLoggedIn, "Reader on a connection that is not logged in");
-            if ((parser != null) && (parser.State == TdsParserState.OpenLoggedIn))
+            if (parser != null && parser.State == TdsParserState.OpenLoggedIn)
             {
                 // Connection is ok - proper cleanup
                 // NOTE: This is NOT thread-safe
@@ -1754,13 +1758,13 @@ namespace Microsoft.Data.SqlClient
             // Stream is only for Binary, Image, VarBinary, Udt and Xml types
             // NOTE: IsBinType also includes Timestamp for some reason...
             MetaType mt = _metaData[i].metaType;
-            if (((!mt.IsBinType) || (mt.SqlDbType == SqlDbType.Timestamp)) && (mt.SqlDbType != SqlDbType.Variant))
+            if ((!mt.IsBinType || mt.SqlDbType == SqlDbType.Timestamp) && mt.SqlDbType != SqlDbType.Variant)
             {
                 throw SQL.StreamNotSupportOnColumnType(_metaData[i].column);
             }
 
             // For non-variant types with sequential access, we support proper streaming
-            if ((mt.SqlDbType != SqlDbType.Variant) && (IsCommandBehavior(CommandBehavior.SequentialAccess)))
+            if (mt.SqlDbType != SqlDbType.Variant && IsCommandBehavior(CommandBehavior.SequentialAccess))
             {
                 _currentStream = new SqlSequentialStream(this, i);
                 _lastColumnWithDataChunkRead = i;
@@ -1805,7 +1809,7 @@ namespace Microsoft.Data.SqlClient
 
             // don't allow get bytes on non-long or non-binary columns
             MetaType mt = _metaData[i].metaType;
-            if (!(mt.IsLong || mt.IsBinType) || (SqlDbType.Xml == mt.SqlDbType))
+            if (!(mt.IsLong || mt.IsBinType) || SqlDbType.Xml == mt.SqlDbType)
             {
                 throw SQL.NonBlobColumn(_metaData[i].column);
             }
@@ -1888,7 +1892,7 @@ namespace Microsoft.Data.SqlClient
                         }
 
                         // If there are an unknown (-1) number of bytes left for a PLP, read its size
-                        if (_sharedState._columnDataBytesRemaining == -1 && (_metaData[i].metaType.IsPlp))
+                        if (_sharedState._columnDataBytesRemaining == -1 && _metaData[i].metaType.IsPlp)
                         {
                             ulong left;
                             result = _parser.TryPlpBytesLeft(_stateObj, out left);
@@ -1928,7 +1932,7 @@ namespace Microsoft.Data.SqlClient
                         long cb = dataIndex - _columnDataBytesRead;
 
                         // if dataIndex is outside of the data range, return 0
-                        if ((cb > _sharedState._columnDataBytesRemaining) && !_metaData[i].metaType.IsPlp)
+                        if (cb > _sharedState._columnDataBytesRemaining && !_metaData[i].metaType.IsPlp)
                         {
                             return TdsOperationStatus.Done;
                         }
@@ -2032,10 +2036,14 @@ namespace Microsoft.Data.SqlClient
                         if (ndataIndex < cbytes)
                         {
                             // help the user out in the case where there's less data than requested
-                            if ((ndataIndex + length) > cbytes)
+                            if (ndataIndex + length > cbytes)
+                            {
                                 cbytes = cbytes - ndataIndex;
+                            }
                             else
+                            {
                                 cbytes = length;
+                            }
                         }
 
                         Buffer.BlockCopy(data, ndataIndex, buffer, bufferIndex, cbytes);
@@ -2162,7 +2170,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     tdsReliabilitySection.Start();
 #endif //DEBUG
-                    if ((_sharedState._columnDataBytesRemaining == 0) || (length == 0))
+                    if (_sharedState._columnDataBytesRemaining == 0 || length == 0)
                     {
                         // No data left or nothing requested, return 0
                         bytesRead = 0;
@@ -2259,13 +2267,13 @@ namespace Microsoft.Data.SqlClient
 
             Debug.Assert(mt != null, @"mt should not be null.");
 
-            if (((!mt.IsCharType) && (mt.SqlDbType != SqlDbType.Variant)) || (mt.SqlDbType == SqlDbType.Xml))
+            if ((!mt.IsCharType && mt.SqlDbType != SqlDbType.Variant) || mt.SqlDbType == SqlDbType.Xml)
             {
                 throw SQL.TextReaderNotSupportOnColumnType(_metaData[i].column);
             }
 
             // For non-variant types with sequential access, we support proper streaming
-            if ((mt.SqlDbType != SqlDbType.Variant) && (IsCommandBehavior(CommandBehavior.SequentialAccess)))
+            if (mt.SqlDbType != SqlDbType.Variant && IsCommandBehavior(CommandBehavior.SequentialAccess))
             {
                 if (_metaData[i].cipherMD != null)
                 {
@@ -2356,8 +2364,7 @@ namespace Microsoft.Data.SqlClient
             {
                 statistics = SqlStatistics.StartTimer(Statistics);
                 SetTimeout(_defaultTimeoutMilliseconds);
-                if ((mt.IsPlp) &&
-                    (IsCommandBehavior(CommandBehavior.SequentialAccess)))
+                if (mt.IsPlp && IsCommandBehavior(CommandBehavior.SequentialAccess))
                 {
                     if (length < 0)
                     {
@@ -2370,13 +2377,13 @@ namespace Microsoft.Data.SqlClient
                     }
 
                     // if bad buffer index, throw
-                    if ((bufferIndex < 0) || (buffer != null && bufferIndex >= buffer.Length))
+                    if (bufferIndex < 0 || (buffer != null && bufferIndex >= buffer.Length))
                     {
                         throw ADP.InvalidDestinationBufferIndex(buffer.Length, bufferIndex, "bufferIndex");
                     }
 
                     // if there is not enough room in the buffer for data
-                    if (buffer != null && (length + bufferIndex > buffer.Length))
+                    if (buffer != null && length + bufferIndex > buffer.Length)
                     {
                         throw ADP.InvalidBufferSizeOrIndex(length, bufferIndex);
                     }
@@ -2412,7 +2419,11 @@ namespace Microsoft.Data.SqlClient
                 }
 
                 // Did we start reading this value yet?
-                if ((_sharedState._nextColumnDataToRead == (i + 1)) && (_sharedState._nextColumnHeaderToRead == (i + 1)) && (_columnDataChars != null) && (IsCommandBehavior(CommandBehavior.SequentialAccess)) && (dataIndex < _columnDataCharsRead))
+                if (_sharedState._nextColumnDataToRead == i + 1 && 
+                    _sharedState._nextColumnHeaderToRead == i + 1 &&
+                    _columnDataChars != null &&
+                    IsCommandBehavior(CommandBehavior.SequentialAccess) &&
+                    dataIndex < _columnDataCharsRead)
                 {
                     // Don't allow re-read of same chars in sequential access mode
                     throw ADP.NonSeqByteAccess(dataIndex, _columnDataCharsRead, nameof(GetChars));
@@ -2455,10 +2466,14 @@ namespace Microsoft.Data.SqlClient
                     if (ndataIndex < cchars)
                     {
                         // help the user out in the case where there's less data than requested
-                        if ((ndataIndex + length) > cchars)
+                        if (ndataIndex + length > cchars)
+                        {
                             cchars = cchars - ndataIndex;
+                        }
                         else
+                        {
                             cchars = length;
+                        }
                     }
 
                     Array.Copy(_columnDataChars, ndataIndex, buffer, bufferIndex, cchars);
@@ -2566,7 +2581,9 @@ namespace Microsoft.Data.SqlClient
                     if (buffer == null)
                     {
                         cch = (long)_parser.PlpBytesTotalLength(_stateObj);
-                        return (isUnicode && (cch > 0)) ? cch >> 1 : cch;
+                        return isUnicode && cch > 0 
+                            ? cch >> 1
+                            : cch;
                     }
                     if (dataIndex > _columnDataCharsRead)
                     {
@@ -2579,17 +2596,22 @@ namespace Microsoft.Data.SqlClient
                         // TODO: for DBCS encoding skip positioning dataIndex is not in characters but is interpreted as
                         // number of chars already read + number of bytes to skip
                         cch = dataIndex - _columnDataCharsRead;
-                        cch = isUnicode ? (cch << 1) : cch;
-                        cch = (long)_parser.SkipPlpValue((ulong)(cch), _stateObj);
+                        cch = isUnicode 
+                            ? cch << 1
+                            : cch;
+                        
+                        cch = (long)_parser.SkipPlpValue((ulong)cch, _stateObj);
                         _columnDataBytesRead += cch;
-                        _columnDataCharsRead += (isUnicode && (cch > 0)) ? cch >> 1 : cch;
+                        _columnDataCharsRead += isUnicode && cch > 0
+                            ? cch >> 1
+                            : cch;
                     }
                     cch = length;
 
                     if (isUnicode)
                     {
                         cch = (long)_parser.ReadPlpUnicodeChars(ref buffer, bufferIndex, length, _stateObj);
-                        _columnDataBytesRead += (cch << 1);
+                        _columnDataBytesRead += cch << 1;
                     }
                     else
                     {
@@ -2639,7 +2661,7 @@ namespace Microsoft.Data.SqlClient
         internal long GetStreamingXmlChars(int i, long dataIndex, char[] buffer, int bufferIndex, int length)
         {
             SqlStreamingXml localSXml = null;
-            if ((_streamingXml != null) && (_streamingXml.ColumnOrdinal != i))
+            if (_streamingXml != null && _streamingXml.ColumnOrdinal != i)
             {
                 _streamingXml.Close();
                 _streamingXml = null;
@@ -2997,7 +3019,7 @@ namespace Microsoft.Data.SqlClient
 
                 SetTimeout(_defaultTimeoutMilliseconds);
 
-                int copyLen = (values.Length < _metaData.VisibleColumnCount) ? values.Length : _metaData.VisibleColumnCount;
+                int copyLen = values.Length < _metaData.VisibleColumnCount ? values.Length : _metaData.VisibleColumnCount;
 
                 for (int i = 0; i < copyLen; i++)
                 {
@@ -3279,16 +3301,14 @@ namespace Microsoft.Data.SqlClient
                     metaType = metaData.baseTI.metaType;
                 }
 
-                if (
-                    (!metaType.IsCharType && metaType.SqlDbType != SqlDbType.Variant) ||
-                    (metaType.SqlDbType == SqlDbType.Xml)
-                )
+                if ((!metaType.IsCharType && metaType.SqlDbType != SqlDbType.Variant) ||
+                    metaType.SqlDbType == SqlDbType.Xml)
                 {
                     throw SQL.TextReaderNotSupportOnColumnType(metaData.column);
                 }
 
                 // For non-variant types with sequential access, we support proper streaming
-                if ((metaType.SqlDbType != SqlDbType.Variant) && IsCommandBehavior(CommandBehavior.SequentialAccess))
+                if (metaType.SqlDbType != SqlDbType.Variant && IsCommandBehavior(CommandBehavior.SequentialAccess))
                 {
                     if (metaData.cipherMD != null)
                     {
@@ -3329,7 +3349,7 @@ namespace Microsoft.Data.SqlClient
                     throw SQL.StreamNotSupportOnColumnType(metaData.column);
                 }
 
-                if ((metaType.SqlDbType != SqlDbType.Variant) && (IsCommandBehavior(CommandBehavior.SequentialAccess)))
+                if (metaType.SqlDbType != SqlDbType.Variant && IsCommandBehavior(CommandBehavior.SequentialAccess))
                 {
                     _currentStream = new SqlSequentialStream(this, metaData.ordinal);
                     _lastColumnWithDataChunkRead = metaData.ordinal;
@@ -3403,7 +3423,9 @@ namespace Microsoft.Data.SqlClient
 
                 CheckMetaDataIsReady();
 
-                int copyLen = (values.Length < _metaData.VisibleColumnCount) ? values.Length : _metaData.VisibleColumnCount;
+                int copyLen = values.Length < _metaData.VisibleColumnCount
+                    ? values.Length
+                    : _metaData.VisibleColumnCount;
                 int maximumColumn = copyLen - 1;
 
                 SetTimeout(_defaultTimeoutMilliseconds);
@@ -3425,7 +3447,7 @@ namespace Microsoft.Data.SqlClient
                     values[i] = GetValueFromSqlBufferInternal(_data[fieldIndex], _metaData[fieldIndex]);
 
                     // If this is sequential access, then we need to wipe the internal buffer
-                    if ((sequentialAccess) && (i < maximumColumn))
+                    if (sequentialAccess && i < maximumColumn)
                     {
                         _data[i].Clear();
                         if (fieldIndex > i && fieldIndex > 0)
@@ -3691,7 +3713,7 @@ namespace Microsoft.Data.SqlClient
         /// <include file='../../../../../../../doc/snippets/Microsoft.Data.SqlClient/SqlDataReader.xml' path='docs/members[@name="SqlDataReader"]/IsDBNull/*' />
         override public bool IsDBNull(int i)
         {
-            if ((IsCommandBehavior(CommandBehavior.SequentialAccess)) && ((_sharedState._nextColumnHeaderToRead > i + 1) || (_lastColumnWithDataChunkRead > i)))
+            if (IsCommandBehavior(CommandBehavior.SequentialAccess) && (_sharedState._nextColumnHeaderToRead > i + 1 || _lastColumnWithDataChunkRead > i))
             {
                 // Bug 447026 : A breaking change in System.Data .NET 4.5 for calling IsDBNull on commands in SequentialAccess mode
                 // http://vstfdevdiv:8080/web/wi.aspx?pcguid=22f9acc9-569a-41ff-b6ac-fac1b6370209&id=447026
@@ -3716,7 +3738,7 @@ namespace Microsoft.Data.SqlClient
         /// <include file='../../../../../../../doc/snippets/Microsoft.Data.SqlClient/SqlDataReader.xml' path='docs/members[@name="SqlDataReader"]/IsCommandBehavior/*' />
         protected internal bool IsCommandBehavior(CommandBehavior condition)
         {
-            return (condition == (condition & _commandBehavior));
+            return condition == (condition & _commandBehavior);
         }
 
         /// <include file='../../../../../../../doc/snippets/Microsoft.Data.SqlClient/SqlDataReader.xml' path='docs/members[@name="SqlDataReader"]/NextResult/*' />
@@ -3837,7 +3859,7 @@ namespace Microsoft.Data.SqlClient
                                         {
                                             _metaData = altMetaDataSet;
                                         }
-                                        Debug.Assert((_metaData != null), "Can't match up altrowmetadata");
+                                        Debug.Assert(_metaData != null, "Can't match up altrowmetadata");
                                         break;
                                     case ALTROWSTATUS.Done:
                                         // restore the row-metaData
@@ -4118,7 +4140,7 @@ namespace Microsoft.Data.SqlClient
                         more = false;
 
 #if DEBUG
-                        if ((!_sharedState._dataReady) && (_stateObj.HasPendingData))
+                        if (!_sharedState._dataReady && _stateObj.HasPendingData)
                         {
                             byte token;
                             result = _stateObj.TryPeekByte(out token);
@@ -4358,7 +4380,7 @@ namespace Microsoft.Data.SqlClient
             if (i < _sharedState._nextColumnHeaderToRead)
             {
                 // Read the header, but we need to read the data
-                if ((i == _sharedState._nextColumnDataToRead) && (!readHeaderOnly))
+                if (i == _sharedState._nextColumnDataToRead && !readHeaderOnly)
                 {
                     return TryReadColumnData();
                 }
@@ -4367,9 +4389,9 @@ namespace Microsoft.Data.SqlClient
                 {
                     // Ensure that, if we've read past the column, then we did store its data
                     Debug.Assert(i == _sharedState._nextColumnDataToRead ||                                                          // Either we haven't read the column yet
-                        ((i + 1 < _sharedState._nextColumnDataToRead) && (IsCommandBehavior(CommandBehavior.SequentialAccess))) ||   // Or we're in sequential mode and we've read way past the column (i.e. it was not the last column we read)
+                        (i + 1 < _sharedState._nextColumnDataToRead && IsCommandBehavior(CommandBehavior.SequentialAccess)) ||   // Or we're in sequential mode and we've read way past the column (i.e. it was not the last column we read)
                         (!_data[i].IsEmpty || _data[i].IsNull) ||                                                       // Or we should have data stored for the column (unless the column was null)
-                        (_metaData[i].type == SqlDbType.Timestamp),                                                     // Or Dev11 Bug #336820, Dev10 Bug #479607 (SqlClient: IsDBNull always returns false for timestamp datatype)
+                        _metaData[i].type == SqlDbType.Timestamp,                                                     // Or Dev11 Bug #336820, Dev10 Bug #479607 (SqlClient: IsDBNull always returns false for timestamp datatype)
                                                                                                                         //    Due to a bug in TdsParser.GetNullSqlValue, Timestamps' IsNull is not correctly set - so we need to bypass the check
                         "Gone past column, be we have no data stored for it");
                     return TdsOperationStatus.Done;
@@ -4390,7 +4412,7 @@ namespace Microsoft.Data.SqlClient
                 }
 
                 // Only wipe out the blob objects if they aren't for a 'future' column (i.e. we haven't read up to them yet)
-                if ((_lastColumnWithDataChunkRead > -1) && (i > _lastColumnWithDataChunkRead))
+                if (_lastColumnWithDataChunkRead > -1 && i > _lastColumnWithDataChunkRead)
                 {
                     CloseActiveSequentialStreamAndTextReader();
                 }
@@ -4527,7 +4549,7 @@ namespace Microsoft.Data.SqlClient
                     }
                     else
                     {
-                        if ((i > _sharedState._nextColumnDataToRead) || (!readHeaderOnly))
+                        if (i > _sharedState._nextColumnDataToRead || !readHeaderOnly)
                         {
                             // If we're not in sequential access mode, we have to
                             // save the data we skip over so that the consumer
@@ -4566,7 +4588,7 @@ namespace Microsoft.Data.SqlClient
         {
             AssertReaderState(requireData: true, permitAsync: true, columnIndex: targetColumn);
 
-            if ((_lastColumnWithDataChunkRead == _sharedState._nextColumnDataToRead) && (_metaData[_lastColumnWithDataChunkRead].metaType.IsPlp))
+            if (_lastColumnWithDataChunkRead == _sharedState._nextColumnDataToRead && _metaData[_lastColumnWithDataChunkRead].metaType.IsPlp)
             {
                 // In the middle of reading a Plp - no idea how much is left
                 return false;
@@ -4578,7 +4600,7 @@ namespace Microsoft.Data.SqlClient
             // So we will make sure that there is always a spare byte for it to look at
             bytesRemaining--;
 
-            if ((targetColumn >= _sharedState._nextColumnDataToRead) && (_sharedState._nextColumnDataToRead < _sharedState._nextColumnHeaderToRead))
+            if (targetColumn >= _sharedState._nextColumnDataToRead && _sharedState._nextColumnDataToRead < _sharedState._nextColumnHeaderToRead)
             {
                 if (_sharedState._columnDataBytesRemaining > bytesRemaining)
                 {
@@ -4596,7 +4618,7 @@ namespace Microsoft.Data.SqlClient
 
             // For each column that we need to read, subtract the size of its header and the size of its data
             int currentColumn = _sharedState._nextColumnHeaderToRead;
-            while ((bytesRemaining >= 0) && (currentColumn <= targetColumn))
+            while (bytesRemaining >= 0 && currentColumn <= targetColumn)
             {
                 // Check NBC first
                 if (!_stateObj.IsNullCompressionBitSet(currentColumn))
@@ -4604,14 +4626,14 @@ namespace Microsoft.Data.SqlClient
 
                     // NOTE: This is mostly duplicated from TryProcessColumnHeaderNoNBC and TryGetTokenLength
                     var metaType = _metaData[currentColumn].metaType;
-                    if ((metaType.IsLong) || (metaType.IsPlp) || (metaType.SqlDbType == SqlDbType.Udt) || (metaType.SqlDbType == SqlDbType.Structured))
+                    if (metaType.IsLong || metaType.IsPlp || metaType.SqlDbType == SqlDbType.Udt || metaType.SqlDbType == SqlDbType.Structured)
                     {
                         // Plp, Udt and TVP types have an unknownable size - so return that the estimate failed
                         return false;
                     }
                     int maxHeaderSize;
                     byte typeAndMask = (byte)(_metaData[currentColumn].tdsType & TdsEnums.SQLLenMask);
-                    if ((typeAndMask == TdsEnums.SQLVarLen) || (typeAndMask == TdsEnums.SQLVarCnt))
+                    if (typeAndMask == TdsEnums.SQLVarLen || typeAndMask == TdsEnums.SQLVarCnt)
                     {
                         if ((_metaData[currentColumn].tdsType & 0x80) != 0)
                         {
@@ -4635,7 +4657,7 @@ namespace Microsoft.Data.SqlClient
                     }
 
                     bytesRemaining = checked(bytesRemaining - maxHeaderSize);
-                    if ((currentColumn < targetColumn) || (!headerOnly))
+                    if (currentColumn < targetColumn || !headerOnly)
                     {
                         bytesRemaining = checked(bytesRemaining - _metaData[currentColumn].length);
                     }
@@ -4644,7 +4666,7 @@ namespace Microsoft.Data.SqlClient
                 currentColumn++;
             }
 
-            return (bytesRemaining >= 0);
+            return bytesRemaining >= 0;
         }
 
         // clean remainder bytes for the column off the wire
@@ -4657,7 +4679,7 @@ namespace Microsoft.Data.SqlClient
             // If we haven't already entirely read the column
             if (_sharedState._nextColumnDataToRead < _sharedState._nextColumnHeaderToRead)
             {
-                if ((_sharedState._nextColumnHeaderToRead > 0) && (_metaData[_sharedState._nextColumnHeaderToRead - 1].metaType.IsPlp))
+                if (_sharedState._nextColumnHeaderToRead > 0 && _metaData[_sharedState._nextColumnHeaderToRead - 1].metaType.IsPlp)
                 {
                     if (_stateObj._longlen != 0)
                     {
@@ -4724,7 +4746,7 @@ namespace Microsoft.Data.SqlClient
                 if (parser.State == TdsParserState.OpenLoggedIn)
                 {
                     SqlClientEventSource.Log.TryCorrelationTraceEvent("<sc.SqlDataReader.RestoreServerSettings|Info|Correlation> ObjectID {0}, ActivityID '{1}'", ObjectID, ActivityCorrelator.Current);
-                    Task executeTask = parser.TdsExecuteSQLBatch(_resetOptionsString, (_command != null) ? _command.CommandTimeout : 0, null, stateObj, sync: true);
+                    Task executeTask = parser.TdsExecuteSQLBatch(_resetOptionsString, _command != null ? _command.CommandTimeout : 0, null, stateObj, sync: true);
                     Debug.Assert(executeTask == null, "Shouldn't get a task when doing sync writes");
 
                     // must execute this one synchronously as we can't retry
@@ -4924,8 +4946,8 @@ namespace Microsoft.Data.SqlClient
         {
             bool active = false;
 
-            active |= ((_currentStream != null) && (_currentStream.ColumnIndex == columnIndex));
-            active |= ((_currentTextReader != null) && (_currentTextReader.ColumnIndex == columnIndex));
+            active |= _currentStream != null && _currentStream.ColumnIndex == columnIndex;
+            active |= _currentTextReader != null && _currentTextReader.ColumnIndex == columnIndex;
 
             return active;
         }
@@ -4944,7 +4966,7 @@ namespace Microsoft.Data.SqlClient
 
         private void CheckMetaDataIsReady(int columnIndex, bool permitAsync = false)
         {
-            if ((!permitAsync) && (_currentTask != null))
+            if (!permitAsync && _currentTask != null)
             {
                 throw ADP.AsyncOperationPending();
             }
@@ -4952,7 +4974,7 @@ namespace Microsoft.Data.SqlClient
             {
                 throw SQL.InvalidRead();
             }
-            if ((columnIndex < 0) || (columnIndex >= _metaData.Length))
+            if (columnIndex < 0 || columnIndex >= _metaData.Length)
             {
                 throw ADP.IndexOutOfRange();
             }
@@ -4965,7 +4987,7 @@ namespace Microsoft.Data.SqlClient
                 throw ADP.AsyncOperationPending();
             }
             Debug.Assert(!_sharedState._dataReady || _metaData != null, "Data is ready, but there is no metadata?");
-            if ((!_sharedState._dataReady) || (_metaData == null))
+            if (!_sharedState._dataReady || _metaData == null)
             {
                 throw SQL.InvalidRead();
             }
@@ -4977,21 +4999,21 @@ namespace Microsoft.Data.SqlClient
             {
                 throw ADP.DataReaderClosed(methodName ?? "CheckHeaderIsReady");
             }
-            if ((!permitAsync) && (_currentTask != null))
+            if (!permitAsync && _currentTask != null)
             {
                 throw ADP.AsyncOperationPending();
             }
             Debug.Assert(!_sharedState._dataReady || _metaData != null, "Data is ready, but there is no metadata?");
-            if ((!_sharedState._dataReady) || (_metaData == null))
+            if (!_sharedState._dataReady || _metaData == null)
             {
                 throw SQL.InvalidRead();
             }
-            if ((columnIndex < 0) || (columnIndex >= _metaData.Length))
+            if (columnIndex < 0 || columnIndex >= _metaData.Length)
             {
                 throw ADP.IndexOutOfRange();
             }
-            if ((IsCommandBehavior(CommandBehavior.SequentialAccess)) &&                                          // Only for sequential access
-                ((_sharedState._nextColumnHeaderToRead > columnIndex + 1) || (_lastColumnWithDataChunkRead > columnIndex)))
+            if (IsCommandBehavior(CommandBehavior.SequentialAccess) &&                                          // Only for sequential access
+                (_sharedState._nextColumnHeaderToRead > columnIndex + 1 || _lastColumnWithDataChunkRead > columnIndex))
             {  // Read past column
                 throw ADP.NonSequentialColumnAccess(columnIndex, Math.Max(_sharedState._nextColumnHeaderToRead - 1, _lastColumnWithDataChunkRead));
             }
@@ -5003,24 +5025,27 @@ namespace Microsoft.Data.SqlClient
             {
                 throw ADP.DataReaderClosed(methodName ?? "CheckDataIsReady");
             }
-            if ((!permitAsync) && (_currentTask != null))
+            if (!permitAsync && _currentTask != null)
             {
                 throw ADP.AsyncOperationPending();
             }
             Debug.Assert(!_sharedState._dataReady || _metaData != null, "Data is ready, but there is no metadata?");
-            if ((!_sharedState._dataReady) || (_metaData == null))
+            if (!_sharedState._dataReady || _metaData == null)
             {
                 throw SQL.InvalidRead();
             }
-            if ((columnIndex < 0) || (columnIndex >= _metaData.Length))
+            if (columnIndex < 0 || columnIndex >= _metaData.Length)
             {
                 throw ADP.IndexOutOfRange();
             }
-            if ((IsCommandBehavior(CommandBehavior.SequentialAccess)) &&                                    // Only for sequential access
-                ((_sharedState._nextColumnDataToRead > columnIndex) || (_lastColumnWithDataChunkRead > columnIndex) ||   // Read past column
-                ((!allowPartiallyReadColumn) && (_lastColumnWithDataChunkRead == columnIndex)) ||           // Partially read column
-                ((allowPartiallyReadColumn) && (HasActiveStreamOrTextReaderOnColumn(columnIndex)))))
-            {      // Has a Stream or TextReader on a partially-read column
+
+            if (IsCommandBehavior(CommandBehavior.SequentialAccess) && // Only for sequential access
+                (_sharedState._nextColumnDataToRead > columnIndex ||
+                 _lastColumnWithDataChunkRead > columnIndex || // Read past column
+                 (!allowPartiallyReadColumn && _lastColumnWithDataChunkRead == columnIndex) || // Partially read column
+                 (allowPartiallyReadColumn && HasActiveStreamOrTextReaderOnColumn(columnIndex))))
+            {
+                // Has a Stream or TextReader on a partially-read column
                 throw ADP.NonSequentialColumnAccess(columnIndex, Math.Max(_sharedState._nextColumnDataToRead, _lastColumnWithDataChunkRead + 1));
             }
         }
@@ -5035,7 +5060,11 @@ namespace Microsoft.Data.SqlClient
             if (columnIndex.HasValue)
             {
                 Debug.Assert(columnIndex.Value >= 0 && columnIndex.Value < _metaData.Length, "Invalid column index");
-                Debug.Assert((!enforceSequentialAccess) || (!IsCommandBehavior(CommandBehavior.SequentialAccess)) || ((_sharedState._nextColumnDataToRead <= columnIndex) && (_lastColumnWithDataChunkRead <= columnIndex)), "Already read past column");
+                Debug.Assert(
+                    !enforceSequentialAccess ||
+                    !IsCommandBehavior(CommandBehavior.SequentialAccess) ||
+                    (_sharedState._nextColumnDataToRead <= columnIndex && _lastColumnWithDataChunkRead <= columnIndex),
+                    "Already read past column");
             }
         }
 
@@ -5143,7 +5172,8 @@ namespace Microsoft.Data.SqlClient
 
             // Check if we need to skip columns
             Debug.Assert(_sharedState._nextColumnDataToRead <= _lastColumnWithDataChunkRead, "Non sequential access");
-            if ((_sharedState._nextColumnHeaderToRead <= _lastColumnWithDataChunkRead) || (_sharedState._nextColumnDataToRead < _lastColumnWithDataChunkRead))
+            if (_sharedState._nextColumnHeaderToRead <= _lastColumnWithDataChunkRead || 
+                _sharedState._nextColumnDataToRead < _lastColumnWithDataChunkRead)
             {
                 TaskCompletionSource<int> source = new TaskCompletionSource<int>();
                 Task original = Interlocked.CompareExchange(ref _currentTask, source.Task, null);
@@ -5414,7 +5444,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     // First, check if we can finish reading the current row
                     // NOTE: If we are in SingleRow mode and we've read that single row (i.e. _haltRead == true), then skip the shortcut
-                    if ((!_haltRead) && ((!_sharedState._dataReady) || (WillHaveEnoughData(_metaData.Length - 1))))
+                    if (!_haltRead && (!_sharedState._dataReady || WillHaveEnoughData(_metaData.Length - 1)))
                     {
 
 #if DEBUG
@@ -5518,7 +5548,7 @@ namespace Microsoft.Data.SqlClient
                 reader.PrepareForAsyncContinuation();
             }
             TdsOperationStatus result;
-            if (hasReadRowToken || (reader.TryReadInternal(true, out hasMoreData) == TdsOperationStatus.Done))
+            if (hasReadRowToken || reader.TryReadInternal(true, out hasMoreData) == TdsOperationStatus.Done)
             {
                 // If there are no more rows, or this is Sequential Access, then we are done
                 if (!hasMoreData || (reader._commandBehavior & CommandBehavior.SequentialAccess) == CommandBehavior.SequentialAccess)
@@ -5572,7 +5602,7 @@ namespace Microsoft.Data.SqlClient
             }
 
             // Shortcut - if there are no issues and the data is already read, then just return the value
-            if ((_sharedState._nextColumnHeaderToRead > i) && (!cancellationToken.IsCancellationRequested) && (_currentTask == null))
+            if (_sharedState._nextColumnHeaderToRead > i && !cancellationToken.IsCancellationRequested && _currentTask == null)
             {
                 var data = _data;
                 if (data != null)
@@ -5703,11 +5733,14 @@ namespace Microsoft.Data.SqlClient
                 CheckDataIsReady(columnIndex: i, methodName: "GetFieldValueAsync");
 
                 // Shortcut - if there are no issues and the data is already read, then just return the value
-                if ((!IsCommandBehavior(CommandBehavior.SequentialAccess)) && (_sharedState._nextColumnDataToRead > i) && (!cancellationToken.IsCancellationRequested) && (_currentTask == null))
+                if (!IsCommandBehavior(CommandBehavior.SequentialAccess) &&
+                    _sharedState._nextColumnDataToRead > i &&
+                    !cancellationToken.IsCancellationRequested &&
+                    _currentTask == null)
                 {
                     var data = _data;
                     var metaData = _metaData;
-                    if ((data != null) && (metaData != null))
+                    if (data != null && metaData != null)
                     {
                         return Task.FromResult<T>(GetFieldValueFromSqlBufferInternal<T>(data[i], metaData[i], isAsync: false));
                     }
@@ -6188,7 +6221,7 @@ namespace Microsoft.Data.SqlClient
             // If something has forced us to switch to SyncOverAsync mode while in an async task then we need to guarantee that we do the cleanup
             // This avoids us replaying non-replayable data (such as DONE or ENV_CHANGE tokens)
             var stateObj = _stateObj;
-            bool ignoreCloseToken = (stateObj != null) && (stateObj._syncOverAsync);
+            bool ignoreCloseToken = stateObj != null && stateObj._syncOverAsync;
             CleanupAfterAsyncInvocation(ignoreCloseToken);
 
             Task current = Interlocked.CompareExchange(ref _currentTask, null, source.Task);
@@ -6263,7 +6296,7 @@ namespace Microsoft.Data.SqlClient
             {
                 // If close requested cancellation and we have a snapshot, then it will deal with cleaning up
                 // NOTE: There are some cases where we wish to ignore the close token, such as when we've read some data that is not replayable (e.g. DONE or ENV_CHANGE token)
-                if ((ignoreCloseToken) || (!_cancelAsyncOnCloseToken.IsCancellationRequested) || (stateObj._asyncReadWithoutSnapshot))
+                if (ignoreCloseToken || !_cancelAsyncOnCloseToken.IsCancellationRequested || stateObj._asyncReadWithoutSnapshot)
                 {
                     // Prevent race condition between the DataReader being closed (e.g. when another MARS thread has an error)
                     lock (stateObj)
@@ -6300,7 +6333,7 @@ namespace Microsoft.Data.SqlClient
 
         private void PrepareForAsyncContinuation()
         {
-            Debug.Assert(((_snapshot != null) || (_stateObj._asyncReadWithoutSnapshot)), "Can not prepare for an async continuation if no async if setup");
+            Debug.Assert(_snapshot != null || _stateObj._asyncReadWithoutSnapshot, "Can not prepare for an async continuation if no async if setup");
             if (_snapshot != null)
             {
                 _sharedState._dataReady = _snapshot._dataReady;

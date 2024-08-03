@@ -26,8 +26,9 @@ namespace Microsoft.Data.SqlClient
         {
             var delta = (Math.Pow(2.0, internalCounter++) - 1.0) * random.Next(minRandom, maxRandom);
             var newTimeMilliseconds = MinTimeInterval.TotalMilliseconds + delta;
-            newTimeMilliseconds = newTimeMilliseconds < MaxTimeInterval.TotalMilliseconds ? newTimeMilliseconds 
-                : random.NextDouble() * (MaxTimeInterval.TotalMilliseconds * 0.2) + (MaxTimeInterval.TotalMilliseconds * 0.8);
+            newTimeMilliseconds = newTimeMilliseconds < MaxTimeInterval.TotalMilliseconds
+                ? newTimeMilliseconds 
+                : random.NextDouble() * (MaxTimeInterval.TotalMilliseconds * 0.2) + MaxTimeInterval.TotalMilliseconds * 0.8;
             var newValue = TimeSpan.FromMilliseconds(newTimeMilliseconds);
 
             Current = newValue < MinTimeInterval ? MinTimeInterval : newValue ;
@@ -64,8 +65,9 @@ namespace Microsoft.Data.SqlClient
         protected override TimeSpan GetNextInterval()
         {
             var newTimeMilliseconds = Current.TotalMilliseconds + random.Next(minRandom, maxRandom);
-            newTimeMilliseconds = newTimeMilliseconds < MaxTimeInterval.TotalMilliseconds ? newTimeMilliseconds 
-                : random.NextDouble() * (MaxTimeInterval.TotalMilliseconds * 0.2) + (MaxTimeInterval.TotalMilliseconds * 0.8);
+            newTimeMilliseconds = newTimeMilliseconds < MaxTimeInterval.TotalMilliseconds 
+                ? newTimeMilliseconds 
+                : random.NextDouble() * (MaxTimeInterval.TotalMilliseconds * 0.2) + MaxTimeInterval.TotalMilliseconds * 0.8;
             var interval = TimeSpan.FromMilliseconds(newTimeMilliseconds);
 
             Current = interval < MinTimeInterval ? MinTimeInterval : interval;

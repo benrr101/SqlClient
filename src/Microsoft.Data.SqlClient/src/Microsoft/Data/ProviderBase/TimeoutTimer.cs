@@ -142,7 +142,7 @@ namespace Microsoft.Data.ProviderBase
         {
             get
             {
-                return (_isInfiniteTimeout) ? long.MaxValue : _timerExpire;
+                return _isInfiniteTimeout ? long.MaxValue : _timerExpire;
             }
         }
 

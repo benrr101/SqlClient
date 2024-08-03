@@ -117,7 +117,7 @@ namespace Microsoft.Data.SqlClient
             byte[] encryptedChangePassword = null;
             int encryptedPasswordLengthInBytes;
             int encryptedChangePasswordLengthInBytes;
-            bool useFeatureExt = (requestedFeatures != TdsEnums.FeatureExtension.None);
+            bool useFeatureExt = requestedFeatures != TdsEnums.FeatureExtension.None;
 
             string userName;
 
@@ -176,8 +176,8 @@ namespace Microsoft.Data.SqlClient
             {
                 checked
                 {
-                    length += (userName.Length * 2) + encryptedPasswordLengthInBytes
-                    + encryptedChangePasswordLengthInBytes;
+                    length += userName.Length * 2 + encryptedPasswordLengthInBytes
+                                                  + encryptedChangePasswordLengthInBytes;
                 }
             }
             else

@@ -556,7 +556,7 @@ namespace Microsoft.Data.SqlClient
             }
             else
             {
-                TransactionType transactionType = (isDistributed) ? TransactionType.Distributed : TransactionType.LocalFromTSQL;
+                TransactionType transactionType = isDistributed ? TransactionType.Distributed : TransactionType.LocalFromTSQL;
                 _currentTransaction = new SqlInternalTransaction(this, transactionType, null, transactionId);
             }
             _currentTransaction.Activate(); // SQLBUDT #376531 -- ensure this is activated to prevent asserts later.

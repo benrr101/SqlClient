@@ -27,7 +27,7 @@ namespace Microsoft.Data.SqlClient
 
         public override bool CanRead
         {
-            get { return ((_sink != null) && (_getters != null)); }
+            get { return _sink != null && _getters != null; }
         }
 
         public override bool CanSeek

@@ -103,7 +103,7 @@ namespace Microsoft.Data.ProviderBase
                 }
 
                 // No free spots, can we just add on to the end?
-                if ((!itemAdded) && (_lastItemIndex + 1 < _items.Length))
+                if (!itemAdded && _lastItemIndex + 1 < _items.Length)
                 {
                     _lastItemIndex++;
                     _items[_lastItemIndex].SetNewTarget(refInfo, value);
@@ -262,7 +262,7 @@ namespace Microsoft.Data.ProviderBase
             // Assume that we couldn't take the lock
             lockObtained = false;
             // Keep trying to take the lock until either we've taken it, or the collection is being notified
-            while ((!_isNotifying) && (!lockObtained))
+            while (!_isNotifying && !lockObtained)
             {
                 Monitor.TryEnter(_itemLock, LockPollTime, ref lockObtained);
             }

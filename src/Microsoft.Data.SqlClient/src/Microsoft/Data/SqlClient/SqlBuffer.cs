@@ -339,7 +339,7 @@ namespace Microsoft.Data.SqlClient
             while (iLen > 0)
             {
                 iLen--;
-                ulAccum = (((ulong)uiCarry) << 32) + (ulong)(data[iLen]);
+                ulAccum = ((ulong)uiCarry << 32) + (ulong)data[iLen];
                 data[iLen] = (uint)(ulAccum / ulDivisor);
                 uiCarry = (uint)(ulAccum - (ulong)data[iLen] * ulDivisor);  // (ULONG) (ulAccum % divisor)
             }
@@ -492,7 +492,7 @@ namespace Microsoft.Data.SqlClient
                 }
                 else if (StorageType.SqlCachedBuffer == _type)
                 {
-                    return ((SqlCachedBuffer)(_object)).ToString();
+                    return ((SqlCachedBuffer)_object).ToString();
                 }
                 return (string)Value; // anything else we haven't thought of goes through boxing.
             }
@@ -646,7 +646,7 @@ namespace Microsoft.Data.SqlClient
 
         private static long GetTicksFromDateTime2Info(DateTime2Info dateTime2Info)
         {
-            return (dateTime2Info._date * TimeSpan.TicksPerDay + dateTime2Info._timeInfo._ticks);
+            return dateTime2Info._date * TimeSpan.TicksPerDay + dateTime2Info._timeInfo._ticks;
         }
 
         internal SqlBinary SqlBinary
@@ -926,7 +926,7 @@ namespace Microsoft.Data.SqlClient
                 }
                 else if (StorageType.SqlCachedBuffer == _type)
                 {
-                    SqlCachedBuffer data = (SqlCachedBuffer)(_object);
+                    SqlCachedBuffer data = (SqlCachedBuffer)_object;
                     if (data.IsNull)
                     {
                         return SqlString.Null;
@@ -972,7 +972,7 @@ namespace Microsoft.Data.SqlClient
 
                     case StorageType.SqlCachedBuffer:
                         {
-                            SqlCachedBuffer data = (SqlCachedBuffer)(_object);
+                            SqlCachedBuffer data = (SqlCachedBuffer)_object;
                             if (data.IsNull)
                             {
                                 return SqlXml.Null;
@@ -1068,7 +1068,7 @@ namespace Microsoft.Data.SqlClient
                             // If we have a CachedBuffer, it's because it's an XMLTYPE column
                             // and we have to return a string when they're asking for the CLS
                             // value of the column.
-                            return ((SqlCachedBuffer)(_object)).ToString();
+                            return ((SqlCachedBuffer)_object).ToString();
                         }
                     case StorageType.SqlGuid:
                         return Guid;
@@ -1346,11 +1346,11 @@ namespace Microsoft.Data.SqlClient
             long tickUnits = timeBytes[0] + ((long)timeBytes[1] << 8) + ((long)timeBytes[2] << 16);
             if (length > 3)
             {
-                tickUnits += ((long)timeBytes[3] << 24);
+                tickUnits += (long)timeBytes[3] << 24;
             }
             if (length > 4)
             {
-                tickUnits += ((long)timeBytes[4] << 32);
+                tickUnits += (long)timeBytes[4] << 32;
             }
             timeInfo._ticks = tickUnits * TdsEnums.TICKS_FROM_SCALE[scale];
 

@@ -418,7 +418,7 @@ namespace Microsoft.Data.SqlClient
             GC.SuppressFinalize(this);
         }
 
-        private bool IsCopyOption(SqlBulkCopyOptions copyOption) => ((_copyOptions & copyOption) == copyOption);
+        private bool IsCopyOption(SqlBulkCopyOptions copyOption) => (_copyOptions & copyOption) == copyOption;
 
         //Creates the initial query string, but does not execute it.
         private string CreateInitialQuery()
@@ -575,7 +575,7 @@ namespace Microsoft.Data.SqlClient
             if (isInTransaction &&
                 _externalTransaction == null &&
                 _internalTransaction == null &&
-                (_connection.Parser != null && _connection.Parser.CurrentTransaction != null && _connection.Parser.CurrentTransaction.IsLocal))
+                _connection.Parser != null && _connection.Parser.CurrentTransaction != null && _connection.Parser.CurrentTransaction.IsLocal)
             {
                 throw SQL.BulkLoadExistingTransaction();
             }
@@ -591,8 +591,8 @@ namespace Microsoft.Data.SqlClient
                 rejectColumn = false;
 
                 // Check for excluded types
-                if ((metadata.type == SqlDbType.Timestamp)
-                    || ((metadata.IsIdentity) && !IsCopyOption(SqlBulkCopyOptions.KeepIdentity)))
+                if (metadata.type == SqlDbType.Timestamp || 
+                    (metadata.IsIdentity && !IsCopyOption(SqlBulkCopyOptions.KeepIdentity)))
                 {
                     // Remove metadata for excluded columns
                     metaDataSet[i] = null;
@@ -604,8 +604,8 @@ namespace Microsoft.Data.SqlClient
                 int assocId;
                 for (assocId = 0; assocId < _localColumnMappings.Count; assocId++)
                 {
-                    if ((_localColumnMappings[assocId]._destinationColumnOrdinal == metadata.ordinal) ||
-                        (UnquotedName(_localColumnMappings[assocId]._destinationColumnName) == metadata.column))
+                    if (_localColumnMappings[assocId]._destinationColumnOrdinal == metadata.ordinal ||
+                        UnquotedName(_localColumnMappings[assocId]._destinationColumnName) == metadata.column)
                     {
                         if (rejectColumn)
                         {
@@ -750,17 +750,17 @@ namespace Microsoft.Data.SqlClient
             // All columnmappings should have matched up
             if (nmatched + nrejected != _localColumnMappings.Count)
             {
-                throw (SQL.BulkLoadNonMatchingColumnMapping());
+                throw SQL.BulkLoadNonMatchingColumnMapping();
             }
 
             updateBulkCommandText.Append(")");
 
-            if (((_copyOptions & (
+            if ((_copyOptions & (
                     SqlBulkCopyOptions.KeepNulls
                     | SqlBulkCopyOptions.TableLock
                     | SqlBulkCopyOptions.CheckConstraints
                     | SqlBulkCopyOptions.FireTriggers
-                    | SqlBulkCopyOptions.AllowEncryptedValueModifications)) != SqlBulkCopyOptions.Default)
+                    | SqlBulkCopyOptions.AllowEncryptedValueModifications)) != SqlBulkCopyOptions.Default
                     || ColumnOrderHints.Count > 0)
             {
                 bool addSeparator = false; // Insert a comma character if multiple options in list
@@ -796,7 +796,7 @@ namespace Microsoft.Data.SqlClient
                 }
                 updateBulkCommandText.Append(")");
             }
-            return (updateBulkCommandText.ToString());
+            return updateBulkCommandText.ToString();
         }
 
         private string TryGetOrderHintText(HashSet<string> destColumnNames)
@@ -999,11 +999,11 @@ namespace Microsoft.Data.SqlClient
                             isDataFeed = false;
 
                             object value = _sqlDataReaderRowSource.GetValue(sourceOrdinal);
-                            isNull = ((value == null) || (value == DBNull.Value));
-                            if ((!isNull) && (metadata.type == SqlDbType.Udt))
+                            isNull = value == null || value == DBNull.Value;
+                            if (!isNull && metadata.type == SqlDbType.Udt)
                             {
                                 var columnAsINullable = value as INullable;
-                                isNull = (columnAsINullable != null) && columnAsINullable.IsNull;
+                                isNull = columnAsINullable != null && columnAsINullable.IsNull;
                             }
 #if DEBUG
                             else if (!isNull)
@@ -1021,7 +1021,7 @@ namespace Microsoft.Data.SqlClient
                         IDataReader rowSourceAsIDataReader = (IDataReader)_rowSource;
 
                         // Only use IsDbNull when streaming is enabled and only for non-SqlDataReader
-                        if ((_enableStreaming) && (_sqlDataReaderRowSource == null) && (rowSourceAsIDataReader.IsDBNull(sourceOrdinal)))
+                        if (_enableStreaming && _sqlDataReaderRowSource == null && rowSourceAsIDataReader.IsDBNull(sourceOrdinal))
                         {
                             isSqlType = false;
                             isNull = true;
@@ -1046,7 +1046,7 @@ namespace Microsoft.Data.SqlClient
                         ADP.IsNullOrSqlType(currentRowValue, out isNull, out isSqlType);
 
                         // If this row is not null, and there are special storage types for this row, then handle the special storage types
-                        if ((!isNull) && (_currentRowMetadata[destRowIndex].IsSqlType))
+                        if (!isNull && _currentRowMetadata[destRowIndex].IsSqlType)
                         {
                             switch (_currentRowMetadata[destRowIndex].Method)
                             {
@@ -1211,7 +1211,8 @@ namespace Microsoft.Data.SqlClient
             bool isSqlType;
             bool isDataFeed;
 
-            if (((_sqlDataReaderRowSource != null) || (_dataTableSource != null)) && ((metadata.metaType.NullableType == TdsEnums.SQLDECIMALN) || (metadata.metaType.NullableType == TdsEnums.SQLNUMERICN)))
+            if ((_sqlDataReaderRowSource != null || _dataTableSource != null) && 
+                (metadata.metaType.NullableType == TdsEnums.SQLDECIMALN || metadata.metaType.NullableType == TdsEnums.SQLNUMERICN))
             {
                 isDataFeed = false;
 
@@ -1254,7 +1255,7 @@ namespace Microsoft.Data.SqlClient
                 }
             }
             // Check for data streams
-            else if ((_enableStreaming) && (metadata.length == MAX_LENGTH) && (!_rowSourceIsSqlDataReaderSmi))
+            else if (_enableStreaming && metadata.length == MAX_LENGTH && !_rowSourceIsSqlDataReaderSmi)
             {
                 isSqlType = false;
 
@@ -1264,18 +1265,18 @@ namespace Microsoft.Data.SqlClient
                     MetaType mtSource = _sqlDataReaderRowSource.MetaData[sourceOrdinal].metaType;
 
                     // There is no memory gain for non-sequential access for binary
-                    if ((metadata.type == SqlDbType.VarBinary) && (mtSource.IsBinType) && (mtSource.SqlDbType != SqlDbType.Timestamp) && _sqlDataReaderRowSource.IsCommandBehavior(CommandBehavior.SequentialAccess))
+                    if (metadata.type == SqlDbType.VarBinary && mtSource.IsBinType && mtSource.SqlDbType != SqlDbType.Timestamp && _sqlDataReaderRowSource.IsCommandBehavior(CommandBehavior.SequentialAccess))
                     {
                         isDataFeed = true;
                         method = ValueMethod.DataFeedStream;
                     }
                     // For text and XML there is memory gain from streaming on destination side even if reader is non-sequential
-                    else if (((metadata.type == SqlDbType.VarChar) || (metadata.type == SqlDbType.NVarChar)) && (mtSource.IsCharType) && (mtSource.SqlDbType != SqlDbType.Xml))
+                    else if ((metadata.type == SqlDbType.VarChar || metadata.type == SqlDbType.NVarChar) && mtSource.IsCharType && mtSource.SqlDbType != SqlDbType.Xml)
                     {
                         isDataFeed = true;
                         method = ValueMethod.DataFeedText;
                     }
-                    else if ((metadata.type == SqlDbType.Xml) && (mtSource.SqlDbType == SqlDbType.Xml))
+                    else if (metadata.type == SqlDbType.Xml && mtSource.SqlDbType == SqlDbType.Xml)
                     {
                         isDataFeed = true;
                         method = ValueMethod.DataFeedXml;
@@ -1293,7 +1294,7 @@ namespace Microsoft.Data.SqlClient
                         isDataFeed = true;
                         method = ValueMethod.DataFeedStream;
                     }
-                    else if ((metadata.type == SqlDbType.VarChar) || (metadata.type == SqlDbType.NVarChar))
+                    else if (metadata.type == SqlDbType.VarChar || metadata.type == SqlDbType.NVarChar)
                     {
                         isDataFeed = true;
                         method = ValueMethod.DataFeedText;
@@ -1537,7 +1538,7 @@ namespace Microsoft.Data.SqlClient
                         // scale of the incoming data in the insert statement, we just tell the server we
                         // are inserting the same scale back.
                         SqlDecimal sqlValue;
-                        if ((isSqlType) && (!typeChanged))
+                        if (isSqlType && !typeChanged)
                         {
                             sqlValue = (SqlDecimal)value;
                         }
@@ -1604,7 +1605,9 @@ namespace Microsoft.Data.SqlClient
                         value = SqlParameter.CoerceValue(value, mt, out coercedToDataFeed, out typeChanged, false);
                         if (!coercedToDataFeed)
                         {   // We do not need to test for TextDataFeed as it is only assigned to (N)VARCHAR(MAX)
-                            string str = ((isSqlType) && (!typeChanged)) ? ((SqlString)value).Value : ((string)value);
+                            string str = isSqlType && !typeChanged 
+                                ? ((SqlString)value).Value
+                                : (string)value;
                             int maxStringLength = length / 2;
                             if (str.Length > maxStringLength)
                             {
@@ -1641,7 +1644,7 @@ namespace Microsoft.Data.SqlClient
                         break;
                     case TdsEnums.SQLXMLTYPE:
                         // Could be either string, SqlCachedBuffer, XmlReader or XmlDataFeed
-                        Debug.Assert((value is XmlReader) || (value is SqlCachedBuffer) || (value is string) || (value is SqlString) || (value is XmlDataFeed), "Invalid value type of Xml datatype");
+                        Debug.Assert(value is XmlReader || value is SqlCachedBuffer || value is string || value is SqlString || value is XmlDataFeed, "Invalid value type of Xml datatype");
                         if (value is XmlReader)
                         {
                             value = new XmlDataFeed((XmlReader)value);
@@ -1770,7 +1773,9 @@ namespace Microsoft.Data.SqlClient
             {
                 statistics = SqlStatistics.StartTimer(Statistics);
                 ResetWriteToServerGlobalVariables();
-                _rowStateToSkip = ((rowState == 0) || (rowState == DataRowState.Deleted)) ? DataRowState.Deleted : ~rowState | DataRowState.Deleted;
+                _rowStateToSkip = rowState == 0 || rowState == DataRowState.Deleted 
+                    ? DataRowState.Deleted
+                    : ~rowState | DataRowState.Deleted;
                 _rowSource = table;
                 _dataTableSource = table;
                 _rowSourceType = ValueSourceType.DataTable;
@@ -1988,7 +1993,9 @@ namespace Microsoft.Data.SqlClient
             {
                 statistics = SqlStatistics.StartTimer(Statistics);
                 ResetWriteToServerGlobalVariables();
-                _rowStateToSkip = ((rowState == 0) || (rowState == DataRowState.Deleted)) ? DataRowState.Deleted : ~rowState | DataRowState.Deleted;
+                _rowStateToSkip = rowState == 0 || rowState == DataRowState.Deleted
+                    ? DataRowState.Deleted
+                    : ~rowState | DataRowState.Deleted;
                 _rowSource = table;
                 _dataTableSource = table;
                 _rowSourceType = ValueSourceType.DataTable;
@@ -2288,18 +2295,18 @@ namespace Microsoft.Data.SqlClient
                 // Target type shouldn't be encrypted
                 Debug.Assert(!metadata.isEncrypted, "Can't encrypt SQL Variant type");
                 SqlBuffer.StorageType variantInternalType = SqlBuffer.StorageType.Empty;
-                if ((_sqlDataReaderRowSource != null) && (_connection.Is2008OrNewer))
+                if (_sqlDataReaderRowSource != null && _connection.Is2008OrNewer)
                 {
                     variantInternalType = _sqlDataReaderRowSource.GetVariantInternalStorageType(_sortedColumnMappings[col]._sourceColumnOrdinal);
                 }
 
                 if (variantInternalType == SqlBuffer.StorageType.DateTime2)
                 {
-                    _parser.WriteSqlVariantDateTime2(((DateTime)value), _stateObj);
+                    _parser.WriteSqlVariantDateTime2((DateTime)value, _stateObj);
                 }
                 else if (variantInternalType == SqlBuffer.StorageType.Date)
                 {
-                    _parser.WriteSqlVariantDate(((DateTime)value), _stateObj);
+                    _parser.WriteSqlVariantDate((DateTime)value, _stateObj);
                 }
                 else
                 {
@@ -2798,7 +2805,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     tdsReliabilitySection.Start();
 #endif //DEBUG
-                if ((cleanupParser) && (_parser != null) && (_stateObj != null))
+                if (cleanupParser && _parser != null && _stateObj != null)
                 {
                     _parser._asyncWrite = false;
                     Task task = _parser.WriteBulkCopyDone(_stateObj);

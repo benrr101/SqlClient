@@ -24,7 +24,7 @@ namespace Microsoft.Data.ProviderBase
         {
             if (initialSize > 0)
             {
-                int flags = ((zeroBuffer) ? LMEM_ZEROINIT : LMEM_FIXED);
+                int flags = zeroBuffer ? LMEM_ZEROINIT : LMEM_FIXED;
 
                 _bufferLength = initialSize;
                 RuntimeHelpers.PrepareConstrainedRegions();
@@ -55,7 +55,7 @@ namespace Microsoft.Data.ProviderBase
         {
             get
             {
-                return (IntPtr.Zero == base.handle);
+                return base.handle == IntPtr.Zero;
             }
         }
 
@@ -82,7 +82,7 @@ namespace Microsoft.Data.ProviderBase
 
                 IntPtr ptr = ADP.IntPtrOffset(DangerousGetHandle(), offset);
                 int length = UnsafeNativeMethods.lstrlenW(ptr);
-                Validate(offset, (2 * (length + 1)));
+                Validate(offset, 2 * (length + 1));
                 value = Marshal.PtrToStringUni(ptr, length);
             }
             finally
@@ -759,7 +759,7 @@ namespace Microsoft.Data.ProviderBase
             ReadBytes(offset, bits, 1, 19);
 
             int[] buffer = new int[4];
-            buffer[3] = ((int)bits[2]) << 16; // scale
+            buffer[3] = (int)bits[2] << 16; // scale
             if (bits[3] == 0)
             {
                 buffer[3] |= unchecked((int)0x80000000); //sign
@@ -798,7 +798,7 @@ namespace Microsoft.Data.ProviderBase
 
         protected void Validate(int offset, int count)
         {
-            if ((offset < 0) || (count < 0) || (Length < checked(offset + count)))
+            if (offset < 0 || count < 0 || checked(offset + count) > Length)
             {
                 throw ADP.InternalError(ADP.InternalErrorCode.InvalidBuffer);
             }

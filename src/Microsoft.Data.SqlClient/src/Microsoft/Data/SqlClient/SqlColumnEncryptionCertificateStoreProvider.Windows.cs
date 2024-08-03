@@ -485,7 +485,7 @@ namespace Microsoft.Data.SqlClient
         /// <returns>Returns a decrypted blob or throws an exception if there are any errors.</returns>
         private byte[] RSADecrypt(byte[] cipherText, X509Certificate2 certificate)
         {
-            Debug.Assert((cipherText != null) && (cipherText.Length != 0));
+            Debug.Assert(cipherText != null && cipherText.Length != 0);
             Debug.Assert(certificate != null);
             Debug.Assert(certificate.HasPrivateKey, "Attempting to decrypt with cert without privatekey");
 
@@ -501,7 +501,7 @@ namespace Microsoft.Data.SqlClient
         /// <returns>Signature</returns>
         private byte[] RSASignHashedData(byte[] dataToSign, X509Certificate2 certificate)
         {
-            Debug.Assert((dataToSign != null) && (dataToSign.Length != 0));
+            Debug.Assert(dataToSign != null && dataToSign.Length != 0);
             Debug.Assert(certificate != null);
             Debug.Assert(certificate.HasPrivateKey, "Attempting to sign with cert without privatekey");
 
@@ -525,8 +525,8 @@ namespace Microsoft.Data.SqlClient
         /// <returns>true if signature is valid, false if it is not valid</returns>
         private bool RSAVerifySignature(byte[] dataToVerify, byte[] signature, X509Certificate2 certificate)
         {
-            Debug.Assert((dataToVerify != null) && (dataToVerify.Length != 0));
-            Debug.Assert((signature != null) && (signature.Length != 0));
+            Debug.Assert(dataToVerify != null && dataToVerify.Length != 0);
+            Debug.Assert(signature != null && signature.Length != 0);
             Debug.Assert(certificate != null);
             Debug.Assert(certificate.HasPrivateKey, "Attempting to sign with cert without privatekey");
 

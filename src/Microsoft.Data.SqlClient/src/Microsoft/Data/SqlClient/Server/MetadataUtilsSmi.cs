@@ -913,9 +913,8 @@ namespace Microsoft.Data.SqlClient.Server
                             maxLength = SmiMetaData.UnlimitedMaxLengthIndicator;
                         }
 
-                        if ((maxLength < 0 &&
-                                (maxLength != SmiMetaData.UnlimitedMaxLengthIndicator ||
-                                 SqlDbType.Binary == colDbType)))
+                        if (maxLength < 0 &&
+                            (maxLength != SmiMetaData.UnlimitedMaxLengthIndicator || SqlDbType.Binary == colDbType))
                         {
                             throw SQL.InvalidColumnMaxLength(colName, maxLength);
                         }
@@ -949,9 +948,8 @@ namespace Microsoft.Data.SqlClient.Server
                             maxLength = SmiMetaData.UnlimitedMaxLengthIndicator;
                         }
 
-                        if ((maxLength < 0 &&
-                                (maxLength != SmiMetaData.UnlimitedMaxLengthIndicator ||
-                                 SqlDbType.Char == colDbType)))
+                        if (maxLength < 0 &&
+                            (maxLength != SmiMetaData.UnlimitedMaxLengthIndicator || SqlDbType.Char == colDbType))
                         {
                             throw SQL.InvalidColumnMaxLength(colName, maxLength);
                         }
@@ -985,9 +983,8 @@ namespace Microsoft.Data.SqlClient.Server
                             maxLength = SmiMetaData.UnlimitedMaxLengthIndicator;
                         }
 
-                        if ((maxLength < 0 &&
-                                (maxLength != SmiMetaData.UnlimitedMaxLengthIndicator ||
-                                 SqlDbType.NChar == colDbType)))
+                        if (maxLength < 0 &&
+                            (maxLength != SmiMetaData.UnlimitedMaxLengthIndicator || SqlDbType.NChar == colDbType))
                         {
                             throw SQL.InvalidColumnMaxLength(colName, maxLength);
                         }

@@ -183,7 +183,7 @@ namespace Microsoft.Data.Common
                         restrictions = builder.ToString();
                     }
                 }
-                return (restrictions != null ? restrictions : "");
+                return restrictions != null ? restrictions : "";
             }
         }
 
@@ -300,7 +300,7 @@ namespace Microsoft.Data.Common
         private void ValidateCombinedSet(DBConnectionString componentSet, DBConnectionString combinedSet)
         {
             Debug.Assert(combinedSet != null, "The combined connection string should not be null");
-            if ((componentSet != null) && (combinedSet._restrictionValues != null) && (componentSet._restrictionValues != null))
+            if (componentSet != null && combinedSet._restrictionValues != null && componentSet._restrictionValues != null)
             {
                 if (componentSet._behavior == KeyRestrictionBehavior.AllowOnly)
                 {
@@ -523,7 +523,7 @@ namespace Microsoft.Data.Common
                 for (int i = 1; i < restrictions.Length; ++i)
                 {
                     string prev = restrictions[i - 1];
-                    if (prev.Length == 0 || (prev == restrictions[i]))
+                    if (prev.Length == 0 || prev == restrictions[i])
                     {
                         restrictions[i - 1] = null;
                         count--;

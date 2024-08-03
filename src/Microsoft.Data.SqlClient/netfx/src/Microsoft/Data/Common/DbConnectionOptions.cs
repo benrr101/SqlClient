@@ -61,7 +61,7 @@ namespace Microsoft.Data.Common
             StringBuilder builder = new(_usersConnectionString.Length);
             for (NameValuePair current = _keyChain; current != null; current = current.Next)
             {
-                if ((current.Name == keyword) && (current.Value == this[keyword]))
+                if (current.Name == keyword && current.Value == this[keyword])
                 {
                     // only replace the parse end-result value instead of all values
                     // so that when duplicate-keywords occur other original values remain in place
@@ -173,7 +173,7 @@ namespace Microsoft.Data.Common
                 {
                     // find the replacement path
                     object rootFolderObject = AppDomain.CurrentDomain.GetData("DataDirectory");
-                    rootFolderPath = (rootFolderObject as string);
+                    rootFolderPath = rootFolderObject as string;
                     if (rootFolderObject != null && rootFolderPath == null)
                     {
                         throw ADP.InvalidDataDirectory();
@@ -193,7 +193,7 @@ namespace Microsoft.Data.Common
                 // We don't know if rootFolderpath ends with '\', and we don't know if the given name starts with onw
                 int fileNamePosition = DataDirectory.Length;    // filename starts right after the '|datadirectory|' keyword
                 bool rootFolderEndsWith = rootFolderPath.Length > 0 && rootFolderPath[rootFolderPath.Length - 1] == '\\';
-                bool fileNameStartsWith = (fileNamePosition < value.Length) && value[fileNamePosition] == '\\';
+                bool fileNameStartsWith = fileNamePosition < value.Length && value[fileNamePosition] == '\\';
 
                 // replace |datadirectory| with root folder path
                 if (!rootFolderEndsWith && !fileNameStartsWith)

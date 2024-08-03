@@ -138,7 +138,7 @@ namespace Microsoft.Data.SqlClient
         )
         {
 #if NETFRAMEWORK
-            Debug.Assert((connectionToAbort == null) || (connectionToDoom == null), "Should not specify both connectionToDoom and connectionToAbort");
+            Debug.Assert(connectionToAbort == null || connectionToDoom == null, "Should not specify both connectionToDoom and connectionToAbort");
 #endif
             task.ContinueWith(
                 tsk =>
@@ -283,7 +283,7 @@ namespace Microsoft.Data.SqlClient
         )
         {
 #if NETFRAMEWORK
-            Debug.Assert((connectionToAbort == null) || (connectionToDoom == null), "Should not specify both connectionToDoom and connectionToAbort");
+            Debug.Assert(connectionToAbort == null || connectionToDoom == null, "Should not specify both connectionToDoom and connectionToAbort");
 #endif
             task.ContinueWith(
                 (Task tsk, object state2) =>
@@ -407,7 +407,7 @@ namespace Microsoft.Data.SqlClient
         {
             try
             {
-                task.Wait(timeout > 0 ? (1000 * timeout) : Timeout.Infinite);
+                task.Wait(timeout > 0 ? 1000 * timeout : Timeout.Infinite);
             }
             catch (AggregateException ae)
             {
@@ -1066,7 +1066,7 @@ namespace Microsoft.Data.SqlClient
         static internal Exception CannotCompleteDelegatedTransactionWithOpenResults(SqlInternalConnectionTds internalConnection, bool marsOn)
         {
             SqlErrorCollection errors = new SqlErrorCollection();
-            errors.Add(new SqlError(TdsEnums.TIMEOUT_EXPIRED, (byte)0x00, TdsEnums.MIN_ERROR_CLASS, null, (StringsHelper.GetString(Strings.ADP_OpenReaderExists, marsOn ? ADP.Command : ADP.Connection)), "", 0, TdsEnums.SNI_WAIT_TIMEOUT));
+            errors.Add(new SqlError(TdsEnums.TIMEOUT_EXPIRED, (byte)0x00, TdsEnums.MIN_ERROR_CLASS, null, StringsHelper.GetString(Strings.ADP_OpenReaderExists, marsOn ? ADP.Command : ADP.Connection), "", 0, TdsEnums.SNI_WAIT_TIMEOUT));
             return SqlException.CreateException(errors, null, internalConnection, innerException: null, batchCommand: null);
         }
 
@@ -1256,7 +1256,7 @@ namespace Microsoft.Data.SqlClient
             string quotedValue = string.Empty;
             if (!isEncrypted)
             {
-                quotedValue = string.Format(" '{0}'", (value.Length > 100 ? value.Substring(0, 100) : value));
+                quotedValue = string.Format(" '{0}'", value.Length > 100 ? value.Substring(0, 100) : value);
             }
             if (rowNumber == -1)
             {
@@ -1438,7 +1438,7 @@ namespace Microsoft.Data.SqlClient
         internal static Exception ROR_FailoverNotSupportedServer(SqlInternalConnectionTds internalConnection)
         {
             SqlErrorCollection errors = new SqlErrorCollection();
-            errors.Add(new SqlError(0, (byte)0x00, TdsEnums.FATAL_ERROR_CLASS, null, (StringsHelper.GetString(Strings.SQLROR_FailoverNotSupported)), "", 0));
+            errors.Add(new SqlError(0, (byte)0x00, TdsEnums.FATAL_ERROR_CLASS, null, StringsHelper.GetString(Strings.SQLROR_FailoverNotSupported), "", 0));
             SqlException exc = SqlException.CreateException(errors, null, internalConnection, innerException: null, batchCommand: null);
             exc._doNotReconnect = true;
             return exc;
@@ -1447,7 +1447,7 @@ namespace Microsoft.Data.SqlClient
         internal static Exception ROR_RecursiveRoutingNotSupported(SqlInternalConnectionTds internalConnection)
         {
             SqlErrorCollection errors = new SqlErrorCollection();
-            errors.Add(new SqlError(0, (byte)0x00, TdsEnums.FATAL_ERROR_CLASS, null, (StringsHelper.GetString(Strings.SQLROR_RecursiveRoutingNotSupported)), "", 0));
+            errors.Add(new SqlError(0, (byte)0x00, TdsEnums.FATAL_ERROR_CLASS, null, StringsHelper.GetString(Strings.SQLROR_RecursiveRoutingNotSupported), "", 0));
             SqlException exc = SqlException.CreateException(errors, null, internalConnection, innerException: null, batchCommand: null);
             exc._doNotReconnect = true;
             return exc;
@@ -1456,7 +1456,7 @@ namespace Microsoft.Data.SqlClient
         internal static Exception ROR_UnexpectedRoutingInfo(SqlInternalConnectionTds internalConnection)
         {
             SqlErrorCollection errors = new SqlErrorCollection();
-            errors.Add(new SqlError(0, (byte)0x00, TdsEnums.FATAL_ERROR_CLASS, null, (StringsHelper.GetString(Strings.SQLROR_UnexpectedRoutingInfo)), "", 0));
+            errors.Add(new SqlError(0, (byte)0x00, TdsEnums.FATAL_ERROR_CLASS, null, StringsHelper.GetString(Strings.SQLROR_UnexpectedRoutingInfo), "", 0));
             SqlException exc = SqlException.CreateException(errors, null, internalConnection, innerException: null, batchCommand: null);
             exc._doNotReconnect = true;
             return exc;
@@ -1465,7 +1465,7 @@ namespace Microsoft.Data.SqlClient
         internal static Exception ROR_InvalidRoutingInfo(SqlInternalConnectionTds internalConnection)
         {
             SqlErrorCollection errors = new SqlErrorCollection();
-            errors.Add(new SqlError(0, (byte)0x00, TdsEnums.FATAL_ERROR_CLASS, null, (StringsHelper.GetString(Strings.SQLROR_InvalidRoutingInfo)), "", 0));
+            errors.Add(new SqlError(0, (byte)0x00, TdsEnums.FATAL_ERROR_CLASS, null, StringsHelper.GetString(Strings.SQLROR_InvalidRoutingInfo), "", 0));
             SqlException exc = SqlException.CreateException(errors, null, internalConnection, innerException: null, batchCommand: null);
             exc._doNotReconnect = true;
             return exc;
@@ -1474,7 +1474,7 @@ namespace Microsoft.Data.SqlClient
         internal static Exception ROR_TimeoutAfterRoutingInfo(SqlInternalConnectionTds internalConnection)
         {
             SqlErrorCollection errors = new SqlErrorCollection();
-            errors.Add(new SqlError(0, (byte)0x00, TdsEnums.FATAL_ERROR_CLASS, null, (StringsHelper.GetString(Strings.SQLROR_TimeoutAfterRoutingInfo)), "", 0));
+            errors.Add(new SqlError(0, (byte)0x00, TdsEnums.FATAL_ERROR_CLASS, null, StringsHelper.GetString(Strings.SQLROR_TimeoutAfterRoutingInfo), "", 0));
             SqlException exc = SqlException.CreateException(errors, null, internalConnection, innerException: null, batchCommand: null);
             exc._doNotReconnect = true;
             return exc;

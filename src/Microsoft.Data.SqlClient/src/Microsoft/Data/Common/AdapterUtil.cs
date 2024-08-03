@@ -104,16 +104,16 @@ namespace Microsoft.Data.Common
             TraceException("<comm.ADP.TraceException|ERR|CATCH> '{0}'", e);
         }
 
-        internal static bool IsEmptyArray(string[] array) => (array is null) || (array.Length == 0);
+        internal static bool IsEmptyArray(string[] array) => array is null || array.Length == 0;
 
         internal static bool IsNull(object value)
         {
-            if ((value is null) || value == DBNull.Value)
+            if (value is null || value == DBNull.Value)
             {
                 return true;
             }
-            INullable nullable = (value as INullable);
-            return ((nullable is not null) && nullable.IsNull);
+            INullable nullable = value as INullable;
+            return nullable is not null && nullable.IsNull;
         }
 
         internal static Exception ExceptionWithStackTrace(Exception e)
@@ -380,12 +380,12 @@ namespace Microsoft.Data.Common
             Debug.Assert(e != null, "Unexpected null exception!");
             Type type = e.GetType();
 
-            return ((type != typeof(StackOverflowException)) &&
-                    (type != typeof(OutOfMemoryException)) &&
-                    (type != typeof(ThreadAbortException)) &&
-                    (type != typeof(NullReferenceException)) &&
-                    (type != typeof(AccessViolationException)) &&
-                    !typeof(SecurityException).IsAssignableFrom(type));
+            return type != typeof(StackOverflowException) &&
+                   type != typeof(OutOfMemoryException) &&
+                   type != typeof(ThreadAbortException) &&
+                   type != typeof(NullReferenceException) &&
+                   type != typeof(AccessViolationException) &&
+                   !typeof(SecurityException).IsAssignableFrom(type);
         }
 
         internal static bool IsCatchableOrSecurityExceptionType(Exception e)
@@ -401,11 +401,11 @@ namespace Microsoft.Data.Common
             Debug.Assert(e != null, "Unexpected null exception!");
             Type type = e.GetType();
 
-            return ((type != typeof(StackOverflowException)) &&
-                    (type != typeof(OutOfMemoryException)) &&
-                    (type != typeof(ThreadAbortException)) &&
-                    (type != typeof(NullReferenceException)) &&
-                    (type != typeof(AccessViolationException)));
+            return type != typeof(StackOverflowException) &&
+                   type != typeof(OutOfMemoryException) &&
+                   type != typeof(ThreadAbortException) &&
+                   type != typeof(NullReferenceException) &&
+                   type != typeof(AccessViolationException);
         }
 
         // Invalid Enumeration
@@ -414,14 +414,14 @@ namespace Microsoft.Data.Common
 
         internal static ArgumentOutOfRangeException InvalidCommandBehavior(CommandBehavior value)
         {
-            Debug.Assert((int)value < 0 || ((int)value > 0x3F), "valid CommandType " + value.ToString());
+            Debug.Assert((int)value < 0 || (int)value > 0x3F, "valid CommandType " + value.ToString());
 
             return InvalidEnumerationValue(typeof(CommandBehavior), (int)value);
         }
 
         internal static void ValidateCommandBehavior(CommandBehavior value)
         {
-            if (((int)value < 0) || (0x3F < (int)value))
+            if ((int)value < 0 || (int)value > 0x3F)
             {
                 throw InvalidCommandBehavior(value);
             }
@@ -488,7 +488,7 @@ namespace Microsoft.Data.Common
             int prefixLength = quotePrefix is null ? 0 : quotePrefix.Length;
             int suffixLength = quoteSuffix is null ? 0 : quoteSuffix.Length;
 
-            if ((suffixLength + prefixLength) == 0)
+            if (suffixLength + prefixLength == 0)
             {
                 unquotedString = quotedString;
                 return true;
@@ -693,12 +693,12 @@ namespace Microsoft.Data.Common
                     throw ADP.InvalidParameterDirection(condition);
             }
 #endif
-            return (condition == (condition & value.Direction));
+            return (condition & value.Direction) == condition;
         }
 
         internal static void IsNullOrSqlType(object value, out bool isNull, out bool isSqlType)
         {
-            if ((value is null) || (value == DBNull.Value))
+            if (value is null || value == DBNull.Value)
             {
                 isNull = true;
                 isSqlType = false;
@@ -710,21 +710,21 @@ namespace Microsoft.Data.Common
                     isNull = nullable.IsNull;
                     // Duplicated from DataStorage.cs
                     // For back-compat, SqlXml is not in this list
-                    isSqlType = ((value is SqlBinary) ||
-                                (value is SqlBoolean) ||
-                                (value is SqlByte) ||
-                                (value is SqlBytes) ||
-                                (value is SqlChars) ||
-                                (value is SqlDateTime) ||
-                                (value is SqlDecimal) ||
-                                (value is SqlDouble) ||
-                                (value is SqlGuid) ||
-                                (value is SqlInt16) ||
-                                (value is SqlInt32) ||
-                                (value is SqlInt64) ||
-                                (value is SqlMoney) ||
-                                (value is SqlSingle) ||
-                                (value is SqlString));
+                    isSqlType = value is not SqlBinary &&
+                                value is not SqlBoolean &&
+                                value is not SqlByte &&
+                                value is not SqlBytes &&
+                                value is not SqlChars &&
+                                value is not SqlDateTime &&
+                                value is not SqlDecimal &&
+                                value is not SqlDouble &&
+                                value is not SqlGuid &&
+                                value is not SqlInt16 &&
+                                value is not SqlInt32 &&
+                                value is not SqlInt64 &&
+                                value is not SqlMoney &&
+                                value is not SqlSingle &&
+                                value is not SqlString;
                 }
                 else
                 {
@@ -873,12 +873,12 @@ namespace Microsoft.Data.Common
         { // MDAC 82165, if the ConnectionState enum to msg the localization looks weird
             return state switch
             {
-                (ConnectionState.Closed) => StringsHelper.GetString(Strings.ADP_ConnectionStateMsg_Closed),
-                (ConnectionState.Connecting | ConnectionState.Broken) => StringsHelper.GetString(Strings.ADP_ConnectionStateMsg_Closed),
-                (ConnectionState.Connecting) => StringsHelper.GetString(Strings.ADP_ConnectionStateMsg_Connecting),
-                (ConnectionState.Open) => StringsHelper.GetString(Strings.ADP_ConnectionStateMsg_Open),
-                (ConnectionState.Open | ConnectionState.Executing) => StringsHelper.GetString(Strings.ADP_ConnectionStateMsg_OpenExecuting),
-                (ConnectionState.Open | ConnectionState.Fetching) => StringsHelper.GetString(Strings.ADP_ConnectionStateMsg_OpenFetching),
+                ConnectionState.Closed => StringsHelper.GetString(Strings.ADP_ConnectionStateMsg_Closed),
+                ConnectionState.Connecting | ConnectionState.Broken => StringsHelper.GetString(Strings.ADP_ConnectionStateMsg_Closed),
+                ConnectionState.Connecting => StringsHelper.GetString(Strings.ADP_ConnectionStateMsg_Connecting),
+                ConnectionState.Open => StringsHelper.GetString(Strings.ADP_ConnectionStateMsg_Open),
+                ConnectionState.Open | ConnectionState.Executing => StringsHelper.GetString(Strings.ADP_ConnectionStateMsg_OpenExecuting),
+                ConnectionState.Open | ConnectionState.Fetching => StringsHelper.GetString(Strings.ADP_ConnectionStateMsg_OpenFetching),
                 _ => StringsHelper.GetString(Strings.ADP_ConnectionStateMsg, state.ToString()),
             };
         }
@@ -1476,8 +1476,8 @@ namespace Microsoft.Data.Common
         internal static readonly int s_ptrSize = IntPtr.Size;
         internal static readonly IntPtr s_invalidPtr = new(-1); // use for INVALID_HANDLE
 
-        internal static readonly bool s_isWindowsNT = (PlatformID.Win32NT == Environment.OSVersion.Platform);
-        internal static readonly bool s_isPlatformNT5 = (ADP.s_isWindowsNT && (Environment.OSVersion.Version.Major >= 5));
+        internal static readonly bool s_isWindowsNT = PlatformID.Win32NT == Environment.OSVersion.Platform;
+        internal static readonly bool s_isPlatformNT5 = ADP.s_isWindowsNT && (Environment.OSVersion.Version.Major >= 5);
 
         [FileIOPermission(SecurityAction.Assert, AllFiles = FileIOPermissionAccess.PathDiscovery)]
         [ResourceExposure(ResourceScope.Machine)]

@@ -98,17 +98,15 @@ namespace Microsoft.Data.SqlClient
 
         public override bool Equals(object obj)
         {
-            return (obj is SqlConnectionPoolKey key
-                && _credential == key._credential
-                && ConnectionString == key.ConnectionString
-                && _accessTokenCallback == key._accessTokenCallback
-                && string.CompareOrdinal(_accessToken, key._accessToken) == 0
+            return obj is SqlConnectionPoolKey key
+                   && _credential == key._credential
+                   && ConnectionString == key.ConnectionString
+                   && _accessTokenCallback == key._accessTokenCallback
+                   && string.CompareOrdinal(_accessToken, key._accessToken) == 0
 #if NETFRAMEWORK
-                && _serverCertificateValidationCallback == key._serverCertificateValidationCallback
-                && _clientCertificateRetrievalCallback == key._clientCertificateRetrievalCallback
-                && _originalNetworkAddressInfo == key._originalNetworkAddressInfo
-#endif
-                );
+                   && _serverCertificateValidationCallback == key._serverCertificateValidationCallback
+                   && _clientCertificateRetrievalCallback == key._clientCertificateRetrievalCallback
+                   && _originalNetworkAddressInfo == key._originalNetworkAddressInfo;
         }
 
         public override int GetHashCode()

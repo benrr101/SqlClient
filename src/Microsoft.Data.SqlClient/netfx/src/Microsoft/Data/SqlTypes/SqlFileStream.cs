@@ -801,7 +801,7 @@ namespace Microsoft.Data.SqlTypes
                     bRevertAssert = true;
 
                     System.Diagnostics.Debug.Assert(m_fs == null);
-                    m_fs = new System.IO.FileStream(hFile, access, DefaultBufferSize, ((options & System.IO.FileOptions.Asynchronous) != 0));
+                    m_fs = new System.IO.FileStream(hFile, access, DefaultBufferSize, (options & System.IO.FileOptions.Asynchronous) != 0);
                 }
                 finally
                 {
@@ -894,7 +894,7 @@ namespace Microsoft.Data.SqlTypes
         private void Initialize(string path)
         {
             // pre-condition should be validated in public interface
-            System.Diagnostics.Debug.Assert(path.Length <= (UInt16.MaxValue / sizeof(char)));
+            System.Diagnostics.Debug.Assert(path.Length <= UInt16.MaxValue / sizeof(char));
 
             UnsafeNativeMethods.UNICODE_STRING objectName;
             objectName.length = (UInt16)(path.Length * sizeof(char));

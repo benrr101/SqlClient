@@ -79,8 +79,8 @@ namespace Microsoft.Data.ProviderBase
                 return false;
             }
 
-            return (String.Equals(StsAuthority, otherKey.StsAuthority, StringComparison.InvariantCultureIgnoreCase)
-                && String.Equals(ServicePrincipalName, otherKey.ServicePrincipalName, StringComparison.InvariantCultureIgnoreCase));
+            return String.Equals(StsAuthority, otherKey.StsAuthority, StringComparison.InvariantCultureIgnoreCase) &&
+                   String.Equals(ServicePrincipalName, otherKey.ServicePrincipalName, StringComparison.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
@@ -102,8 +102,8 @@ namespace Microsoft.Data.ProviderBase
 
             unchecked
             {
-                hashCode = (hashCode * 17) + StsAuthority.GetHashCode();
-                hashCode = (hashCode * 17) + ServicePrincipalName.GetHashCode();
+                hashCode = hashCode * 17 + StsAuthority.GetHashCode();
+                hashCode = hashCode * 17 + ServicePrincipalName.GetHashCode();
             }
 
             return hashCode;

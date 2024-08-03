@@ -115,7 +115,7 @@ namespace Microsoft.Data.SqlClient
             }
 
             string failoverConnectionString = userConnectionOptions.ExpandKeyword(keywordToReplace, actualFailoverPartner);
-            return (new SqlConnectionString(failoverConnectionString)).CreatePermissionSet();
+            return new SqlConnectionString(failoverConnectionString).CreatePermissionSet();
         }
 
         internal void FailoverPermissionDemand()

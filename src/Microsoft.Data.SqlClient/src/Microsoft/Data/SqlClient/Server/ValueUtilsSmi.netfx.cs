@@ -22,7 +22,7 @@ namespace Microsoft.Data.SqlClient.Server
         {
             Debug.Assert(!ValueUtilsSmi.IsDBNull_Unchecked(sink, getters, ordinal), "Should not try to get a SqlSequentialStreamSmi on a null column");
             ThrowIfITypedGettersIsNull(sink, getters, ordinal);
-            if ((!bypassTypeCheck) && (!CanAccessGetterDirectly(metaData, ExtendedClrTypeCode.Stream)))
+            if (!bypassTypeCheck && !CanAccessGetterDirectly(metaData, ExtendedClrTypeCode.Stream))
             {
                 throw ADP.InvalidCast();
             }
@@ -53,12 +53,12 @@ namespace Microsoft.Data.SqlClient.Server
             // If a sql_variant, get the internal type
             if (!bypassTypeCheck)
             {
-                if ((!isDbNull) && (metaData.SqlDbType == SqlDbType.Variant))
+                if (!isDbNull && metaData.SqlDbType == SqlDbType.Variant)
                 {
                     metaData = getters.GetVariantType(sink, ordinal);
                 }
                 // If the SqlDbType is still variant, then it must contain null, so don't throw InvalidCast
-                if ((metaData.SqlDbType != SqlDbType.Variant) && (!CanAccessGetterDirectly(metaData, ExtendedClrTypeCode.Stream)))
+                if (metaData.SqlDbType != SqlDbType.Variant && !CanAccessGetterDirectly(metaData, ExtendedClrTypeCode.Stream))
                 {
                     throw ADP.InvalidCast();
                 }
@@ -85,12 +85,12 @@ namespace Microsoft.Data.SqlClient.Server
             bool isDbNull = ValueUtilsSmi.IsDBNull_Unchecked(sink, getters, ordinal);
 
             // If a sql_variant, get the internal type
-            if ((!isDbNull) && (metaData.SqlDbType == SqlDbType.Variant))
+            if (!isDbNull && metaData.SqlDbType == SqlDbType.Variant)
             {
                 metaData = getters.GetVariantType(sink, ordinal);
             }
             // If the SqlDbType is still variant, then it must contain null, so don't throw InvalidCast
-            if ((metaData.SqlDbType != SqlDbType.Variant) && (!CanAccessGetterDirectly(metaData, ExtendedClrTypeCode.TextReader)))
+            if (metaData.SqlDbType != SqlDbType.Variant && !CanAccessGetterDirectly(metaData, ExtendedClrTypeCode.TextReader))
             {
                 throw ADP.InvalidCast();
             }
