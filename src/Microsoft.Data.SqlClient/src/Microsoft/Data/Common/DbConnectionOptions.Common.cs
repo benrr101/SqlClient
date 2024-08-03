@@ -119,8 +119,8 @@ namespace Microsoft.Data.Common
             if (_usersConnectionString.Length > 0)
             {
                 _keyChain = ParseInternal(_parsetable, _usersConnectionString, true, synonyms, false);
-                _hasPasswordKeyword = (_parsetable.ContainsKey(KEY.Password) || _parsetable.ContainsKey(SYNONYM.Pwd));
-                _hasUserIdKeyword = (_parsetable.ContainsKey(KEY.User_ID) || _parsetable.ContainsKey(SYNONYM.UID));
+                _hasPasswordKeyword = _parsetable.ContainsKey(KEY.Password) || _parsetable.ContainsKey(SYNONYM.Pwd);
+                _hasUserIdKeyword = _parsetable.ContainsKey(KEY.User_ID) || _parsetable.ContainsKey(SYNONYM.UID);
             }
         }
 
@@ -282,7 +282,7 @@ namespace Microsoft.Data.Common
             int index = 0;
             if (trimWhitespace)
             {
-                while ((index < count) && char.IsWhiteSpace(buffer[index]))
+                while (index < count && char.IsWhiteSpace(buffer[index]))
                 {
                     index++; // leading whitespace
                 }
@@ -331,16 +331,21 @@ namespace Microsoft.Data.Common
                 switch (parserState)
                 {
                     case ParserState.NothingYet: // [\\s;]*
-                        if ((';' == currentChar) || char.IsWhiteSpace(currentChar))
+                        if (currentChar == ';' || char.IsWhiteSpace(currentChar))
                         {
                             continue;
                         }
-                        if ('\0' == currentChar)
-                        { parserState = ParserState.NullTermination; continue; }
+                        if (currentChar == '\0')
+                        {
+                            parserState = ParserState.NullTermination; continue;
+                        }
                         if (char.IsControl(currentChar))
-                        { throw ADP.ConnectionStringSyntax(startposition); }
+                        {
+                            throw ADP.ConnectionStringSyntax(startposition);
+                        }
+                        
                         startposition = currentPosition;
-                        if ('=' != currentChar)
+                        if (currentChar != '=')
                         {
                             parserState = ParserState.Key;
                             break;
@@ -486,7 +491,7 @@ namespace Microsoft.Data.Common
                     keyvalue = GetKeyValue(buffer, true);
 
                     char tmpChar = keyvalue[keyvalue.Length - 1];
-                    if (!useOdbcRules && (('\'' == tmpChar) || ('"' == tmpChar)))
+                    if (!useOdbcRules && (tmpChar == '\'' || tmpChar == '"'))
                     {
                         throw ADP.ConnectionStringSyntax(startposition);    // unquoted value must not end in quote, except for odbc
                     }
@@ -509,7 +514,7 @@ namespace Microsoft.Data.Common
                 default:
                     throw ADP.InternalError(ADP.InternalErrorCode.InvalidParserState2);
             }
-            if ((';' == currentChar) && (currentPosition < connectionString.Length))
+            if (currentChar == ';' && currentPosition < connectionString.Length)
             {
                 currentPosition++;
             }
@@ -522,7 +527,7 @@ namespace Microsoft.Data.Common
             {
 #if DEBUG
                 bool compValue = s_connectionStringValidValueRegex.IsMatch(keyvalue);
-                Debug.Assert((keyvalue.IndexOf('\u0000') == -1) == compValue, "IsValueValid mismatch with regex");
+                Debug.Assert(keyvalue.IndexOf('\u0000') == -1 == compValue, "IsValueValid mismatch with regex");
 #endif
                 return keyvalue.IndexOf('\u0000') == -1;
             }
@@ -535,9 +540,9 @@ namespace Microsoft.Data.Common
             {
 #if DEBUG
                 bool compValue = s_connectionStringValidKeyRegex.IsMatch(keyname);
-                Debug.Assert((keyname.Length > 0 && (';' != keyname[0]) && !char.IsWhiteSpace(keyname[0]) && (-1 == keyname.IndexOf('\u0000'))) == compValue, "IsValueValid mismatch with regex");
+                Debug.Assert((keyname.Length > 0 && keyname[0] != ';' && !char.IsWhiteSpace(keyname[0]) && keyname.IndexOf('\u0000') == -1) == compValue, "IsValueValid mismatch with regex");
 #endif
-                return keyname.Length > 0 && (';' != keyname[0]) && !char.IsWhiteSpace(keyname[0]) && keyname.IndexOf('\u0000') == -1;
+                return keyname.Length > 0 && keyname[0] != ';' && !char.IsWhiteSpace(keyname[0]) && keyname.IndexOf('\u0000') == -1;
             }
             return false;
         }
@@ -546,7 +551,7 @@ namespace Microsoft.Data.Common
         private static Dictionary<string, string> SplitConnectionString(string connectionString, Dictionary<string, string> synonyms, bool firstKey)
         {
             var parsetable = new Dictionary<string, string>();
-            Regex parser = (firstKey ? s_connectionStringRegexOdbc : s_connectionStringRegex);
+            Regex parser = firstKey ? s_connectionStringRegexOdbc : s_connectionStringRegex;
 
             const int KeyIndex = 1, ValueIndex = 2;
             Debug.Assert(KeyIndex == parser.GroupNumberFromName("key"), "wrong key index");
@@ -555,7 +560,7 @@ namespace Microsoft.Data.Common
             if (connectionString != null)
             {
                 Match match = parser.Match(connectionString);
-                if (!match.Success || (match.Length != connectionString.Length))
+                if (!match.Success || match.Length != connectionString.Length)
                 {
                     throw ADP.ConnectionStringSyntax(match.Length);
                 }
@@ -589,7 +594,7 @@ namespace Microsoft.Data.Common
                     DebugTraceKeyValuePair(keyname, keyvalue, synonyms);
                     string synonym;
                     string realkeyname = synonyms != null
-                        ? (synonyms.TryGetValue(keyname, out synonym) ? synonym : null)
+                        ? synonyms.TryGetValue(keyname, out synonym) ? synonym : null
                         : keyname;
 
                     if (!IsKeyNameValid(realkeyname))
@@ -629,7 +634,7 @@ namespace Microsoft.Data.Common
 
                     const string KeywordNotSupportedMessagePrefix = "Keyword not supported:";
                     const string WrongFormatMessagePrefix = "Format of the initialization string";
-                    bool isEquivalent = (msg1 == msg2);
+                    bool isEquivalent = msg1 == msg2;
                     if (!isEquivalent)
                     {
                         // We also accept cases were Regex parser (debug only) reports "wrong format" and 
@@ -685,9 +690,9 @@ namespace Microsoft.Data.Common
                     Debug.Assert(IsKeyNameValid(keyname), "ParseFailure, invalid keyname");
                     Debug.Assert(IsValueValidInternal(keyvalue), "parse failure, invalid keyvalue");
 
-                    string realkeyname = (synonyms is not null) ?
-                                         (synonyms.TryGetValue(keyname, out string synonym) ? synonym : null) :
-                                          keyname;
+                    string realkeyname = synonyms is not null
+                        ? synonyms.TryGetValue(keyname, out string synonym) ? synonym : null
+                        : keyname;
 
                     if (!IsKeyNameValid(realkeyname))
                     {

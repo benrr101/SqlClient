@@ -302,7 +302,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                return (DataClassificationVersion != TdsEnums.DATA_CLASSIFICATION_NOT_ENABLED);
+                return DataClassificationVersion != TdsEnums.DATA_CLASSIFICATION_NOT_ENABLED;
             }
         }
 
@@ -456,7 +456,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                return (_is2012 && SqlClientEventSource.Log.IsEnabled());
+                return _is2012 && SqlClientEventSource.Log.IsEnabled();
             }
         }
 
@@ -499,7 +499,7 @@ namespace Microsoft.Data.SqlClient
                               bool disableTnir)
         {
             SqlConnectionEncryptOption encrypt = connectionOptions.Encrypt;
-            bool isTlsFirst = (encrypt == SqlConnectionEncryptOption.Strict);
+            bool isTlsFirst = encrypt == SqlConnectionEncryptOption.Strict;
             bool trustServerCert = connectionOptions.TrustServerCertificate;
             bool integratedSecurity = connectionOptions.IntegratedSecurity;
             SqlAuthenticationMethod authType = connectionOptions.Authentication;
@@ -838,7 +838,7 @@ namespace Microsoft.Data.SqlClient
 
                 result = SNINativeMethodWrapper.SniGetProviderNumber(_physicalStateObj.Handle, ref providerNumber);
                 Debug.Assert(result == TdsEnums.SNI_SUCCESS, "Unexpected failure state upon calling SniGetProviderNumber");
-                isTcpProtocol = (providerNumber == SNINativeMethodWrapper.ProviderEnum.TCP_PROV);
+                isTcpProtocol = providerNumber == SNINativeMethodWrapper.ProviderEnum.TCP_PROV;
             }
             else if (userProtocol == TdsEnums.TCP)
             {
@@ -987,7 +987,7 @@ namespace Microsoft.Data.SqlClient
                 // This will take care of disposing if the parser is closed
                 _sessionPool.PutSession(session);
             }
-            else if ((_state == TdsParserState.Closed) || (_state == TdsParserState.Broken))
+            else if (_state == TdsParserState.Closed || _state == TdsParserState.Broken)
             {
                 // Parser is closed\broken - dispose the stateObj
                 Debug.Assert(session == _physicalStateObj, "MARS is off, but session to close is not the _physicalStateObj");
@@ -1452,7 +1452,7 @@ namespace Microsoft.Data.SqlClient
 
                         switch (_encryptionOption & EncryptionOptions.OPTIONS_MASK)
                         {
-                            case (EncryptionOptions.OFF):
+                            case EncryptionOptions.OFF:
                                 if ((serverOption & EncryptionOptions.OPTIONS_MASK) == EncryptionOptions.OFF)
                                 {
                                     // Only encrypt login.
@@ -1466,7 +1466,7 @@ namespace Microsoft.Data.SqlClient
                                 // NOT_SUP: No encryption.
                                 break;
 
-                            case (EncryptionOptions.NOT_SUP):
+                            case EncryptionOptions.NOT_SUP:
                                 if ((serverOption & EncryptionOptions.OPTIONS_MASK) == EncryptionOptions.REQ)
                                 {
                                     // Server requires encryption, but client does not support it.
@@ -1520,7 +1520,7 @@ namespace Microsoft.Data.SqlClient
                         payloadOffset = payload[offset++] << 8 | payload[offset++];
                         payloadLength = payload[offset++] << 8 | payload[offset++];
 
-                        marsCapable = (payload[payloadOffset] == 0 ? false : true);
+                        marsCapable = payload[payloadOffset] == 0 ? false : true;
 
                         Debug.Assert(payload[payloadOffset] == 0 || payload[payloadOffset] == 1, "Value for Mars PreLoginHandshake option not equal to 1 or 0!");
                         break;
@@ -1776,10 +1776,13 @@ namespace Microsoft.Data.SqlClient
             Debug.Assert(_connHandler != null, "TdsParser::ThrowExceptionAndWarning called with null connectionHandler!");
 
             // Don't break the connection if it is already closed
-            breakConnection &= (TdsParserState.Closed != _state);
+            breakConnection &= TdsParserState.Closed != _state;
             if (breakConnection)
             {
-                if ((_state == TdsParserState.OpenNotLoggedIn) && (_connHandler.ConnectionOptions.TransparentNetworkIPResolution || _connHandler.ConnectionOptions.MultiSubnetFailover || _loginWithFailover) && (temp.Count == 1) && ((temp[0].Number == TdsEnums.TIMEOUT_EXPIRED) || (temp[0].Number == TdsEnums.SNI_WAIT_TIMEOUT)))
+                if (_state == TdsParserState.OpenNotLoggedIn && 
+                    (_connHandler.ConnectionOptions.TransparentNetworkIPResolution || _connHandler.ConnectionOptions.MultiSubnetFailover || _loginWithFailover) && 
+                    temp.Count == 1 && 
+                    (temp[0].Number == TdsEnums.TIMEOUT_EXPIRED || temp[0].Number == TdsEnums.SNI_WAIT_TIMEOUT))
                 {
                     // DevDiv2 Bug 459546: With "MultiSubnetFailover=yes" in the Connection String, SQLClient incorrectly throws a Timeout using shorter time slice (3-4 seconds), not honoring the actual 'Connect Timeout'
                     // http://vstfdevdiv:8080/DevDiv2/DevDiv/_workitems/edit/459546
@@ -1885,7 +1888,7 @@ namespace Microsoft.Data.SqlClient
         {
 #if DEBUG
             // There is an exception here for MARS as its possible that another thread has closed the connection just as we see an error
-            Debug.Assert(SniContext.Undefined != stateObj.DebugOnlyCopyOfSniContext || ((_fMARS) && ((_state == TdsParserState.Closed) || (_state == TdsParserState.Broken))), "SniContext must not be None");
+            Debug.Assert(SniContext.Undefined != stateObj.DebugOnlyCopyOfSniContext || ((_fMARS) && (_state == TdsParserState.Closed || _state == TdsParserState.Broken)), "SniContext must not be None");
 #endif
             SNINativeMethodWrapper.SNI_Error sniError = new SNINativeMethodWrapper.SNI_Error();
             SNINativeMethodWrapper.SNIGetLastError(out sniError);
@@ -2107,7 +2110,7 @@ namespace Microsoft.Data.SqlClient
         {
             ReliabilitySection.Assert("unreliable call to WriteShort");  // you need to setup for a thread abort somewhere before you call this method
 
-            if ((stateObj._outBytesUsed + 2) > stateObj._outBuff.Length)
+            if (stateObj._outBytesUsed + 2 > stateObj._outBuff.Length)
             {
                 // if all of the short doesn't fit into the buffer
                 stateObj.WriteByte((byte)(v & 0xff));
@@ -2167,7 +2170,7 @@ namespace Microsoft.Data.SqlClient
         {
             ReliabilitySection.Assert("unreliable call to WriteInt");  // you need to setup for a thread abort somewhere before you call this method
 
-            if ((stateObj._outBytesUsed + 4) > stateObj._outBuff.Length)
+            if (stateObj._outBytesUsed + 4 > stateObj._outBuff.Length)
             {
                 // if all of the int doesn't fit into the buffer
                 for (int shiftValue = 0; shiftValue < sizeof(int) * 8; shiftValue += 8)
@@ -2237,7 +2240,7 @@ namespace Microsoft.Data.SqlClient
         {
             ReliabilitySection.Assert("unreliable call to WriteLong");  // you need to setup for a thread abort somewhere before you call this method
 
-            if ((stateObj._outBytesUsed + 8) > stateObj._outBuff.Length)
+            if (stateObj._outBytesUsed + 8 > stateObj._outBuff.Length)
             {
                 // if all of the long doesn't fit into the buffer
                 for (int shiftValue = 0; shiftValue < sizeof(long) * 8; shiftValue += 8)
@@ -2286,7 +2289,7 @@ namespace Microsoft.Data.SqlClient
             Debug.Assert(length <= 8, "Length specified is longer than the size of a long");
             Debug.Assert(length >= 0, "Length should not be negative");
 
-            if ((stateObj._outBytesUsed + length) > stateObj._outBuff.Length)
+            if (stateObj._outBytesUsed + length > stateObj._outBuff.Length)
             {
                 // if all of the long doesn't fit into the buffer
                 for (int shiftValue = 0; shiftValue < length * 8; shiftValue += 8)
@@ -2403,36 +2406,35 @@ namespace Microsoft.Data.SqlClient
         /// <returns>True if the token is a valid TDS token, otherwise false</returns>
         internal static bool IsValidTdsToken(byte token)
         {
-            return (
-                token == TdsEnums.SQLERROR ||
-                token == TdsEnums.SQLINFO ||
-                token == TdsEnums.SQLLOGINACK ||
-                token == TdsEnums.SQLENVCHANGE ||
-                token == TdsEnums.SQLRETURNVALUE ||
-                token == TdsEnums.SQLRETURNSTATUS ||
-                token == TdsEnums.SQLCOLNAME ||
-                token == TdsEnums.SQLCOLFMT ||
-                token == TdsEnums.SQLRESCOLSRCS ||
-                token == TdsEnums.SQLDATACLASSIFICATION ||
-                token == TdsEnums.SQLCOLMETADATA ||
-                token == TdsEnums.SQLALTMETADATA ||
-                token == TdsEnums.SQLTABNAME ||
-                token == TdsEnums.SQLCOLINFO ||
-                token == TdsEnums.SQLORDER ||
-                token == TdsEnums.SQLALTROW ||
-                token == TdsEnums.SQLROW ||
-                token == TdsEnums.SQLNBCROW ||
-                token == TdsEnums.SQLDONE ||
-                token == TdsEnums.SQLDONEPROC ||
-                token == TdsEnums.SQLDONEINPROC ||
-                token == TdsEnums.SQLROWCRC ||
-                token == TdsEnums.SQLSECLEVEL ||
-                token == TdsEnums.SQLPROCID ||
-                token == TdsEnums.SQLOFFSET ||
-                token == TdsEnums.SQLSSPI ||
-                token == TdsEnums.SQLFEATUREEXTACK ||
-                token == TdsEnums.SQLSESSIONSTATE ||
-                token == TdsEnums.SQLFEDAUTHINFO);
+            return token == TdsEnums.SQLERROR ||
+                   token == TdsEnums.SQLINFO ||
+                   token == TdsEnums.SQLLOGINACK ||
+                   token == TdsEnums.SQLENVCHANGE ||
+                   token == TdsEnums.SQLRETURNVALUE ||
+                   token == TdsEnums.SQLRETURNSTATUS ||
+                   token == TdsEnums.SQLCOLNAME ||
+                   token == TdsEnums.SQLCOLFMT ||
+                   token == TdsEnums.SQLRESCOLSRCS ||
+                   token == TdsEnums.SQLDATACLASSIFICATION ||
+                   token == TdsEnums.SQLCOLMETADATA ||
+                   token == TdsEnums.SQLALTMETADATA ||
+                   token == TdsEnums.SQLTABNAME ||
+                   token == TdsEnums.SQLCOLINFO ||
+                   token == TdsEnums.SQLORDER ||
+                   token == TdsEnums.SQLALTROW ||
+                   token == TdsEnums.SQLROW ||
+                   token == TdsEnums.SQLNBCROW ||
+                   token == TdsEnums.SQLDONE ||
+                   token == TdsEnums.SQLDONEPROC ||
+                   token == TdsEnums.SQLDONEINPROC ||
+                   token == TdsEnums.SQLROWCRC ||
+                   token == TdsEnums.SQLSECLEVEL ||
+                   token == TdsEnums.SQLPROCID ||
+                   token == TdsEnums.SQLOFFSET ||
+                   token == TdsEnums.SQLSSPI ||
+                   token == TdsEnums.SQLFEATUREEXTACK ||
+                   token == TdsEnums.SQLSESSIONSTATE ||
+                   token == TdsEnums.SQLFEDAUTHINFO;
         }
 
         // Main parse loop for the top-level tds tokens, calls back into the I*Handler interfaces
@@ -3693,7 +3695,7 @@ namespace Microsoft.Data.SqlClient
             if ((TdsEnums.DONE_ERROR & status) == TdsEnums.DONE_ERROR && 
                 stateObj.ErrorCount == 0 &&
                 stateObj.HasReceivedError == false &&
-                (RunBehavior.Clean != (RunBehavior.Clean & run)))
+                (RunBehavior.Clean & run) != RunBehavior.Clean)
             {
                 stateObj.AddError(new SqlError(0, 0, TdsEnums.MIN_ERROR_CLASS, _server, SQLMessage.SevereError(), "", 0, exception: null, batchIndex: cmd?.GetCurrentBatchIndex() ?? -1));
 
@@ -3709,7 +3711,8 @@ namespace Microsoft.Data.SqlClient
             // Similar to above, only with a more severe error.  In this case, if we received
             // the done_srverror, this exception will be added to the collection regardless.
             // MDAC #93896.  Also, per Ashwin, the server will always break the connection in this case.
-            if ((TdsEnums.DONE_SRVERROR & status) == TdsEnums.DONE_SRVERROR && (RunBehavior.Clean != (RunBehavior.Clean & run)))
+            if ((TdsEnums.DONE_SRVERROR & status) == TdsEnums.DONE_SRVERROR && 
+                (RunBehavior.Clean & run) != RunBehavior.Clean)
             {
                 stateObj.AddError(new SqlError(0, 0, TdsEnums.FATAL_ERROR_CLASS, _server, SQLMessage.SevereError(), "", 0, exception: null, batchIndex: cmd?.GetCurrentBatchIndex() ?? -1));
 
@@ -5097,8 +5100,8 @@ namespace Microsoft.Data.SqlClient
             // Check if TCE is enable and if it is set the crypto MD for the column.
             // TCE is enabled if the command is set to enabled or to resultset only and this is not a return value
             // or if it is set to use connection setting and the connection has TCE enabled.
-            if ((columnEncryptionSetting == SqlCommandColumnEncryptionSetting.Enabled ||
-                (columnEncryptionSetting == SqlCommandColumnEncryptionSetting.ResultSetOnly && !isReturnValue)) ||
+            if (columnEncryptionSetting == SqlCommandColumnEncryptionSetting.Enabled ||
+                columnEncryptionSetting == SqlCommandColumnEncryptionSetting.ResultSetOnly && !isReturnValue ||
                 (columnEncryptionSetting == SqlCommandColumnEncryptionSetting.UseConnectionSetting &&
                 _connHandler != null && _connHandler.ConnectionOptions != null &&
                 _connHandler.ConnectionOptions.ColumnEncryptionSetting == SqlConnectionColumnEncryptionSetting.Enabled))

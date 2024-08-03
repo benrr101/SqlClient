@@ -84,9 +84,9 @@ namespace Microsoft.Data.SqlClient
             {
                 throw ADP.ArgumentNull(nameof(buffer));
             }
-            if ((offset < 0) || (count < 0))
+            if (offset < 0 || count < 0)
             {
-                throw ADP.ArgumentOutOfRange(string.Empty, (offset < 0 ? nameof(offset) : nameof(count)));
+                throw ADP.ArgumentOutOfRange(string.Empty, offset < 0 ? nameof(offset) : nameof(count));
             }
             if (buffer.Length - offset < count)
             {
@@ -103,7 +103,7 @@ namespace Microsoft.Data.SqlClient
                 _bufferedData = new byte[2];
                 cBufferedData = ReadBytes(_bufferedData, 0, 2);
                 // Check to se if we should add the byte order mark
-                if ((cBufferedData < 2) || ((_bufferedData[0] == 0xDF) && (_bufferedData[1] == 0xFF)))
+                if (cBufferedData < 2 || (_bufferedData[0] == 0xDF && _bufferedData[1] == 0xFF))
                 {
                     _bom = 0;
                 }
@@ -131,7 +131,7 @@ namespace Microsoft.Data.SqlClient
                     buffer[offset++] = _bufferedData[0];
                     intCount++;
                     count--;
-                    if ((cBufferedData > 1) && (count > 0))
+                    if (cBufferedData > 1 && count > 0)
                     {
                         buffer[offset++] = _bufferedData[1];
                         intCount++;
@@ -347,9 +347,9 @@ namespace Microsoft.Data.SqlClient
                 throw ADP.ArgumentNull(nameof(buffer));
             }
 
-            if ((offset < 0) || (count < 0))
+            if (offset < 0 || count < 0)
             {
-                throw ADP.ArgumentOutOfRange(string.Empty, (offset < 0 ? nameof(offset) : nameof(count)));
+                throw ADP.ArgumentOutOfRange(string.Empty, offset < 0 ? nameof(offset) : nameof(count));
             }
 
             if (buffer.Length - offset < count)
@@ -454,7 +454,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                if ((_totalLength == 0) && (_cachedBytes != null))
+                if (_totalLength == 0 && _cachedBytes != null)
                 {
                     long pos = 0;
                     for (int ii = 0; ii < _cachedBytes.Count; ii++)
@@ -523,13 +523,13 @@ namespace Microsoft.Data.SqlClient
             // total size up front without reading and converting the XML.
             if (buffer == null)
             {
-                return (long)(-1);
+                return (long)-1;
             }
 
             StringBuilder strBldr = _strWriter.GetStringBuilder();
             while (!_xmlReader.EOF)
             {
-                if (strBldr.Length >= (length + charsToSkip))
+                if (strBldr.Length >= length + charsToSkip)
                 {
                     break;
                 }

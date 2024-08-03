@@ -364,9 +364,9 @@ namespace Microsoft.Data.SqlClient
                         return MetaXml;
                     else if (dataType == typeof(SqlString))
                     {
-                        return ((inferLen && !((SqlString)value).IsNull)
+                        return inferLen && !((SqlString)value).IsNull
                             ? PromoteStringType(((SqlString)value).Value)
-                            : MetaNVarChar); // MDAC 87587
+                            : MetaNVarChar; // MDAC 87587
                     }
                     else if (dataType == typeof(IEnumerable<DbDataRecord>) || dataType == typeof(DataTable))
                     {
@@ -450,7 +450,7 @@ namespace Microsoft.Data.SqlClient
                 case TypeCode.DateTime:
                     return s_metaDateTime;
                 case TypeCode.String:
-                    return (inferLen ? PromoteStringType((string)value) : MetaNVarChar);
+                    return inferLen ? PromoteStringType((string)value) : MetaNVarChar;
                 default:
                     throw ADP.UnknownDataTypeCode(dataType, Type.GetTypeCode(dataType));
             }
@@ -509,7 +509,7 @@ namespace Microsoft.Data.SqlClient
         {
             int len = s.Length;
 
-            if ((len << 1) > TdsEnums.TYPE_SIZE_LIMIT)
+            if (len << 1 > TdsEnums.TYPE_SIZE_LIMIT)
             {
                 return s_metaVarChar; // try as var char since we can send a 8K characters
             }
@@ -686,10 +686,10 @@ namespace Microsoft.Data.SqlClient
                 case OleDbType.Char:
                 case OleDbType.VarChar:
                     // these guys are ambiguous - server sends over DBTYPE_STR in both cases
-                    sqlType = (typeName == MetaTypeName.CHAR) ? SqlDbType.Char : SqlDbType.VarChar;
+                    sqlType = typeName == MetaTypeName.CHAR ? SqlDbType.Char : SqlDbType.VarChar;
                     break;
                 case OleDbType.Currency:
-                    sqlType = (typeName == MetaTypeName.SMALLMONEY) ? SqlDbType.SmallMoney : SqlDbType.Money;
+                    sqlType = typeName == MetaTypeName.SMALLMONEY ? SqlDbType.SmallMoney : SqlDbType.Money;
                     break;
                 case OleDbType.Date:
                 case OleDbType.DBTimeStamp:
@@ -736,7 +736,7 @@ namespace Microsoft.Data.SqlClient
                     break;
                 case OleDbType.VarBinary:
                 case OleDbType.Binary:
-                    sqlType = (typeName == MetaTypeName.BINARY) ? SqlDbType.Binary : SqlDbType.VarBinary;
+                    sqlType = typeName == MetaTypeName.BINARY ? SqlDbType.Binary : SqlDbType.VarBinary;
                     break;
                 case OleDbType.Variant:
                     sqlType = SqlDbType.Variant;
@@ -746,7 +746,7 @@ namespace Microsoft.Data.SqlClient
                 case OleDbType.BSTR:
                     // these guys are ambiguous - server sends over DBTYPE_WSTR in both cases
                     // BSTR is always assumed to be NVARCHAR
-                    sqlType = (typeName == MetaTypeName.NCHAR) ? SqlDbType.NChar : SqlDbType.NVarChar;
+                    sqlType = typeName == MetaTypeName.NCHAR ? SqlDbType.NChar : SqlDbType.NVarChar;
                     break;
                 case OleDbType.DBDate: // Date
                     sqlType = SqlDbType.Date;

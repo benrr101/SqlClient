@@ -34,7 +34,7 @@ namespace Microsoft.Data.SqlClient
             Debug.Assert(string.Equals(encryptionAlgorithm, SqlAeadAes256CbcHmac256Algorithm.AlgorithmName, StringComparison.OrdinalIgnoreCase) == true);
 
             // Validate encryption type
-            if (!((encryptionType == SqlClientEncryptionType.Deterministic) || (encryptionType == SqlClientEncryptionType.Randomized)))
+            if (!(encryptionType == SqlClientEncryptionType.Deterministic || encryptionType == SqlClientEncryptionType.Randomized))
             {
                 throw SQL.InvalidEncryptionType(SqlAeadAes256CbcHmac256Algorithm.AlgorithmName,
                                                 encryptionType,

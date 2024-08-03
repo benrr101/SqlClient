@@ -57,9 +57,9 @@ namespace Microsoft.Data.SqlClient
                 SQLDNSInfo oldItem;
                 if (GetDNSInfo(newItem.FQDN, out oldItem))
                 {
-                    return (newItem.AddrIPv4 == oldItem.AddrIPv4 &&
-                            newItem.AddrIPv6 == oldItem.AddrIPv6 &&
-                            newItem.Port == oldItem.Port);
+                    return newItem.AddrIPv4 == oldItem.AddrIPv4 &&
+                           newItem.AddrIPv6 == oldItem.AddrIPv6 &&
+                           newItem.Port == oldItem.Port;
                 }
             }
 

@@ -191,7 +191,7 @@ namespace Microsoft.Data.SqlClient
                 throw ADP.PermissionTypeMismatch();
             }
 
-            SqlClientPermission superset = (target as SqlClientPermission);
+            SqlClientPermission superset = target as SqlClientPermission;
 
             bool subset = superset.IsUnrestricted();
             if (!subset)
@@ -247,7 +247,7 @@ namespace Microsoft.Data.SqlClient
                     }
                 }
             }
-            return (newPermission.IsEmpty() ? null : newPermission);
+            return newPermission.IsEmpty() ? null : newPermission;
         }
 
         private string DecodeXmlValue(string value)

@@ -96,7 +96,7 @@ namespace Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider
                 cipherTextLength, keySizeInBytes, masterKeyPath), Constants.AeParamEncryptedCek);
 
         internal static ArgumentNullException NullAlgorithm(bool isSystemOp) =>
-            new(Constants.AeParamEncryptionAlgorithm, (isSystemOp ? Strings.NullAlgorithmInternal : Strings.NullAlgorithm));
+            new(Constants.AeParamEncryptionAlgorithm, isSystemOp ? Strings.NullAlgorithmInternal : Strings.NullAlgorithm);
 
         internal static ArgumentException InvalidKeyAlgorithm(string encryptionAlgorithm) =>
             new(string.Format(CultureInfo.InvariantCulture, Strings.InvalidKeyAlgorithm, encryptionAlgorithm,

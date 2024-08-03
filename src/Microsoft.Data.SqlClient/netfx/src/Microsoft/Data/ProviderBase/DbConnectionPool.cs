@@ -573,9 +573,10 @@ namespace Microsoft.Data.ProviderBase
                 if (totalObjects < MinPoolSize)
                     return true;
 
-                int freeObjects = (_stackNew.Count + _stackOld.Count);
+                int freeObjects = _stackNew.Count + _stackOld.Count;
                 int waitingRequests = _waitCount;
-                bool needToReplenish = (freeObjects < waitingRequests) || ((freeObjects == waitingRequests) && (totalObjects > 1));
+                bool needToReplenish = freeObjects < waitingRequests || 
+                                       (freeObjects == waitingRequests && totalObjects > 1);
 
                 return needToReplenish;
             }
@@ -800,7 +801,7 @@ namespace Microsoft.Data.ProviderBase
 
         private Timer CreateCleanupTimer()
         {
-            return (new Timer(new TimerCallback(this.CleanupCallback), null, _cleanupWait, _cleanupWait));
+            return new Timer(new TimerCallback(this.CleanupCallback), null, _cleanupWait, _cleanupWait);
         }
 
         private bool IsBlockingPeriodEnabled()
@@ -862,7 +863,7 @@ namespace Microsoft.Data.ProviderBase
 
                 lock (_objectList)
                 {
-                    if ((oldConnection != null) && (oldConnection.Pool == this))
+                    if (oldConnection != null && oldConnection.Pool == this)
                     {
                         _objectList.Remove(oldConnection);
                     }
@@ -1459,7 +1460,7 @@ namespace Microsoft.Data.ProviderBase
                                 Interlocked.Decrement(ref _waitCount);
                                 obj = GetFromGeneralPool();
 
-                                if ((obj != null) && (!obj.IsConnectionAlive()))
+                                if (obj != null && !obj.IsConnectionAlive())
                                 {
                                     SqlClientEventSource.Log.TryPoolerTraceEvent("<prov.DbConnectionPool.GetConnection|RES|CPOOL> {0}, Connection {1}, found dead and removed.", ObjectID, obj.ObjectID);
                                     DestroyObject(obj);
@@ -1498,17 +1499,17 @@ namespace Microsoft.Data.ProviderBase
                                 Marshal.ThrowExceptionForHR(waitForMultipleObjectsExHR);
                                 goto default; // if ThrowExceptionForHR didn't throw for some reason
 
-                            case (WAIT_ABANDONED + SEMAPHORE_HANDLE):
+                            case WAIT_ABANDONED + SEMAPHORE_HANDLE:
                                 SqlClientEventSource.Log.TryPoolerTraceEvent("<prov.DbConnectionPool.GetConnection|RES|CPOOL> {0}, Semaphore handle abandonded.", ObjectID);
                                 Interlocked.Decrement(ref _waitCount);
                                 throw new AbandonedMutexException(SEMAPHORE_HANDLE, _waitHandles.PoolSemaphore);
 
-                            case (WAIT_ABANDONED + ERROR_HANDLE):
+                            case WAIT_ABANDONED + ERROR_HANDLE:
                                 SqlClientEventSource.Log.TryPoolerTraceEvent("<prov.DbConnectionPool.GetConnection|RES|CPOOL> {0}, Error handle abandonded.", ObjectID);
                                 Interlocked.Decrement(ref _waitCount);
                                 throw new AbandonedMutexException(ERROR_HANDLE, _waitHandles.ErrorEvent);
 
-                            case (WAIT_ABANDONED + CREATION_HANDLE):
+                            case WAIT_ABANDONED + CREATION_HANDLE:
                                 SqlClientEventSource.Log.TryPoolerTraceEvent("<prov.DbConnectionPool.GetConnection|RES|CPOOL> {0}, Creation handle abandoned.", ObjectID);
                                 Interlocked.Decrement(ref _waitCount);
                                 throw new AbandonedMutexException(CREATION_HANDLE, _waitHandles.CreationSemaphore);
@@ -1631,7 +1632,7 @@ namespace Microsoft.Data.ProviderBase
                 SqlClientEventSource.Log.TryPoolerTraceEvent("<prov.DbConnectionPool.GetFromGeneralPool|RES|CPOOL> {0}, Connection {1}, Popped from general pool.", ObjectID, obj.ObjectID);
                 PerformanceCounters.NumberOfFreeConnections.Decrement();
             }
-            return (obj);
+            return obj;
         }
 
         private DbConnectionInternal GetFromTransactedPool(out Transaction transaction)
@@ -2007,14 +2008,16 @@ namespace Microsoft.Data.ProviderBase
             }
             else
             {
-                if ((oldConnection != null) || (Count < MaxPoolSize) || MaxPoolSize == 0)
+                if (oldConnection != null || Count < MaxPoolSize || MaxPoolSize == 0)
                 {
                     // If we have an odd number of total objects, reclaim any dead objects.
                     // If we did not find any objects to reclaim, create a new one.
 
                     // TODO: Consider implement a control knob here; why do we only check for dead objects ever other time?  why not every 10th time or every time?
-                    if ((oldConnection != null) || (Count & 0x1) == 0x1 || !ReclaimEmancipatedObjects())
+                    if (oldConnection != null || (Count & 0x1) == 0x1 || !ReclaimEmancipatedObjects())
+                    {
                         obj = CreateObject(owningObject, userOptions, oldConnection);
+                    }
                 }
                 return obj;
             }

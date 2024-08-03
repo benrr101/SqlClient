@@ -171,7 +171,7 @@ namespace Microsoft.Data.SqlClient
             int cipherStartIndex = ivStartIndex + _BlockSizeInBytes; // this is where hmac starts.
 
             // Output buffer size = size of VersionByte + Authentication Tag + IV + cipher Text blocks.
-            int outputBufSize = sizeof(byte) + authenticationTagLen + iv.Length + (numBlocks * _BlockSizeInBytes);
+            int outputBufSize = sizeof(byte) + authenticationTagLen + iv.Length + numBlocks * _BlockSizeInBytes;
             byte[] outBuffer = new byte[outputBufSize];
 
             // Store the version and IV rightaway
@@ -336,9 +336,9 @@ namespace Microsoft.Data.SqlClient
         /// <returns>Returns decrypted plain text data</returns>
         private byte[] DecryptData(byte[] iv, byte[] cipherText, int offset, int count)
         {
-            Debug.Assert((iv != null) && (cipherText != null));
+            Debug.Assert(iv != null && cipherText != null);
             Debug.Assert(offset > -1 && count > -1);
-            Debug.Assert((count + offset) <= cipherText.Length);
+            Debug.Assert(count + offset <= cipherText.Length);
 
             byte[] plainText;
 

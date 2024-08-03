@@ -370,11 +370,13 @@ namespace Microsoft.Data.SqlClient
             ConnectionState originalState = _innerConnection.State & ConnectionState.Open;
             ConnectionState currentState = to.State & ConnectionState.Open;
 
-            if ((originalState != currentState) && (ConnectionState.Closed == currentState))
+            if (originalState != currentState && ConnectionState.Closed == currentState)
             {
                 // Increment the close count whenever we switch to Closed
                 unchecked
-                { _closeCount++; }
+                {
+                    _closeCount++;
+                }
             }
 
             _innerConnection = to;
@@ -410,7 +412,7 @@ namespace Microsoft.Data.SqlClient
             Debug.Assert(from != null, "from null InnerConnection");
             Debug.Assert(to != null, "to null InnerConnection");
 
-            bool result = (from == Interlocked.CompareExchange<DbConnectionInternal>(ref _innerConnection, to, from));
+            bool result = Interlocked.CompareExchange<DbConnectionInternal>(ref _innerConnection, to, from) == from;
             return result;
         }
 

@@ -65,7 +65,7 @@ namespace Microsoft.Data.SqlClient.Server
                     _majorVersion = (byte)(buildVersion >> 24);
                     _minorVersion = (byte)((buildVersion >> 16) & 0xff);
                     _buildNum = (short)(buildVersion & 0xffff);
-                    _serverVersion = (String.Format((IFormatProvider)null, "{0:00}.{1:00}.{2:0000}", _majorVersion, (short)_minorVersion, _buildNum));
+                    _serverVersion = String.Format((IFormatProvider)null, "{0:00}.{1:00}.{2:0000}", _majorVersion, (short)_minorVersion, _buildNum);
                 }
                 else
                 {

@@ -203,7 +203,7 @@ namespace Microsoft.Data.SqlClient
 
             // This message is to be added only when within the various stages of a connection. 
             // In all other cases, it will default to the original error message.
-            if ((_currentPhase != SqlConnectionTimeoutErrorPhase.Undefined) && (_currentPhase != SqlConnectionTimeoutErrorPhase.Complete))
+            if (_currentPhase != SqlConnectionTimeoutErrorPhase.Undefined && _currentPhase != SqlConnectionTimeoutErrorPhase.Complete)
             {
                 // NOTE: In case of a failover scenario, add a string that this failure occurred as part of the primary or secondary server
                 if (_isFailoverScenario)

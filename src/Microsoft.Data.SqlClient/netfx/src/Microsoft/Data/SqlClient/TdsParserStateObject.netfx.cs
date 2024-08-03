@@ -142,7 +142,7 @@ namespace Microsoft.Data.SqlClient
             try
             {
                 // Keep looping until we either grabbed the lock (and therefore sent attention) or the connection closes\breaks
-                while ((!hasLock) && (_parser.State != TdsParserState.Closed) && (_parser.State != TdsParserState.Broken))
+                while (!hasLock && _parser.State != TdsParserState.Closed && _parser.State != TdsParserState.Broken)
                 {
                     Monitor.TryEnter(this, WaitForCancellationLockPollTimeout, ref hasLock);
                     if (hasLock)
@@ -151,7 +151,7 @@ namespace Microsoft.Data.SqlClient
 
                         // don't allow objectID -1 since it is reserved for 'not associated with a command'
                         // yes, the 2^32-1 comand won't cancel - but it also won't cancel when we don't want it
-                        if ((!_cancelled) && (objectID == _allowObjectID) && (objectID != -1))
+                        if (!_cancelled && objectID == _allowObjectID && objectID != -1)
                         {
                             _cancelled = true;
 
@@ -159,7 +159,7 @@ namespace Microsoft.Data.SqlClient
                             {
                                 bool hasParserLock = false;
                                 // Keep looping until we have the parser lock (and so are allowed to write), or the connection closes\breaks
-                                while ((!hasParserLock) && (_parser.State != TdsParserState.Closed) && (_parser.State != TdsParserState.Broken))
+                                while (!hasParserLock && _parser.State != TdsParserState.Closed && _parser.State != TdsParserState.Broken)
                                 {
                                     try
                                     {
@@ -397,7 +397,7 @@ namespace Microsoft.Data.SqlClient
         /// <returns>True if the connection is still alive, otherwise false</returns>
         internal bool ValidateSNIConnection()
         {
-            if ((_parser == null) || ((_parser.State == TdsParserState.Broken) || (_parser.State == TdsParserState.Closed)))
+            if (_parser == null || _parser.State == TdsParserState.Broken || _parser.State == TdsParserState.Closed)
             {
                 return false;
             }
@@ -422,7 +422,7 @@ namespace Microsoft.Data.SqlClient
             {
                 Interlocked.Decrement(ref _readingCount);
             }
-            return (error == TdsEnums.SNI_SUCCESS) || (error == TdsEnums.SNI_WAIT_TIMEOUT);
+            return error == TdsEnums.SNI_SUCCESS || error == TdsEnums.SNI_WAIT_TIMEOUT;
         }
 
         // This method should only be called by ReadSni!  If not - it may have problems with timeouts!
@@ -497,7 +497,7 @@ namespace Microsoft.Data.SqlClient
                                 // For DbMirroring Failover during login, never break the connection, just close the TdsParser
                                 _parser.Disconnect();
                             }
-                            else if ((_parser.State == TdsParserState.OpenNotLoggedIn) && (_parser.Connection.ConnectionOptions.MultiSubnetFailover || _parser.Connection.ConnectionOptions.TransparentNetworkIPResolution))
+                            else if (_parser.State == TdsParserState.OpenNotLoggedIn && (_parser.Connection.ConnectionOptions.MultiSubnetFailover || _parser.Connection.ConnectionOptions.TransparentNetworkIPResolution))
                             {
                                 // For MultiSubnet Failover during login, never break the connection, just close the TdsParser
                                 _parser.Disconnect();
@@ -528,7 +528,7 @@ namespace Microsoft.Data.SqlClient
         {
             if (error != 0)
             {
-                if ((_parser.State == TdsParserState.Closed) || (_parser.State == TdsParserState.Broken))
+                if (_parser.State == TdsParserState.Closed || _parser.State == TdsParserState.Broken)
                 {
                     // Do nothing with callback if closed or broken and error not 0 - callback can occur
                     // after connection has been closed.  PROBLEM IN NETLIB - DESIGN FLAW.
@@ -611,7 +611,7 @@ namespace Microsoft.Data.SqlClient
 
             TaskCompletionSource<object> source = _networkPacketTaskSource;
 #if DEBUG
-            if ((s_forcePendingReadsToWaitForUser) && (_realNetworkPacketTaskSource != null))
+            if (s_forcePendingReadsToWaitForUser && _realNetworkPacketTaskSource != null)
             {
                 source = _realNetworkPacketTaskSource;
             }
@@ -668,7 +668,7 @@ namespace Microsoft.Data.SqlClient
             {
                 // pendingCallbacks may be 2 after decrementing, this indicates that a fatal timeout is occurring, and therefore we shouldn't complete the task
                 int pendingCallbacks = DecrementPendingCallbacks(false); // may dispose of GC handle.
-                if ((processFinallyBlock) && (source != null) && (pendingCallbacks < 2))
+                if (processFinallyBlock && source != null && pendingCallbacks < 2)
                 {
                     if (error == 0)
                     {
@@ -708,7 +708,7 @@ namespace Microsoft.Data.SqlClient
                     // Do the close on another thread, since we don't want to block the callback thread
                     ThrowExceptionAndWarning(asyncClose: true);
                 }
-                else if ((_parser.State == TdsParserState.Closed) || (_parser.State == TdsParserState.Broken))
+                else if (_parser.State == TdsParserState.Closed || _parser.State == TdsParserState.Broken)
                 {
                     // Connection was closed by another thread before we parsed the packet, so no error was added to the collection
                     throw ADP.ClosedConnectionError();
@@ -854,7 +854,7 @@ namespace Microsoft.Data.SqlClient
             // It is guaranteed both secure password and secure change password should fit into the first packet
             // Given current TDS format and implementation it is not possible that one of secure string is the last item and exactly fill up the output buffer
             //  if this ever happens and it is correct situation, the packet needs to be written out after _outBytesUsed is update
-            Debug.Assert((_outBytesUsed + lengthInBytes) < _outBuff.Length, "Passwords cannot be split into two different packet or the last item which fully fill up _outBuff!!!");
+            Debug.Assert(_outBytesUsed + lengthInBytes < _outBuff.Length, "Passwords cannot be split into two different packet or the last item which fully fill up _outBuff!!!");
 
             _outBytesUsed += lengthInBytes;
         }
@@ -891,7 +891,7 @@ namespace Microsoft.Data.SqlClient
             Interlocked.MemoryBarrier();
 
             // Now that we have set _writeCompletionSource, check if parser is closed or broken
-            if ((_parser.State == TdsParserState.Closed) || (_parser.State == TdsParserState.Broken))
+            if (_parser.State == TdsParserState.Closed || _parser.State == TdsParserState.Broken)
             {
                 throw ADP.ClosedConnectionError();
             }
@@ -906,7 +906,7 @@ namespace Microsoft.Data.SqlClient
 #pragma warning restore 420 
 
             // If there are no outstanding writes, see if we can shortcut and return null
-            if ((_asyncWriteCount == 0) && ((!task.IsCompleted) || (task.Exception == null)))
+            if (_asyncWriteCount == 0 && (!task.IsCompleted || task.Exception == null))
             {
                 task = null;
             }
@@ -954,7 +954,7 @@ namespace Microsoft.Data.SqlClient
                 // loop through and write the entire array
                 do
                 {
-                    if ((_outBytesUsed + len) > _outBuff.Length)
+                    if (_outBytesUsed + len > _outBuff.Length)
                     {
                         // If the remainder of the data won't fit into the buffer, then we have to put
                         // whatever we can into the buffer, and flush that so we can then put more into
@@ -1033,7 +1033,7 @@ namespace Microsoft.Data.SqlClient
         internal Task WritePacket(byte flushMode, bool canAccumulate = false)
         {
             TdsParserState state = _parser.State;
-            if ((state == TdsParserState.Closed) || (state == TdsParserState.Broken))
+            if (state == TdsParserState.Closed || state == TdsParserState.Broken)
             {
                 throw ADP.ClosedConnectionError();
             }
@@ -1045,7 +1045,7 @@ namespace Microsoft.Data.SqlClient
                 // So we need to avoid this check prior to login completing
                 state == TdsParserState.OpenLoggedIn
                     && !_bulkCopyOpperationInProgress // ignore the condition checking for bulk copy
-                    && _outBytesUsed == (_outputHeaderLen + BitConverter.ToInt32(_outBuff, _outputHeaderLen))
+                    && _outBytesUsed == _outputHeaderLen + BitConverter.ToInt32(_outBuff, _outputHeaderLen)
                     && _outputPacketCount == 0
                     || _outBytesUsed == _outputHeaderLen
                     && _outputPacketCount == 0)
@@ -1057,7 +1057,7 @@ namespace Microsoft.Data.SqlClient
             byte packetNumber = _outputPacketNumber;
 
             // Set Status byte based whether this is end of message or not
-            bool willCancel = (_cancelled) && (_parser._asyncWrite);
+            bool willCancel = _cancelled && _parser._asyncWrite;
             if (willCancel)
             {
                 status = TdsEnums.ST_EOM | TdsEnums.ST_IGNORE;
@@ -1193,7 +1193,7 @@ namespace Microsoft.Data.SqlClient
                     }
 
                     // If there are no outstanding writes, see if we can shortcut and return null
-                    if ((_asyncWriteCount == 0) && ((!task.IsCompleted) || (task.Exception == null)))
+                    if (_asyncWriteCount == 0 && (!task.IsCompleted || task.Exception == null))
                     {
                         task = null;
                     }
@@ -1295,7 +1295,7 @@ namespace Microsoft.Data.SqlClient
 #endif
                         // Take lock and send attention
                         bool releaseLock = false;
-                        if ((mustTakeWriteLock) && (!_parser.Connection.ThreadHasParserLockForClose))
+                        if (mustTakeWriteLock && !_parser.Connection.ThreadHasParserLockForClose)
                         {
                             releaseLock = true;
                             _parser.Connection._parserLock.Wait(canReleaseFromAnyThread: false);
@@ -1708,7 +1708,7 @@ namespace Microsoft.Data.SqlClient
                 foreach (SqlError error in inCollection)
                 {
                     collectionToAddTo.Add(error);
-                    broken |= (error.Class >= TdsEnums.FATAL_ERROR_CLASS);
+                    broken |= error.Class >= TdsEnums.FATAL_ERROR_CLASS;
                 }
             }
         }
@@ -1741,7 +1741,8 @@ namespace Microsoft.Data.SqlClient
             {
                 Debug.Assert(_errors == null && _warnings == null, "Can't restore errors after attention because there are already other errors");
 
-                _hasErrorOrWarning = (((_preAttentionErrors != null) && (_preAttentionErrors.Count > 0)) || ((_preAttentionWarnings != null) && (_preAttentionWarnings.Count > 0)));
+                _hasErrorOrWarning = (_preAttentionErrors != null && _preAttentionErrors.Count > 0) || 
+                                     (_preAttentionWarnings != null && _preAttentionWarnings.Count > 0);
 
                 _errors = _preAttentionErrors;
                 _warnings = _preAttentionWarnings;
@@ -1770,7 +1771,7 @@ namespace Microsoft.Data.SqlClient
         {
             // If our TdsParser is closed or broken, then we don't really care about our state
             TdsParser parser = _parser;
-            if ((parser != null) && (parser.State != TdsParserState.Closed) && (parser.State != TdsParserState.Broken))
+            if (parser != null && parser.State != TdsParserState.Closed && parser.State != TdsParserState.Broken)
             {
                 // Async reads
                 Debug.Assert(_snapshot == null && !_snapshotReplay, "StateObj has leftover snapshot state");

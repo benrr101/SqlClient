@@ -181,12 +181,15 @@ namespace Microsoft.Data.SqlClient
 
         internal static SqlException CreateException(SqlErrorCollection errorCollection, string serverVersion, SqlInternalConnectionTds internalConnection, Exception innerException = null, SqlBatchCommand batchCommand = null)
         {
-            Guid connectionId = (internalConnection == null) ? Guid.Empty : internalConnection._clientConnectionId;
+            Guid connectionId = internalConnection == null
+                ? Guid.Empty
+                : internalConnection._clientConnectionId;
             SqlException exception = CreateException(errorCollection, serverVersion, connectionId, innerException, batchCommand);
 
             if (internalConnection != null)
             {
-                if ((internalConnection.OriginalClientConnectionId != Guid.Empty) && (internalConnection.OriginalClientConnectionId != internalConnection.ClientConnectionId))
+                if (internalConnection.OriginalClientConnectionId != Guid.Empty &&
+                    internalConnection.OriginalClientConnectionId != internalConnection.ClientConnectionId)
                 {
                     exception.Data.Add(OriginalClientConnectionIdKey, internalConnection.OriginalClientConnectionId);
                 }

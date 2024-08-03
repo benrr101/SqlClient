@@ -29,7 +29,7 @@ namespace Microsoft.Data.SqlClient
             _disposalTokenSource = new CancellationTokenSource();
 
             // Safely convert the CommandTimeout from seconds to milliseconds
-            if ((reader.Command != null) && (reader.Command.CommandTimeout != 0))
+            if (reader.Command != null && reader.Command.CommandTimeout != 0)
             {
                 _readTimeout = (int)Math.Min((long)reader.Command.CommandTimeout * 1000L, (long)int.MaxValue);
             }
@@ -39,7 +39,7 @@ namespace Microsoft.Data.SqlClient
             }
         }
 
-        public override bool CanRead => (_reader != null) && (!_reader.IsClosed);
+        public override bool CanRead => _reader != null && !_reader.IsClosed;
 
         public override bool CanSeek => false;
 
@@ -63,7 +63,7 @@ namespace Microsoft.Data.SqlClient
             get => _readTimeout;
             set
             {
-                if ((value > 0) || (value == Timeout.Infinite))
+                if (value > 0 || value == Timeout.Infinite)
                 {
                     _readTimeout = value;
                 }
@@ -136,7 +136,7 @@ namespace Microsoft.Data.SqlClient
                         int bytesRead = 0;
                         Task<int> getBytesTask = null;
                         SqlDataReader reader = _reader;
-                        if ((reader != null) && (!cancellationToken.IsCancellationRequested) && (!_disposalTokenSource.Token.IsCancellationRequested))
+                        if (reader != null && !cancellationToken.IsCancellationRequested && !_disposalTokenSource.Token.IsCancellationRequested)
                         {
                             getBytesTask = reader.GetBytesAsync(_columnIndex, buffer, offset, count, _readTimeout, combinedTokenSource.Token, out bytesRead);
                         }
@@ -168,7 +168,7 @@ namespace Microsoft.Data.SqlClient
                             {
                                 _currentTask = null;
                                 // If we completed, but _reader is null (i.e. the stream is closed), then report cancellation
-                                if ((t.Status == TaskStatus.RanToCompletion) && (CanRead))
+                                if (t.Status == TaskStatus.RanToCompletion && CanRead)
                                 {
                                     completion.SetResult((int)t.Result);
                                 }

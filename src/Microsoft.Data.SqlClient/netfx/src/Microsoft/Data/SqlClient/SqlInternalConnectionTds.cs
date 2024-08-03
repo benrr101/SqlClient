@@ -156,7 +156,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                return (ConnectionOptions.ConnectTimeout == ADP.InfiniteConnectionTimeout || ConnectionOptions.ConnectTimeout >= ADP.MaxBufferAccessTokenExpiry)
+                return ConnectionOptions.ConnectTimeout == ADP.InfiniteConnectionTimeout || ConnectionOptions.ConnectTimeout >= ADP.MaxBufferAccessTokenExpiry
                     ? ADP.MaxBufferAccessTokenExpiry : ConnectionOptions.ConnectTimeout;
             }
         }
@@ -331,7 +331,7 @@ namespace Microsoft.Data.SqlClient
                     Monitor.TryEnter(semaphore, timeout, ref hasMonitor); // semaphore is used as lock object, no relation to SemaphoreSlim.Wait/Release methods
                     if (hasMonitor)
                     {
-                        if ((canReleaseFromAnyThread) || (semaphore.CurrentCount == 0))
+                        if (canReleaseFromAnyThread || semaphore.CurrentCount == 0)
                         {
                             if (semaphore.Wait(timeout))
                             {
@@ -355,7 +355,7 @@ namespace Microsoft.Data.SqlClient
                 }
                 finally
                 {
-                    if ((!lockTaken) && (hasMonitor))
+                    if (!lockTaken && hasMonitor)
                     {
                         Monitor.Exit(semaphore);
                     }
@@ -730,7 +730,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                return (!Parser.MARSOn && Parser._physicalStateObj.BcpLock);
+                return !Parser.MARSOn && Parser._physicalStateObj.BcpLock;
             }
         }
 
@@ -812,8 +812,8 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                return (string.Format("{0:00}.{1:00}.{2:0000}", _loginAck.majorVersion,
-                       (short)_loginAck.minorVersion, _loginAck.buildNum));
+                return string.Format("{0:00}.{1:00}.{2:0000}", _loginAck.majorVersion,
+                    (short)_loginAck.minorVersion, _loginAck.buildNum);
             }
         }
         public int ServerProcessId
@@ -886,7 +886,7 @@ namespace Microsoft.Data.SqlClient
         override internal void ValidateConnectionForExecute(SqlCommand command)
         {
             TdsParser parser = _parser;
-            if ((parser == null) || (parser.State == TdsParserState.Broken) || (parser.State == TdsParserState.Closed))
+            if (parser == null || parser.State == TdsParserState.Broken || parser.State == TdsParserState.Closed)
             {
                 throw ADP.ClosedConnectionError();
             }
@@ -1966,7 +1966,7 @@ namespace Microsoft.Data.SqlClient
                 SqlClientEventSource.Log.TryAdvancedTraceEvent("<sc.SqlInternalConnectionTds.LoginNoFailover|ADV> {0}, sleeping {1}[milisec]", ObjectID, sleepInterval);
 
                 Thread.Sleep(sleepInterval);
-                sleepInterval = (sleepInterval < 500) ? sleepInterval * 2 : 1000;
+                sleepInterval = sleepInterval < 500 ? sleepInterval * 2 : 1000;
             }
             _activeDirectoryAuthTimeoutRetryHelper.State = ActiveDirectoryAuthenticationTimeoutRetryState.HasLoggedIn;
 
@@ -1999,7 +1999,7 @@ namespace Microsoft.Data.SqlClient
             // If the user has specified the option in the connection string explicitly, then we shouldn't disable TNIR.
             bool isTnirExplicitlySpecifiedInConnectionOptions = connectionOptions.Parsetable.ContainsKey(SqlConnectionString.KEY.TransparentNetworkIPResolution);
 
-            return isTnirExplicitlySpecifiedInConnectionOptions ? false : (isAzureEndPoint || isFedAuthEnabled);
+            return isTnirExplicitlySpecifiedInConnectionOptions ? false : isAzureEndPoint || isFedAuthEnabled;
         }
 
         // With possible MFA support in all AD auth providers, the duration for acquiring a token can be unpredictable.
@@ -2090,7 +2090,7 @@ namespace Microsoft.Data.SqlClient
             while (true)
             {
                 // Set timeout for this attempt, but don't exceed original timer
-                long nextTimeoutInterval = checked(timeoutUnitInterval * ((attemptNumber / 2) + 1));
+                long nextTimeoutInterval = checked(timeoutUnitInterval * (attemptNumber / 2 + 1));
                 long milliseconds = timeout.MillisecondsRemaining;
                 if (nextTimeoutInterval > milliseconds)
                 {
@@ -2221,7 +2221,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     SqlClientEventSource.Log.TryAdvancedTraceEvent("<sc.SqlInternalConnectionTds.LoginWithFailover|ADV> {0}, sleeping {1}[milisec]", ObjectID, sleepInterval);
                     Thread.Sleep(sleepInterval);
-                    sleepInterval = (sleepInterval < 500) ? sleepInterval * 2 : 1000;
+                    sleepInterval = sleepInterval < 500 ? sleepInterval * 2 : 1000;
                 }
 
                 // Update attempt number and target host
@@ -2245,7 +2245,7 @@ namespace Microsoft.Data.SqlClient
                 // partner; save this information in _currentFailoverPartner.
                 PoolGroupProviderInfo.FailoverCheck(useFailoverHost, connectionOptions, ServerProvidedFailOverPartner);
             }
-            CurrentDataSource = (useFailoverHost ? failoverHost : primaryServerInfo.UserServerName);
+            CurrentDataSource = useFailoverHost ? failoverHost : primaryServerInfo.UserServerName;
         }
 
         private void ResolveExtendedServerName(ServerInfo serverInfo, bool aliasLookup, SqlConnectionString options)
@@ -3121,7 +3121,7 @@ namespace Microsoft.Data.SqlClient
 
                         if (data.Length > 1)
                         {
-                            _parser.EnclaveType = Encoding.Unicode.GetString(data, 2, (data.Length - 2));
+                            _parser.EnclaveType = Encoding.Unicode.GetString(data, 2, data.Length - 2);
                         }
 
                         break;
@@ -3175,7 +3175,7 @@ namespace Microsoft.Data.SqlClient
                             throw SQL.ParsingError(ParsingErrorState.CorruptedTdsStream);
                         }
                         byte supportedDataClassificationVersion = data[0];
-                        if (supportedDataClassificationVersion == 0 || (supportedDataClassificationVersion > TdsEnums.DATA_CLASSIFICATION_VERSION_MAX_SUPPORTED))
+                        if (supportedDataClassificationVersion == 0 || supportedDataClassificationVersion > TdsEnums.DATA_CLASSIFICATION_VERSION_MAX_SUPPORTED)
                         {
                             SqlClientEventSource.Log.TryTraceEvent("<sc.SqlInternalConnectionTds.OnFeatureExtAck|ERR> {0}, Invalid version number for DATACLASSIFICATION", ObjectID);
                             throw SQL.ParsingErrorValue(ParsingErrorState.DataClassificationInvalidVersion, supportedDataClassificationVersion);
@@ -3187,7 +3187,7 @@ namespace Microsoft.Data.SqlClient
                             throw SQL.ParsingError(ParsingErrorState.CorruptedTdsStream);
                         }
                         byte enabled = data[1];
-                        _parser.DataClassificationVersion = (enabled == 0) ? TdsEnums.DATA_CLASSIFICATION_NOT_ENABLED : supportedDataClassificationVersion;
+                        _parser.DataClassificationVersion = enabled == 0 ? TdsEnums.DATA_CLASSIFICATION_NOT_ENABLED : supportedDataClassificationVersion;
                         break;
                     }
 
@@ -3329,7 +3329,7 @@ namespace Microsoft.Data.SqlClient
             //Method body
 
             Debug.Assert(serverName != null, "server name should never be null");
-            UserServerName = (serverName ?? string.Empty); // ensure user server name is not null
+            UserServerName = serverName ?? string.Empty; // ensure user server name is not null
 
             UserProtocol = userOptions.NetworkLibrary;
             ResolvedDatabaseName = userOptions.InitialCatalog;

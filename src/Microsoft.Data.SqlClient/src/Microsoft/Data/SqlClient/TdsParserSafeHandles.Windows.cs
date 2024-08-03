@@ -68,7 +68,7 @@ namespace Microsoft.Data.SqlClient
             }
         }
 
-        public override bool IsInvalid => (IntPtr.Zero == base.handle);
+        public override bool IsInvalid => IntPtr.Zero == base.handle;
 
         override protected bool ReleaseHandle()
         {
@@ -209,7 +209,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                return (IntPtr.Zero == base.handle);
+                return IntPtr.Zero == base.handle;
             }
         }
 
@@ -252,7 +252,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                return (IntPtr.Zero == base.handle);
+                return IntPtr.Zero == base.handle;
             }
         }
 

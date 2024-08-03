@@ -544,11 +544,11 @@ namespace Microsoft.Data.SqlClient
                 SmiXetterAccessMap.IsSetterAccessValid(_metaData, SmiXetterTypeCode.XetDateTime));
             if (SqlDbType.Variant == _metaData.SqlDbType)
             {
-                if ((_variantType != null) && (_variantType.SqlDbType == SqlDbType.DateTime2))
+                if (_variantType != null && _variantType.SqlDbType == SqlDbType.DateTime2)
                 {
                     _stateObj.Parser.WriteSqlVariantDateTime2(value, _stateObj);
                 }
-                else if ((_variantType != null) && (_variantType.SqlDbType == SqlDbType.Date))
+                else if (_variantType != null && _variantType.SqlDbType == SqlDbType.Date)
                 {
                     _stateObj.Parser.WriteSqlVariantDate(value, _stateObj);
                 }

@@ -176,7 +176,7 @@ namespace Microsoft.Data.SqlClient
                     Debug.Assert(_cachedCount == 0, "SessionPool is disposed, but there are still sessions in the cache?");
                     session.Dispose();
                 }
-                else if ((okToReuse) && (_freeStateObjectCount < MaxInactiveCount))
+                else if (okToReuse && _freeStateObjectCount < MaxInactiveCount)
                 {
                     // Session is good to re-use and our cache has space
                     SqlClientEventSource.Log.TryAdvancedTraceEvent("<sc.TdsParserSessionPool.PutSession|ADV> {0} keeping session {1} cachedCount={2}", ObjectID, session.ObjectID, _cachedCount);

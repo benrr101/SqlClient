@@ -46,7 +46,7 @@ namespace Microsoft.Data.Common
             _tree = permit._tree;
             if (_tree != null)
             {
-                NameValuePermission[] tree = (_tree.Clone() as NameValuePermission[]);
+                NameValuePermission[] tree = _tree.Clone() as NameValuePermission[];
                 for (int i = 0; i < tree.Length; ++i)
                 {
                     if (tree[i] != null)

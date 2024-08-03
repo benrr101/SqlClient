@@ -35,8 +35,8 @@ namespace Microsoft.Data.SqlClient
         {
             AssertWriteAccess();
             Debug.Assert(string.IsNullOrEmpty(bulkCopyColumnMapping.SourceColumn) || bulkCopyColumnMapping._internalSourceColumnOrdinal == -1, "BulkLoadAmbiguousSourceColumn");
-            if (((string.IsNullOrEmpty(bulkCopyColumnMapping.SourceColumn)) && (bulkCopyColumnMapping.SourceOrdinal == -1))
-                || ((string.IsNullOrEmpty(bulkCopyColumnMapping.DestinationColumn)) && (bulkCopyColumnMapping.DestinationOrdinal == -1)))
+            if ((string.IsNullOrEmpty(bulkCopyColumnMapping.SourceColumn) && bulkCopyColumnMapping.SourceOrdinal == -1) ||
+                (string.IsNullOrEmpty(bulkCopyColumnMapping.DestinationColumn) && bulkCopyColumnMapping.DestinationOrdinal == -1))
             {
                 throw SQL.BulkLoadNonMatchingColumnMapping();
             }
@@ -130,9 +130,13 @@ namespace Microsoft.Data.SqlClient
             MappingSchema mappingSchema;
             foreach (SqlBulkCopyColumnMapping a in InnerList)
             {
-                mappingSchema = a.SourceOrdinal != -1 ?
-                    (a.DestinationOrdinal != -1 ? MappingSchema.OrdinalsOrdinals : MappingSchema.OrdinalsNames) :
-                    (a.DestinationOrdinal != -1 ? MappingSchema.NamesOrdinals : MappingSchema.NamesNames);
+                mappingSchema = a.SourceOrdinal != -1 
+                    ? a.DestinationOrdinal != -1 
+                        ? MappingSchema.OrdinalsOrdinals 
+                        : MappingSchema.OrdinalsNames
+                    : a.DestinationOrdinal != -1
+                        ? MappingSchema.NamesOrdinals
+                        : MappingSchema.NamesNames;
 
                 if (_mappingSchema == MappingSchema.Undefined)
                 {

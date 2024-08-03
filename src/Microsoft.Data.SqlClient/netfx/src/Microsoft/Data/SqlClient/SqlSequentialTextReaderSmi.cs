@@ -40,7 +40,7 @@ namespace Microsoft.Data.SqlClient
                 _peekedChar = Read();
             }
 
-            Debug.Assert(_peekedChar == -1 || ((_peekedChar >= char.MinValue) && (_peekedChar <= char.MaxValue)), string.Format("Bad peeked character: {0}", _peekedChar));
+            Debug.Assert(_peekedChar == -1 || (_peekedChar >= char.MinValue && _peekedChar <= char.MaxValue), string.Format("Bad peeked character: {0}", _peekedChar));
             return _peekedChar;
         }
 
@@ -71,7 +71,7 @@ namespace Microsoft.Data.SqlClient
                 }
             }
 
-            Debug.Assert(readChar == -1 || ((readChar >= char.MinValue) && (readChar <= char.MaxValue)), string.Format("Bad read character: {0}", readChar));
+            Debug.Assert(readChar == -1 || (readChar >= char.MinValue && readChar <= char.MaxValue), string.Format("Bad read character: {0}", readChar));
             return readChar;
         }
 
@@ -85,9 +85,9 @@ namespace Microsoft.Data.SqlClient
 
             int charsRead = 0;
             // Load in peeked char
-            if ((count > 0) && (HasPeekedChar))
+            if (count > 0 && HasPeekedChar)
             {
-                Debug.Assert((_peekedChar >= char.MinValue) && (_peekedChar <= char.MaxValue), string.Format("Bad peeked character: {0}", _peekedChar));
+                Debug.Assert(_peekedChar >= char.MinValue && _peekedChar <= char.MaxValue, string.Format("Bad peeked character: {0}", _peekedChar));
                 buffer[index + charsRead] = (char)_peekedChar;
                 charsRead++;
                 _peekedChar = -1;
@@ -123,7 +123,7 @@ namespace Microsoft.Data.SqlClient
         /// </summary>
         private bool IsClosed
         {
-            get { return ((_sink == null) || (_getters == null)); }
+            get { return _sink == null || _getters == null; }
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Microsoft.Data.SqlClient
         /// </summary>
         private bool HasPeekedChar
         {
-            get { return (_peekedChar >= char.MinValue); }
+            get { return _peekedChar >= char.MinValue; }
         }
     }
 }

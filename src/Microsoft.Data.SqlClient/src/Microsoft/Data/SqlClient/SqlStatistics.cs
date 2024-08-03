@@ -139,7 +139,7 @@ namespace Microsoft.Data.SqlClient
         {
             if (_startExecutionTimestamp > 0)
             {
-                _executionTime += (ADP.TimerCurrent() - _startExecutionTimestamp);
+                _executionTime += ADP.TimerCurrent() - _startExecutionTimestamp;
                 _startExecutionTimestamp = 0;
             }
         }
@@ -148,7 +148,7 @@ namespace Microsoft.Data.SqlClient
         {
             if (_waitForReply && _startNetworkServerTimestamp > 0)
             {
-                _networkServerTime += (ADP.TimerCurrent() - _startNetworkServerTimestamp);
+                _networkServerTime += ADP.TimerCurrent() - _startNetworkServerTimestamp;
                 _startNetworkServerTimestamp = 0;
             }
             _waitForReply = false;
@@ -309,7 +309,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     Debug.Assert(dictionary != null);
                     Debug.Assert(collection != null);
-                    Debug.Assert((collection is KeyCollection) || (collection is ValueCollection));
+                    Debug.Assert(collection is KeyCollection || collection is ValueCollection);
 
                     _dictionary = dictionary;
                     _collection = collection;

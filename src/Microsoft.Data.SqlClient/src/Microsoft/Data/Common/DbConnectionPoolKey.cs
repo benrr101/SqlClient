@@ -47,7 +47,7 @@ namespace Microsoft.Data.Common
                 return false;
             }
 
-            return (obj is DbConnectionPoolKey key && _connectionString == key._connectionString);
+            return obj is DbConnectionPoolKey key && _connectionString == key._connectionString;
         }
 
         public override int GetHashCode()

@@ -23,7 +23,7 @@ namespace Microsoft.Data.SqlClient
 
             public void Clear() => _command = null;
 
-            private bool Predicate(SqlDataReader reader) => (!reader.IsClosed) && (_command == reader.Command);
+            private bool Predicate(SqlDataReader reader) => !reader.IsClosed && _command == reader.Command;
         }
 
         internal const int DataReaderTag = 1;

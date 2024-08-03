@@ -122,7 +122,7 @@ namespace Microsoft.Data.SqlClient
                 try
                 {
                     // Example: 2301 - 2000 = 301; 301 / 2301 = 0.1308 * 100 = 13% compacting
-                    _cache.Compact((((double)(currentCacheSize - _cacheSize) / (double)currentCacheSize) * 100));
+                    _cache.Compact((double)(currentCacheSize - _cacheSize) / (double)currentCacheSize * 100);
                 }
                 finally
                 {

@@ -35,7 +35,7 @@ namespace Microsoft.Data.Sql
             }
             set
             {
-                if (value != null && (ushort.MaxValue < value.Length))
+                if (value != null && ushort.MaxValue < value.Length)
                 {
                     throw ADP.ArgumentOutOfRange(string.Empty, nameof(Options));
                 }
@@ -69,7 +69,7 @@ namespace Microsoft.Data.Sql
             }
             set
             {
-                if (value != null && (ushort.MaxValue < value.Length))
+                if (value != null && ushort.MaxValue < value.Length)
                 {
                     throw ADP.ArgumentOutOfRange(string.Empty, nameof(UserData));
                 }

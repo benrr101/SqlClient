@@ -494,7 +494,7 @@ namespace Microsoft.Data.SqlClient.Server
                         Stream s = new SmiGettersStream(sink, getters, ordinal, metaData);
                         SqlStreamChars sc = CopyIntoNewSmiScratchStreamChars(s, sink, context);
 
-                        Type SqlCharsType = (typeof(SqlChars));
+                        Type SqlCharsType = typeof(SqlChars);
                         Type[] argTypes = new Type[] { typeof(SqlStreamChars) };
                         SqlChars SqlCharsInstance = (SqlChars)SqlCharsType.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance,
                               null, argTypes, null).Invoke(new object[] { sc });
@@ -2024,7 +2024,7 @@ namespace Microsoft.Data.SqlClient.Server
                                     SmiContextFactory.Sql2008Version
 #endif
                                     );
-                                if ((storageType == SqlBuffer.StorageType.DateTime2) || (storageType == SqlBuffer.StorageType.Date))
+                                if (storageType == SqlBuffer.StorageType.DateTime2 || storageType == SqlBuffer.StorageType.Date)
                                 {
                                     SetCompatibleValueV200(sink, setters, i, metaData[i], o, typeCode, 0, null, storageType);
                                 }
@@ -2323,7 +2323,7 @@ namespace Microsoft.Data.SqlClient.Server
         private static void SetDateTime_Checked(SmiEventSink_Default sink, ITypedSettersV3 setters, int ordinal, SmiMetaData metaData, DateTime value)
         {
             VerifyDateTimeRange(metaData.SqlDbType, value);
-            SetDateTime_Unchecked(sink, setters, ordinal, (metaData.SqlDbType == SqlDbType.Date) ? value.Date : value);
+            SetDateTime_Unchecked(sink, setters, ordinal, metaData.SqlDbType == SqlDbType.Date ? value.Date : value);
         }
 
         private static void SetTimeSpan_Checked(SmiEventSink_Default sink, SmiTypedGetterSetter setters, int ordinal, SmiMetaData metaData, TimeSpan value)

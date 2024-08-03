@@ -110,7 +110,7 @@ namespace Microsoft.Data.SqlClient
             }
             set
             {
-                if (("[" != value) && ("\"" != value))
+                if (value != "[" && value != "\"")
                 {
                     throw ADP.DoubleValuedProperty(nameof(QuotePrefix), "[", "\"");
                 }
@@ -132,7 +132,7 @@ namespace Microsoft.Data.SqlClient
             }
             set
             {
-                if (("]" != value) && ("\"" != value))
+                if (value != "]" && value != "\"")
                 {
                     throw ADP.DoubleValuedProperty(nameof(QuoteSuffix), "]", "\"");
                 }
@@ -198,7 +198,7 @@ namespace Microsoft.Data.SqlClient
             p.SqlDbType = (SqlDbType)valueType;
             p.Offset = 0;
 
-            if ((p.SqlDbType == SqlDbType.Udt) && !p.SourceColumnNullMapping)
+            if (p.SqlDbType == SqlDbType.Udt && !p.SourceColumnNullMapping)
             {
                 p.UdtTypeName = datarow["DataTypeName"] as string;
             }
@@ -211,34 +211,34 @@ namespace Microsoft.Data.SqlClient
             if (bvalue != DBNull.Value)
             {
                 byte bval = (byte)(short)bvalue;
-                p.PrecisionInternal = ((0xff != bval) ? bval : (byte)0);
+                p.PrecisionInternal = bval != 0xff ? bval : (byte)0;
             }
 
             bvalue = datarow[SchemaTableColumn.NumericScale];
             if (bvalue != DBNull.Value)
             {
                 byte bval = (byte)(short)bvalue;
-                p.ScaleInternal = ((0xff != bval) ? bval : (byte)0);
+                p.ScaleInternal = bval != 0xff ? bval : (byte)0;
             }
         }
 
         /// <include file='../../../../../../doc/snippets/Microsoft.Data.SqlClient/SqlCommandBuilder.xml' path='docs/members[@name="SqlCommandBuilder"]/GetParameterName1/*'/>
         protected override string GetParameterName(int parameterOrdinal)
-            => ("@p" + parameterOrdinal.ToString(CultureInfo.InvariantCulture));
+            => "@p" + parameterOrdinal.ToString(CultureInfo.InvariantCulture);
 
         /// <include file='../../../../../../doc/snippets/Microsoft.Data.SqlClient/SqlCommandBuilder.xml' path='docs/members[@name="SqlCommandBuilder"]/GetParameterName2/*'/>
         protected override string GetParameterName(string parameterName)
-            => ("@" + parameterName);
+            => "@" + parameterName;
 
         /// <include file='../../../../../../doc/snippets/Microsoft.Data.SqlClient/SqlCommandBuilder.xml' path='docs/members[@name="SqlCommandBuilder"]/GetParameterPlaceholder/*'/>
         protected override string GetParameterPlaceholder(int parameterOrdinal)
-            => ("@p" + parameterOrdinal.ToString(CultureInfo.InvariantCulture));
+            => "@p" + parameterOrdinal.ToString(CultureInfo.InvariantCulture);
 
         private void ConsistentQuoteDelimiters(string quotePrefix, string quoteSuffix)
         {
             Debug.Assert(quotePrefix == "\"" || quotePrefix == "[");
-            if ((("\"" == quotePrefix) && ("\"" != quoteSuffix)) ||
-                (("[" == quotePrefix) && ("]" != quoteSuffix)))
+            if ((quotePrefix == "\"" && quoteSuffix != "\"") ||
+                (quotePrefix == "[" && quoteSuffix != "]"))
             {
                 throw ADP.InvalidPrefixSuffix();
             }

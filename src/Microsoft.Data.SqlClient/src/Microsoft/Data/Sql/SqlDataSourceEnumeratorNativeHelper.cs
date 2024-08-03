@@ -26,7 +26,7 @@ namespace Microsoft.Data.Sql
         internal static DataTable GetDataSources()
         {
 #if NETFRAMEWORK
-            (new NamedPermissionSet("FullTrust")).Demand(); // SQLBUDT 244304
+            new NamedPermissionSet("FullTrust").Demand(); // SQLBUDT 244304
 #endif
             char[] buffer = null;
             StringBuilder strbldr = new();

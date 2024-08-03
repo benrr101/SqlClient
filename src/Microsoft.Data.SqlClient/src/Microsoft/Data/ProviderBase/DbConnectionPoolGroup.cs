@@ -88,7 +88,7 @@ namespace Microsoft.Data.ProviderBase
             }
         }
 
-        internal bool IsDisabled => (PoolGroupStateDisabled == _state);
+        internal bool IsDisabled => PoolGroupStateDisabled == _state;
 
         internal int ObjectID { get; } = Interlocked.Increment(ref s_objectTypeCount);
 
@@ -240,12 +240,12 @@ namespace Microsoft.Data.ProviderBase
             // when getting a connection, make the entry active if it was idle (but not disabled)
             // must always lock this before calling
 
-            if (PoolGroupStateIdle == _state)
+            if (_state == PoolGroupStateIdle)
             {
                 _state = PoolGroupStateActive;
                 SqlClientEventSource.Log.TryTraceEvent("<prov.DbConnectionPoolGroup.ClearInternal|RES|INFO|CPOOL> {0}, Active", ObjectID);
             }
-            return (PoolGroupStateActive == _state);
+            return _state == PoolGroupStateActive;
         }
 
         internal bool Prune()
@@ -268,7 +268,7 @@ namespace Microsoft.Data.ProviderBase
                             // Empty pool during pruning indicates zero or low activity, but
                             //  an error state indicates the pool needs to stay around to
                             //  throttle new connection attempts.
-                            if ((!pool.ErrorOccurred) && pool.Count == 0)
+                            if (!pool.ErrorOccurred && pool.Count == 0)
                             {
                                 // Order is important here.  First we remove the pool
                                 // from the collection of pools so no one will try
@@ -294,18 +294,18 @@ namespace Microsoft.Data.ProviderBase
                 // otherwise pruning thread risks making entry disabled soon after user calls ClearPool
                 if (_poolCollection.Count == 0)
                 {
-                    if (PoolGroupStateActive == _state)
+                    if (_state == PoolGroupStateActive)
                     {
                         _state = PoolGroupStateIdle;
                         SqlClientEventSource.Log.TryTraceEvent("<prov.DbConnectionPoolGroup.ClearInternal|RES|INFO|CPOOL> {0}, Idle", ObjectID);
                     }
-                    else if (PoolGroupStateIdle == _state)
+                    else if (_state == PoolGroupStateIdle)
                     {
                         _state = PoolGroupStateDisabled;
                         SqlClientEventSource.Log.TryTraceEvent("<prov.DbConnectionPoolGroup.ReadyToRemove|RES|INFO|CPOOL> {0}, Disabled", ObjectID);
                     }
                 }
-                return (PoolGroupStateDisabled == _state);
+                return _state == PoolGroupStateDisabled;
             }
         }
     }

@@ -19,7 +19,7 @@ namespace Microsoft.Data.SqlClient
         /// <include file='../../../../../../doc/snippets/Microsoft.Data.SqlClient/SqlRowUpdatingEventArgs.xml' path='docs/members[@name="SqlRowUpdatingEventArgs"]/Command/*' />
         new public SqlCommand Command
         {
-            get { return (base.Command as SqlCommand); }
+            get { return base.Command as SqlCommand; }
             set { base.Command = value; }
         }
 
@@ -27,7 +27,7 @@ namespace Microsoft.Data.SqlClient
         override protected IDbCommand BaseCommand
         {
             get { return base.BaseCommand; }
-            set { base.BaseCommand = (value as SqlCommand); }
+            set { base.BaseCommand = value as SqlCommand; }
         }
     }
 }

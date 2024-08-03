@@ -64,7 +64,7 @@ namespace Microsoft.Data.ProviderBase
 
             DataTable sourceTable = _metaDataCollectionsDataSet.Tables[collectionName];
 
-            if ((sourceTable == null) || (collectionName != sourceTable.TableName))
+            if (sourceTable == null || collectionName != sourceTable.TableName)
             {
                 throw ADP.DataTableDoesNotExist(collectionName);
             }
@@ -120,7 +120,7 @@ namespace Microsoft.Data.ProviderBase
             int numberOfRestrictions = (int)requestedCollectionRow[numberOfRestrictionsColumn, DataRowVersion.Current];
             string collectionName = requestedCollectionRow[collectionNameColumn, DataRowVersion.Current] as string;
 
-            if ((restrictions != null) && (restrictions.Length > numberOfRestrictions))
+            if (restrictions != null && restrictions.Length > numberOfRestrictions)
             {
                 throw ADP.TooManyRestrictions(collectionName);
             }
@@ -134,7 +134,7 @@ namespace Microsoft.Data.ProviderBase
 
                 DbParameter restrictionParameter = command.CreateParameter();
 
-                if ((restrictions != null) && (restrictions.Length > i) && (restrictions[i] != null))
+                if (restrictions != null && restrictions.Length > i && restrictions[i] != null)
                 {
                     restrictionParameter.Value = restrictions[i];
                 }
@@ -237,7 +237,7 @@ namespace Microsoft.Data.ProviderBase
 
             DataColumn collectionNameColumn = metaDataCollectionsTable.Columns[DbMetaDataColumnNames.CollectionName];
 
-            if (collectionNameColumn == null || (typeof(string) != collectionNameColumn.DataType))
+            if (collectionNameColumn == null || collectionNameColumn.DataType != typeof(string))
             {
                 throw ADP.InvalidXmlMissingColumn(DbMetaDataCollectionNames.MetaDataCollections, DbMetaDataColumnNames.CollectionName);
             }
@@ -319,7 +319,7 @@ namespace Microsoft.Data.ProviderBase
             DataColumn versionColumn = dataSourceInfoTable.Columns[DataSourceProductVersionKey];
             DataColumn normalizedVersionColumn = dataSourceInfoTable.Columns[DataSourceProductVersionNormalizedKey];
 
-            if ((versionColumn == null) || (normalizedVersionColumn == null))
+            if (versionColumn == null || normalizedVersionColumn == null)
             {
                 throw ADP.MissingDataSourceInformationColumn();
             }
@@ -359,7 +359,7 @@ namespace Microsoft.Data.ProviderBase
                 }
             }
 
-            if ((parameterName == null) || (collectionName == null) || (restrictionName == null) || (restrictionNumber == null))
+            if (parameterName == null || collectionName == null || restrictionName == null || restrictionNumber == null)
             {
                 throw ADP.MissingRestrictionColumn();
             }
@@ -367,9 +367,9 @@ namespace Microsoft.Data.ProviderBase
             foreach (DataRow restriction in restrictionsTable.Rows)
             {
 
-                if (((string)restriction[collectionName] == neededCollectionName) &&
-                    ((int)restriction[restrictionNumber] == neededRestrictionNumber) &&
-                    (SupportedByCurrentVersion(restriction)))
+                if ((string)restriction[collectionName] == neededCollectionName &&
+                    (int)restriction[restrictionNumber] == neededRestrictionNumber &&
+                    SupportedByCurrentVersion(restriction))
                 {
 
                     result = (string)restriction[parameterName];
@@ -403,7 +403,7 @@ namespace Microsoft.Data.ProviderBase
 
                 for (int i = 0; i < restrictions.Length; i++)
                 {
-                    if ((restrictions[i] != null) && (restrictions[i].Length > 4096))
+                    if (restrictions[i] != null && restrictions[i].Length > 4096)
                     {
                         // use a non-specific error because no new beta 2 error messages are allowed
                         // TODO: will add a more descriptive error in RTM

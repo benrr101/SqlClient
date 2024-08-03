@@ -24,7 +24,9 @@ namespace Microsoft.Data.ProviderBase
         private const int Win32_CreateWellKnownSid = 5;
 
         static public readonly DbConnectionPoolIdentity NoIdentity = new DbConnectionPoolIdentity(String.Empty, false, true);
-        static private readonly byte[] NetworkSid = (ADP.s_isWindowsNT ? CreateWellKnownSid(WellKnownSidType.NetworkSid) : null);
+        static private readonly byte[] NetworkSid = ADP.s_isWindowsNT 
+            ? CreateWellKnownSid(WellKnownSidType.NetworkSid)
+            : null;
         static private DbConnectionPoolIdentity _lastIdentity = null;
 
         private readonly string _sidString;
@@ -69,11 +71,13 @@ namespace Microsoft.Data.ProviderBase
 
         override public bool Equals(object value)
         {
-            bool result = ((this == NoIdentity) || (this == value));
+            bool result = this == NoIdentity || this == value;
             if (!result && value != null)
             {
-                DbConnectionPoolIdentity that = ((DbConnectionPoolIdentity)value);
-                result = ((this._sidString == that._sidString) && (this._isRestricted == that._isRestricted) && (this._isNetwork == that._isNetwork));
+                DbConnectionPoolIdentity that = (DbConnectionPoolIdentity)value;
+                result = this._sidString == that._sidString && 
+                         this._isRestricted == that._isRestricted && 
+                         this._isNetwork == that._isNetwork;
             }
             return result;
         }
@@ -192,7 +196,10 @@ namespace Microsoft.Data.ProviderBase
                 string sidString = Marshal.PtrToStringUni(sidStringBuffer);
 
                 var lastIdentity = _lastIdentity;
-                if ((lastIdentity != null) && (lastIdentity._sidString == sidString) && (lastIdentity._isRestricted == isRestricted) && (lastIdentity._isNetwork == isNetwork))
+                if (lastIdentity != null && 
+                    lastIdentity._sidString == sidString &&
+                    lastIdentity._isRestricted == isRestricted && 
+                    lastIdentity._isNetwork == isNetwork)
                 {
                     current = lastIdentity;
                 }
@@ -229,7 +236,7 @@ namespace Microsoft.Data.ProviderBase
             // passing 1,2,3,4,5 instead of true/false so that with a debugger
             // we could determine more easily which Win32 method call failed
             int lastError = Marshal.GetHRForLastWin32Error();
-            if ((Win32_CheckTokenMembership != caller) || (E_NotImpersonationToken != lastError))
+            if (Win32_CheckTokenMembership != caller || E_NotImpersonationToken != lastError)
             {
                 Marshal.ThrowExceptionForHR(lastError); // will only throw if (hresult < 0)
             }

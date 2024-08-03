@@ -68,7 +68,7 @@ namespace Microsoft.Data.SqlClient.Server
                 throw ADP.ArgumentNull(nameof(values));
             }
 
-            int copyLength = (values.Length < FieldCount) ? values.Length : FieldCount;
+            int copyLength = values.Length < FieldCount ? values.Length : FieldCount;
             for (int i = 0; i < copyLength; i++)
             {
                 values[i] = GetValue(i);
@@ -188,7 +188,7 @@ namespace Microsoft.Data.SqlClient.Server
                 throw ADP.ArgumentNull(nameof(values));
             }
 
-            int copyLength = (values.Length < FieldCount) ? values.Length : FieldCount;
+            int copyLength = values.Length < FieldCount ? values.Length : FieldCount;
             for (int i = 0; i < copyLength; i++)
             {
                 values[i] = GetSqlValue(i);

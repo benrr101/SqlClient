@@ -1091,12 +1091,12 @@ internal class SqlDependencyProcessDispatcher : MarshalByRefObject
 
                 // Move to main node, expecting "QueryNotification".
                 xmlReader.Read();
-                if ((XmlNodeType.Element == xmlReader.NodeType) &&
-                     (RootNode == xmlReader.LocalName) &&
-                     xmlReader.AttributeCount >= 3)
+                if (XmlNodeType.Element == xmlReader.NodeType &&
+                    RootNode == xmlReader.LocalName &&
+                    xmlReader.AttributeCount >= 3)
                 {
                     // Loop until we've processed all the attributes.
-                    while ((MessageAttributes.All != messageAttributes) && (xmlReader.MoveToNextAttribute()))
+                    while (MessageAttributes.All != messageAttributes && xmlReader.MoveToNextAttribute())
                     {
                         try
                         {
@@ -1189,7 +1189,7 @@ internal class SqlDependencyProcessDispatcher : MarshalByRefObject
                     }
 
                     // Verify state after Read().
-                    if ((XmlNodeType.Element != xmlReader.NodeType) || string.Compare(xmlReader.LocalName, MessageNode, StringComparison.OrdinalIgnoreCase) != 0)
+                    if (XmlNodeType.Element != xmlReader.NodeType || string.Compare(xmlReader.LocalName, MessageNode, StringComparison.OrdinalIgnoreCase) != 0)
                     {
                         SqlClientEventSource.Log.TryNotificationTraceEvent("<sc.SqlDependencyProcessDispatcher.ProcessMessage|DEP|ERR> unexpected Read failure on xml or unexpected structure of xml.");
                         return null;

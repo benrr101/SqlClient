@@ -96,7 +96,7 @@ namespace Microsoft.Data.ProviderBase
         internal bool LockToUpdate()
         {
             int oldValue = Interlocked.CompareExchange(ref _isUpdateInProgress, STATUS_LOCKED, STATUS_UNLOCKED);
-            return (oldValue == STATUS_UNLOCKED);
+            return oldValue == STATUS_UNLOCKED;
         }
 
         /// <summary>

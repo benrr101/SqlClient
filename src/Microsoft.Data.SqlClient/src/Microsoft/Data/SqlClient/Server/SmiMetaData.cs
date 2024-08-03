@@ -66,8 +66,8 @@ namespace Microsoft.Data.SqlClient.Server
         internal const int MaxTimeScale = 7;        // Max scale for time, datetime2, and datetimeoffset
         internal static readonly DateTime MaxSmallDateTime = new DateTime(2079, 06, 06, 23, 59, 29, 998);
         internal static readonly DateTime MinSmallDateTime = new DateTime(1899, 12, 31, 23, 59, 29, 999);
-        internal static readonly SqlMoney MaxSmallMoney = new SqlMoney(((decimal)int.MaxValue) / 10000);
-        internal static readonly SqlMoney MinSmallMoney = new SqlMoney(((decimal)int.MinValue) / 10000);
+        internal static readonly SqlMoney MaxSmallMoney = new SqlMoney((decimal)int.MaxValue / 10000);
+        internal static readonly SqlMoney MinSmallMoney = new SqlMoney((decimal)int.MinValue / 10000);
         internal const SqlCompareOptions DefaultStringCompareOptions = SqlCompareOptions.IgnoreCase
                                         | SqlCompareOptions.IgnoreKanaType | SqlCompareOptions.IgnoreWidth;
 
@@ -352,7 +352,7 @@ namespace Microsoft.Data.SqlClient.Server
                 case SqlDbType.Udt:
                     // For SqlParameter, both userDefinedType and udtAssemblyQualifiedName can be NULL,
                     // so we are checking only maxLength if it will be used (i.e. userDefinedType is NULL)
-                    Debug.Assert((userDefinedType != null) || (maxLength >= 0 || UnlimitedMaxLengthIndicator == maxLength),
+                    Debug.Assert(userDefinedType != null || maxLength >= 0 || UnlimitedMaxLengthIndicator == maxLength,
                              $"SmiMetaData.ctor: Udt name={udtAssemblyQualifiedName}, maxLength={maxLength}");
                     // Type not validated until matched to a server.  Could be null if extended metadata supplies three-part name!
                     _clrType = userDefinedType;
@@ -369,7 +369,7 @@ namespace Microsoft.Data.SqlClient.Server
                 case SqlDbType.Structured:
                     if (fieldTypes != null)
                     {
-                        _fieldMetaData = (new List<SmiExtendedMetaData>(fieldTypes)).AsReadOnly();
+                        _fieldMetaData = new List<SmiExtendedMetaData>(fieldTypes).AsReadOnly();
                     }
                     _isMultiValued = isMultiValued;
                     _maxLength = _fieldMetaData.Count;

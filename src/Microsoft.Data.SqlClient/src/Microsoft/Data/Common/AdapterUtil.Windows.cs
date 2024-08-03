@@ -27,7 +27,7 @@ namespace Microsoft.Data.Common
         internal static object LocalMachineRegistryValue(string subkey, string queryvalue)
         { // MDAC 77697
 #if NETFRAMEWORK
-            (new RegistryPermission(RegistryPermissionAccess.Read, "HKEY_LOCAL_MACHINE\\" + subkey)).Assert(); // MDAC 62028
+            new RegistryPermission(RegistryPermissionAccess.Read, "HKEY_LOCAL_MACHINE\\" + subkey).Assert(); // MDAC 62028
 #endif
             try
             {
