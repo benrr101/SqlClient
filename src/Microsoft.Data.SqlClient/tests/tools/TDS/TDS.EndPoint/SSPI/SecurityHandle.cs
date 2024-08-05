@@ -21,7 +21,7 @@ namespace Microsoft.SqlServer.TDS.EndPoint.SSPI
         /// </summary>
         internal bool IsValid()
         {
-            return (LowPart != IntPtr.Zero) || (HighPart != IntPtr.Zero);
+            return LowPart != IntPtr.Zero || HighPart != IntPtr.Zero;
         }
     }
 }

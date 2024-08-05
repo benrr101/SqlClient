@@ -25,12 +25,12 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             "select * from sys.databases; print 'THIS IS THE END!'";
 
         private static readonly string _testConnString =
-            (new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString)
+            new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString)
             {
                 PacketSize = 512,
                 MaxPoolSize = 1,
                 MultipleActiveResultSets = true
-            }).ConnectionString;
+            }.ConnectionString;
 
         // Synapse: Catalog view 'dm_exec_connections' is not supported in this version.
         [ConditionalFact(typeof(DataTestUtility), nameof(DataTestUtility.AreConnStringsSetup), nameof(DataTestUtility.IsNotAzureSynapse))]
@@ -247,12 +247,12 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                                             break;
                                         case ReaderTestType.NoCloses:
                                             // 1 for connection, 1 for current command, 1 for 0 based array offset, plus i for open readers
-                                            Assert.True(connections == (3 + i), "Failure - incorrect number of connections for NoCloses: " + connections +
-                                                "\ni: " + i + " :::: requests: " + requests + " :::: spid1: " + spid1 + " ::::: spid2: " + spid2);
+                                            Assert.True(connections == 3 + i, "Failure - incorrect number of connections for NoCloses: " + connections +
+                                                                              "\ni: " + i + " :::: requests: " + requests + " :::: spid1: " + spid1 + " ::::: spid2: " + spid2);
 
                                             // 1 for current command, 1 for 0 based array offset, plus i open readers
-                                            Assert.True(requests == (2 + i), "Failure - incorrect number of requests for NoCloses: " + requests +
-                                                "\ni: " + i + " :::: connections: " + connections + " :::: spid1: " + spid1 + " ::::: spid2: " + spid2);
+                                            Assert.True(requests == 2 + i, "Failure - incorrect number of requests for NoCloses: " + requests +
+                                                                           "\ni: " + i + " :::: connections: " + connections + " :::: spid1: " + spid1 + " ::::: spid2: " + spid2);
                                             break;
                                     }
                                     break;

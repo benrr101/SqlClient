@@ -98,7 +98,7 @@ namespace Microsoft.SqlServer.TDS.Authentication
         public override void Deflate(Stream destination)
         {
             // Write the total Length
-            uint totalLengthOfData = (uint)(sizeof(uint) /*bytes to carry the token length itself*/ + _token.Length + ((_nonce != null) ? _nonce.Length : 0));
+            uint totalLengthOfData = (uint)(sizeof(uint) /*bytes to carry the token length itself*/ + _token.Length + (_nonce != null ? _nonce.Length : 0));
             TDSUtilities.WriteUInt(destination, totalLengthOfData);
 
             // Write the Length of FedAuthToken

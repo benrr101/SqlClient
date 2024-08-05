@@ -29,7 +29,7 @@ namespace Microsoft.Data.SqlClient
             NativeHandle = nativeHandle;
         }
 
-        public bool IsNull => (Type == NativeHandleType) ? NativeHandle is null : ManagedHandle is null;
+        public bool IsNull => Type == NativeHandleType ? NativeHandle is null : ManagedHandle is null;
 
         public static SessionHandle FromManagedSession(SNI.SNIHandle managedSessionHandle) => new SessionHandle(managedSessionHandle, default, ManagedHandleType);
 

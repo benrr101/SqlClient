@@ -755,8 +755,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                                 resultStr.Length == maxLength &&
                                 metadata.TryGetValue(SteAttributeKey.SqlDbType, out value) &&
                                 value != SteTypeBoundaries.s_doNotUseMarker &&
-                                (SqlDbType.Char == ((SqlDbType)value) ||
-                                  SqlDbType.NChar == ((SqlDbType)value)))
+                                (SqlDbType.Char == (SqlDbType)value ||
+                                  SqlDbType.NChar == (SqlDbType)value))
                     {
                         returnValue = true;
                     }
@@ -801,7 +801,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                         }
                         // Check for length extension due to fixed-length type
                         else if (metadata.TryGetValue(SteAttributeKey.SqlDbType, out value) && value != SteTypeBoundaries.s_doNotUseMarker &&
-                                (SqlDbType.Binary == ((SqlDbType)value)))
+                                SqlDbType.Binary == (SqlDbType)value)
                         {
                             returnValue = true;
                         }
@@ -1360,7 +1360,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             Type type = null;
             long localeId = 0;
             SqlCompareOptions opts = SqlCompareOptions.IgnoreCase | SqlCompareOptions.IgnoreKanaType | SqlCompareOptions.IgnoreWidth;
-            if (perm.TryGetValue(SteAttributeKey.SqlDbType, out object attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.SqlDbType, out object attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 sqlDbType = (SqlDbType)attr;
             }
@@ -1369,37 +1369,37 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 throw new InvalidOperationException("PermToSqlMetaData: No SqlDbType available!");
             }
 
-            if (perm.TryGetValue(SteAttributeKey.MaxLength, out attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.MaxLength, out attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 maxLength = (int)attr;
             }
 
-            if (perm.TryGetValue(SteAttributeKey.Precision, out attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.Precision, out attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 precision = (byte)attr;
             }
 
-            if (perm.TryGetValue(SteAttributeKey.Scale, out attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.Scale, out attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 scale = (byte)attr;
             }
 
-            if (perm.TryGetValue(SteAttributeKey.LocaleId, out attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.LocaleId, out attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 localeId = (int)attr;
             }
 
-            if (perm.TryGetValue(SteAttributeKey.CompareOptions, out attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.CompareOptions, out attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 opts = (SqlCompareOptions)attr;
             }
 
-            if (perm.TryGetValue(SteAttributeKey.TypeName, out attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.TypeName, out attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 typeName = (string)attr;
             }
 
-            if (perm.TryGetValue(SteAttributeKey.Type, out attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.Type, out attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 type = (Type)attr;
             }

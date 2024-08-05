@@ -168,7 +168,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             Console.WriteLine("Table \"{0}\" has {1} columns", dataTable.TableName.ToString(), columnCount.ToString());
             Console.WriteLine("Table \"{0}\" has {1} rows. At most the first {2} are dumped.", dataTable.TableName.ToString(), rowCount.ToString(), rowPrintCount.ToString());
 
-            if ((rowPrintCount != 0) && (rowPrintCount < rowCount))
+            if (rowPrintCount != 0 && rowPrintCount < rowCount)
             {
                 rowCount = rowPrintCount;
             }

@@ -293,7 +293,7 @@ namespace Microsoft.Data.SqlClient
         /// <returns>Returns the decrypted plaintext Column Encryption Key or throws an exception if there are any errors.</returns>
         private byte[] RSADecrypt(RSACryptoServiceProvider rscp, byte[] encryptedColumnEncryptionKey)
         {
-            Debug.Assert((encryptedColumnEncryptionKey != null) && (encryptedColumnEncryptionKey.Length != 0));
+            Debug.Assert(encryptedColumnEncryptionKey != null && encryptedColumnEncryptionKey.Length != 0);
             Debug.Assert(rscp != null);
 
             return rscp.Decrypt(encryptedColumnEncryptionKey, fOAEP: true);
@@ -307,7 +307,7 @@ namespace Microsoft.Data.SqlClient
         /// <returns>Signature</returns>
         private byte[] RSASignHashedData(byte[] dataToSign, RSACryptoServiceProvider rscp)
         {
-            Debug.Assert((dataToSign != null) && (dataToSign.Length != 0));
+            Debug.Assert(dataToSign != null && dataToSign.Length != 0);
             Debug.Assert(rscp != null);
 
             return rscp.SignData(dataToSign, HashingAlgorithm);
@@ -322,8 +322,8 @@ namespace Microsoft.Data.SqlClient
         /// <returns>true if signature is valid, false if it is not valid</returns>
         private bool RSAVerifySignature(byte[] dataToVerify, byte[] signature, RSACryptoServiceProvider rscp)
         {
-            Debug.Assert((dataToVerify != null) && (dataToVerify.Length != 0));
-            Debug.Assert((signature != null) && (signature.Length != 0));
+            Debug.Assert(dataToVerify != null && dataToVerify.Length != 0);
+            Debug.Assert(signature != null && signature.Length != 0);
             Debug.Assert(rscp != null);
 
             return rscp.VerifyData(dataToVerify, HashingAlgorithm, signature);

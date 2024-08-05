@@ -139,7 +139,7 @@ namespace Microsoft.SqlServer.TDS.SessionState
             Database = TDSUtilities.ReadString(source, (ushort)(byteLength * 2));
 
             // Update offset
-            InflationSize += ((uint)byteLength * 2);  // one character is 2 bytes long
+            InflationSize += (uint)byteLength * 2;  // one character is 2 bytes long
 
             // Check if we still have space to read
             if (InflationSize >= totalLength)
@@ -198,7 +198,7 @@ namespace Microsoft.SqlServer.TDS.SessionState
             Language = TDSUtilities.ReadString(source, (ushort)(byteLength * 2));
 
             // Update offset
-            InflationSize += ((uint)byteLength * 2);  // one character is 2 bytes long
+            InflationSize += (uint)byteLength * 2;  // one character is 2 bytes long
 
             // Read while we have data
             while (totalLength > InflationSize)

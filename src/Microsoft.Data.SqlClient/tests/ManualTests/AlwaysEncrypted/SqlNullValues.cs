@@ -95,7 +95,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                     }
                 }
 
-                using (SqlCommand cmd2 = new SqlCommand((ReturnValueSetting.Null == nullReturnValue) ? UdfName : UdfNameNotNull,
+                using (SqlCommand cmd2 = new SqlCommand(ReturnValueSetting.Null == nullReturnValue ? UdfName : UdfNameNotNull,
                     sqlConn, null, commandSetting))
                 {
                     cmd2.CommandType = CommandType.StoredProcedure;

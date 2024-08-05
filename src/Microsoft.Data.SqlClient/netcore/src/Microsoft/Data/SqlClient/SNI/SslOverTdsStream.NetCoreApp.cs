@@ -129,7 +129,7 @@ namespace Microsoft.Data.SqlClient.SNI
                     {
                         int headerBytesReadIteration;
                         {
-                            ValueTask<int> headerReadValueTask = _stream.ReadAsync(headerBytes.AsMemory(headerBytesRead, (TdsEnums.HEADER_LEN - headerBytesRead)), cancellationToken);
+                            ValueTask<int> headerReadValueTask = _stream.ReadAsync(headerBytes.AsMemory(headerBytesRead, TdsEnums.HEADER_LEN - headerBytesRead), cancellationToken);
                             if (headerReadValueTask.IsCompletedSuccessfully)
                             {
                                 headerBytesReadIteration = headerReadValueTask.Result;

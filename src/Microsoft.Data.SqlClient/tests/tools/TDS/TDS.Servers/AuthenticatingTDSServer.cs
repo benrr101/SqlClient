@@ -49,7 +49,7 @@ namespace Microsoft.SqlServer.TDS.Servers
                 {
                     // Check filter
                     if ((ServerArguments.ApplicationIntentFilter == ApplicationIntentFilterType.ReadOnly && loginRequest.TypeFlags.ReadOnlyIntent != TDSLogin7TypeFlagsReadOnlyIntent.ReadOnly)
-                        || (ServerArguments.ApplicationIntentFilter == ApplicationIntentFilterType.None))
+                        || ServerArguments.ApplicationIntentFilter == ApplicationIntentFilterType.None)
                     {
                         // Log request to which we're about to send a failure
                         TDSUtilities.Log(Arguments.Log, "Request", loginRequest);

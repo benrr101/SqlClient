@@ -308,7 +308,7 @@ namespace Microsoft.SqlServer.TDS.ColMetadata
             }
 
             // Check if we need to write table name
-            if ((DataType == TDSDataType.Text || DataType == TDSDataType.NText || DataType == TDSDataType.Image) && (TableName != null))
+            if ((DataType == TDSDataType.Text || DataType == TDSDataType.NText || DataType == TDSDataType.Image) && TableName != null)
             {
                 // Write part count
                 destination.WriteByte((byte)TableName.Count);

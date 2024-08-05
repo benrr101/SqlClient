@@ -891,7 +891,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 int precision = columnInfo.Precision.Value;
                 if (precision != RealPrecision && precision != MaxFloatPrecision)
                     throw new ArgumentException("wrong precision");
-                return (precision <= RealPrecision) ? 4 : 8;
+                return precision <= RealPrecision ? 4 : 8;
             }
         }
 
@@ -900,7 +900,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             int precision = columnInfo.Precision.HasValue ? columnInfo.Precision.Value : MaxFloatPrecision;
             if (precision != RealPrecision && precision != MaxFloatPrecision)
                 throw new ArgumentException("wrong precision");
-            int mantissaBits = (precision <= RealPrecision) ? 24 : 53;
+            int mantissaBits = precision <= RealPrecision ? 24 : 53;
             return string.Format("{0}({1})", TypePrefix, mantissaBits);
         }
 
@@ -1376,7 +1376,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
         private static bool IsUnicodeType(SqlDbType t)
         {
-            return (t == SqlDbType.NChar || t == SqlDbType.NText || t == SqlDbType.NVarChar);
+            return t == SqlDbType.NChar || t == SqlDbType.NText || t == SqlDbType.NVarChar;
         }
 
         protected override object CreateRandomValueInternal(SqlRandomizer rand, SqlRandomTableColumn columnInfo)
@@ -1469,7 +1469,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             int charSize = rand.NextAllocationSizeBytes(0, columnInfo.StorageSize);
             const string prefix = "<x>";
             const string suffix = "</x>";
-            if (charSize > (prefix.Length + suffix.Length))
+            if (charSize > prefix.Length + suffix.Length)
             {
                 string randValue = new string('a', charSize - (prefix.Length + suffix.Length));
                 return string.Format("<x>{0}</x>", randValue).ToCharArray();

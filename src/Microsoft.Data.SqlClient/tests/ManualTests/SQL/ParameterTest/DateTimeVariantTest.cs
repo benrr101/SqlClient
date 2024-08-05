@@ -1071,8 +1071,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             }
             if (!actualBaseTypeName.Equals(expectedBaseTypeName))
             {
-                if (((actualTypeName.ToLowerInvariant() != "system.datetime") || (actualTypeName.ToLowerInvariant() != "system.datetimeoffset"))
-                    && (actualBaseTypeName != "datetime2"))
+                if ((actualTypeName.ToLowerInvariant() != "system.datetime" || actualTypeName.ToLowerInvariant() != "system.datetimeoffset")
+                    && actualBaseTypeName != "datetime2")
                 {
                     string ErrorMessage = string.Format(">>> ERROR: VARIANT BASE TYPE MISMATCH!!! [Actual = {0}] [Expected = {1}]",
                         actualBaseTypeName,
@@ -1109,8 +1109,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     else
                         return false;
                 case "datetime":
-                    if ((((DateTime)expectedValue).Ticks == 3155378975999999999) &&
-                        (((DateTime)actualValue).Ticks == 3155378975999970000))
+                    if (((DateTime)expectedValue).Ticks == 3155378975999999999 &&
+                        ((DateTime)actualValue).Ticks == 3155378975999970000)
                         return true;
                     else
                         return false;

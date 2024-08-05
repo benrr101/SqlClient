@@ -311,7 +311,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                             if (_values[i] is Guid)
                             {
                                 bsrc = ((Guid)value).ToByteArray();
-                                bdst = ((Guid)(_values[i])).ToByteArray();
+                                bdst = ((Guid)_values[i]).ToByteArray();
                             }
                             else
                             {
@@ -630,7 +630,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
                     // verify the ouptut parameter
                     Assert.True(
-                        ((int)cmd.Parameters[1].Value == 2000) &&
+                        (int)cmd.Parameters[1].Value == 2000 &&
                         string.Compare(cmd.Parameters[2].Value.ToString(), "Success!", false, CultureInfo.InvariantCulture) == 0,
                         "FAILED:  unbound return value case, output param is not correct!");
 
@@ -914,7 +914,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     int i2 = (int)row2["id"];
 
                     Assert.True(
-                        (i1 != 0) && (i2 != 0) && (i2 == (i1 + 1)),
+                        i1 != 0 && i2 != 0 && i2 == i1 + 1,
                         string.Format("FAILED:  UpdateRefresh, i2 should equal (i1 + 1). i1: {0}. i2: {1}.", i1, i2));
                 }
                 finally
@@ -1041,11 +1041,11 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     adapter.Fill(ds, "goofy");
 
                     byte[] expectedBytes1 = { 0x01, 0x02, 0x03, 0x04 };
-                    byte[] val = (byte[])(ds.Tables[0].Rows[0][0]);
+                    byte[] val = (byte[])ds.Tables[0].Rows[0][0];
                     Assert.True(ByteArraysEqual(expectedBytes1, val), "FAILED: Test 1: Unequal byte arrays.");
 
                     byte[] expectedBytes2 = { 0x05, 0x06, 0x07 };
-                    val = (byte[])(ds.Tables[0].Rows[0][1]);
+                    val = (byte[])ds.Tables[0].Rows[0][1];
                     Assert.True(ByteArraysEqual(expectedBytes2, val), "FAILED: Test 2: Unequal byte arrays.");
                 }
                 finally
@@ -1655,7 +1655,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             {
                 Type valuetype = value.GetType();
 
-                if (used != null && (!valuetype.IsPrimitive))
+                if (used != null && !valuetype.IsPrimitive)
                 {
                     if (used.Contains(value))
                     {
@@ -1670,7 +1670,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                         used.Add(value, used.Count);
                     }
                 }
-                if ((value is string) || (value is SqlString))
+                if (value is string || value is SqlString)
                 {
                     if (value is SqlString)
                     {
@@ -1683,7 +1683,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     textBuilder.Append((string)value);
                     textBuilder.Append(">");
                 }
-                else if ((value is DateTime) || (value is SqlDateTime))
+                else if (value is DateTime || value is SqlDateTime)
                 {
                     if (value is SqlDateTime)
                     {
@@ -1694,7 +1694,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     textBuilder.Append(((DateTime)value).ToString("s", cultureInfo));
                     textBuilder.Append(">");
                 }
-                else if ((value is float) || (value is SqlSingle))
+                else if (value is float || value is SqlSingle)
                 {
                     if (value is SqlSingle)
                     {
@@ -1705,7 +1705,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     textBuilder.Append(((float)value).ToString(cultureInfo));
                     textBuilder.Append(">");
                 }
-                else if ((value is double) || (value is SqlDouble))
+                else if (value is double || value is SqlDouble)
                 {
                     if (value is SqlDouble)
                     {
@@ -1716,7 +1716,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     textBuilder.Append(((double)value).ToString(cultureInfo));
                     textBuilder.Append(">");
                 }
-                else if ((value is decimal) || (value is SqlDecimal) || (value is SqlMoney))
+                else if (value is decimal || value is SqlDecimal || value is SqlMoney)
                 {
                     if (value is SqlDecimal)
                     {

@@ -216,7 +216,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         protected static void SerializeInt(int val, byte[] buf, ref int offset)
         {
             uint uval = unchecked((uint)val);
-            buf[offset++] = (byte)((uval & 0x000000FF));
+            buf[offset++] = (byte)(uval & 0x000000FF);
             buf[offset++] = (byte)((uval & 0x0000FF00) >> 8);
             buf[offset++] = (byte)((uval & 0x00FF0000) >> 16);
             buf[offset++] = (byte)((uval & 0xFF000000) >> 24);
@@ -288,13 +288,13 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
             //Initialize our Seed array.
             //This algorithm comes from Numerical Recipes in C (2nd Ed.)
-            int subtraction = (Seed == int.MinValue) ? int.MaxValue : Math.Abs(Seed);
+            int subtraction = Seed == int.MinValue ? int.MaxValue : Math.Abs(Seed);
             mj = MSEED - subtraction;
             _seedArray[55] = mj;
             mk = 1;
             for (int i = 1; i < 55; i++)
             {  //Apparently the range [1..55] is special (Knuth) and so we're wasting the 0'th position.
-                ii = (21 * i) % 55;
+                ii = 21 * i % 55;
                 _seedArray[ii] = mk;
                 mk = mj - mk;
                 if (mk < 0)
@@ -329,7 +329,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         {
             //Including this division at the end gives us significantly improved
             //random number distribution.
-            return (InternalSample() * (1.0 / MBIG));
+            return InternalSample() * (1.0 / MBIG);
         }
 
         private int InternalSample()
@@ -382,13 +382,13 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
             int result = InternalSample();
             // Note we can't use addition here. The distribution will be bad if we do that.
-            bool negative = (InternalSample() % 2 == 0) ? true : false;  // decide the sign based on second sample
+            bool negative = InternalSample() % 2 == 0 ? true : false;  // decide the sign based on second sample
             if (negative)
             {
                 result = -result;
             }
             double d = result;
-            d += (int.MaxValue - 1); // get a number in range [0 .. 2 * Int32MaxValue - 1)
+            d += int.MaxValue - 1; // get a number in range [0 .. 2 * Int32MaxValue - 1)
             d /= 2 * (uint)int.MaxValue - 1;
             return d;
         }
@@ -410,7 +410,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             long range = (long)maxValue - minValue;
             if (range <= (long)int.MaxValue)
             {
-                return ((int)(Sample() * range) + minValue);
+                return (int)(Sample() * range) + minValue;
             }
             else
             {

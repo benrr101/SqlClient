@@ -40,7 +40,7 @@ namespace Microsoft.Data.SqlClient.Server
             }
 
             // Allow values array longer than FieldCount, just ignore the extra cells.
-            int copyLength = (values.Length > FieldCount) ? FieldCount : values.Length;
+            int copyLength = values.Length > FieldCount ? FieldCount : values.Length;
 
             ExtendedClrTypeCode[] typeCodes = new ExtendedClrTypeCode[copyLength];
 

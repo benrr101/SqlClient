@@ -284,7 +284,7 @@ namespace Microsoft.Data.SqlClient
         /// <returns>Returns the decrypted plaintext Column Encryption Key or throws an exception if there are any errors.</returns>
         private byte[] RSADecrypt(RSACng rsaCngProvider, byte[] encryptedColumnEncryptionKey)
         {
-            Debug.Assert((encryptedColumnEncryptionKey != null) && (encryptedColumnEncryptionKey.Length != 0));
+            Debug.Assert(encryptedColumnEncryptionKey != null && encryptedColumnEncryptionKey.Length != 0);
             Debug.Assert(rsaCngProvider != null);
 
             return rsaCngProvider.Decrypt(encryptedColumnEncryptionKey, RSAEncryptionPadding.OaepSHA1);
@@ -298,7 +298,7 @@ namespace Microsoft.Data.SqlClient
         /// <returns>Signature</returns>
         private byte[] RSASignHashedData(byte[] dataToSign, RSACng rsaCngProvider)
         {
-            Debug.Assert((dataToSign != null) && (dataToSign.Length != 0));
+            Debug.Assert(dataToSign != null && dataToSign.Length != 0);
             Debug.Assert(rsaCngProvider != null);
 
             return rsaCngProvider.SignData(dataToSign, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
@@ -313,8 +313,8 @@ namespace Microsoft.Data.SqlClient
         /// <returns>true if signature is valid, false if it is not valid</returns>
         private bool RSAVerifySignature(byte[] dataToVerify, byte[] signature, RSACng rsaCngProvider)
         {
-            Debug.Assert((dataToVerify != null) && (dataToVerify.Length != 0));
-            Debug.Assert((signature != null) && (signature.Length != 0));
+            Debug.Assert(dataToVerify != null && dataToVerify.Length != 0);
+            Debug.Assert(signature != null && signature.Length != 0);
             Debug.Assert(rsaCngProvider != null);
 
             return rsaCngProvider.VerifyData(dataToVerify, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);

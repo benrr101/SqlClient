@@ -93,9 +93,9 @@ namespace Microsoft.SqlServer.TDS.Login7
         public byte ToByte()
         {
             return (byte)((byte)Language
-                | ((byte)Odbc) << 1
-                | ((byte)UserType) << 4
-                | ((byte)IntegratedSecurity) << 7);
+                | (byte)Odbc << 1
+                | (byte)UserType << 4
+                | (byte)IntegratedSecurity << 7);
         }
     }
 }

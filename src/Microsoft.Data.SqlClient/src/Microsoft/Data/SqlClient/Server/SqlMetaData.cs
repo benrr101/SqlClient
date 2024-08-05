@@ -998,7 +998,7 @@ namespace Microsoft.Data.SqlClient.Server
             }
 
             // Must specify both sort order and ordinal, or neither
-            if ((SortOrder.Unspecified == columnSortOrder) != (DefaultSortOrdinal == sortOrdinal))
+            if (SortOrder.Unspecified == columnSortOrder != (DefaultSortOrdinal == sortOrdinal))
             {
                 throw SQL.MustSpecifyBothSortOrderAndOrdinal(columnSortOrder, sortOrdinal);
             }

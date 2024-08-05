@@ -60,7 +60,7 @@ namespace Microsoft.SqlServer.TDS.SSPI
             destination.WriteByte((byte)TDSTokenType.SSPI);
 
             // Write length
-            TDSUtilities.WriteUShort(destination, (ushort)((Payload != null) ? Payload.Length : 0));
+            TDSUtilities.WriteUShort(destination, (ushort)(Payload != null ? Payload.Length : 0));
 
             // Check if data is available
             if (Payload != null)

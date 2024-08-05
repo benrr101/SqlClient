@@ -16,7 +16,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
         public UdtTest()
         {
-            _connStr = (new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { InitialCatalog = DataTestUtility.UdtTestDbName }).ConnectionString;
+            _connStr = new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { InitialCatalog = DataTestUtility.UdtTestDbName }.ConnectionString;
         }
 
         [ConditionalFact(typeof(DataTestUtility), nameof(DataTestUtility.IsUdtTestDatabasePresent), nameof(DataTestUtility.AreConnStringsSetup), nameof(DataTestUtility.IsNotAzureServer))]
@@ -281,11 +281,11 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                                             }
 
                                             currentValue++;
-                                            Assert.True(currentValue <= (expectedValues.Length + 1), "Expected to only hit one extra result.");
+                                            Assert.True(currentValue <= expectedValues.Length + 1, "Expected to only hit one extra result.");
                                         }
                                     }
                                     while (reader.NextResult());
-                                    DataTestUtility.AssertEqualsWithDescription(currentValue, (expectedValues.Length + 1), "Did not hit all expected values.");
+                                    DataTestUtility.AssertEqualsWithDescription(currentValue, expectedValues.Length + 1, "Did not hit all expected values.");
                                     rerun = false;
                                 }
                             }

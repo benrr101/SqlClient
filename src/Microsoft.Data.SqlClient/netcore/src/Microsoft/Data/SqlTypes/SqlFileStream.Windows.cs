@@ -675,7 +675,7 @@ namespace Microsoft.Data.SqlTypes
                 // now that we've successfully opened a handle on the path and verified that it is a file,
                 // use the SafeFileHandle to initialize our internal System.IO.FileStream instance
                 System.Diagnostics.Debug.Assert(_m_fs == null);
-                _m_fs = new System.IO.FileStream(hFile, access, DefaultBufferSize, ((options & System.IO.FileOptions.Asynchronous) != 0));
+                _m_fs = new System.IO.FileStream(hFile, access, DefaultBufferSize, (options & System.IO.FileOptions.Asynchronous) != 0);
             }
             catch
             {

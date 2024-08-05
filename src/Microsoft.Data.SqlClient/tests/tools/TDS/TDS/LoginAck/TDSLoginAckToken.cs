@@ -95,7 +95,7 @@ namespace Microsoft.SqlServer.TDS.LoginAck
             string tdsVersion = string.Format("{0:X}", (uint)(source.ReadByte() << 24)
                 + (uint)(source.ReadByte() << 16)
                 + (uint)(source.ReadByte() << 8)
-                + (uint)(source.ReadByte()));
+                + (uint)source.ReadByte());
 
             // Consturct TDS version
             TDSVersion = new Version(int.Parse(tdsVersion.Substring(0, 1)), int.Parse(tdsVersion.Substring(1, 1)), Convert.ToInt32(tdsVersion.Substring(2, 2), 16), Convert.ToInt32(tdsVersion.Substring(4, 4), 16));

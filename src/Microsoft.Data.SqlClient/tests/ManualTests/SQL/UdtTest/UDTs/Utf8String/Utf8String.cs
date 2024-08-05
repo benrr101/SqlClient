@@ -152,12 +152,12 @@ namespace Microsoft.Samples.SqlServer
 
         public static bool operator <(Utf8String utf8String, Utf8String other)
         {
-            return (utf8String.CompareTo(other) < 0);
+            return utf8String.CompareTo(other) < 0;
         }
 
         public static bool operator >(Utf8String utf8String, Utf8String other)
         {
-            return (utf8String.CompareTo(other) > 0);
+            return utf8String.CompareTo(other) > 0;
         }
 
         private int CompareUsingCultureInternal(Utf8String other, CultureInfo culture, bool ignoreCase,
@@ -165,16 +165,26 @@ namespace Microsoft.Samples.SqlServer
         {
             // By definition
             if (other == null)
+            {
                 return 1;
+            }
 
             if (this.IsNull)
+            {
                 if (other.IsNull)
+                {
                     return 0;
+                }
                 else
+                {
                     return -1;
+                }
+            }
 
             if (other.IsNull)
+            {
                 return 1;
+            }
 
             return this.GetSortKeyUsingCultureInternal(culture, ignoreCase, ignoreNonSpace,
                 ignoreWidth).CompareTo(other.GetSortKeyUsingCultureInternal(culture, ignoreCase,

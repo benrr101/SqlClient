@@ -102,7 +102,7 @@ namespace Microsoft.SqlServer.TDS.EndPoint.SSPI
                 for (int index = 0; index < BufferCount; index++)
                 {
                     // Calculate pointer to the buffer
-                    IntPtr currentBufferPtr = new IntPtr(BuffersPtr.ToInt64() + (index * Marshal.SizeOf(typeof(SecBuffer))));
+                    IntPtr currentBufferPtr = new IntPtr(BuffersPtr.ToInt64() + index * Marshal.SizeOf(typeof(SecBuffer)));
 
                     // Project the buffer into the managed world
                     SecBuffer secBuffer = (SecBuffer)Marshal.PtrToStructure(currentBufferPtr, typeof(SecBuffer));
@@ -138,7 +138,7 @@ namespace Microsoft.SqlServer.TDS.EndPoint.SSPI
             for (int index = 0; index < BufferCount; index++)
             {
                 // Calculate pointer to the buffer
-                IntPtr currentBufferPtr = new IntPtr(BuffersPtr.ToInt64() + (index * Marshal.SizeOf(typeof(SecBuffer))));
+                IntPtr currentBufferPtr = new IntPtr(BuffersPtr.ToInt64() + index * Marshal.SizeOf(typeof(SecBuffer)));
 
                 // Project the buffer into the managed world
                 SecBuffer secBuffer = (SecBuffer)Marshal.PtrToStructure(currentBufferPtr, typeof(SecBuffer));

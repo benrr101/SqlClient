@@ -42,7 +42,7 @@ namespace Microsoft.Data.Common
             {
                 // find the replacement path
                 object rootFolderObject = AppDomain.CurrentDomain.GetData("DataDirectory");
-                var rootFolderPath = (rootFolderObject as string);
+                var rootFolderPath = rootFolderObject as string;
                 if (rootFolderObject != null && rootFolderPath == null)
                 {
                     throw ADP.InvalidDataDirectory();

@@ -67,7 +67,7 @@ namespace System.IO
         /// </summary>
         internal static bool IsValidDriveChar(char value)
         {
-            return ((value >= 'A' && value <= 'Z') || (value >= 'a' && value <= 'z'));
+            return (value >= 'A' && value <= 'Z') || (value >= 'a' && value <= 'z');
         }
 
         internal static bool EndsWithPeriodOrSpace(string path)
@@ -300,8 +300,8 @@ namespace System.IO
 
             // The only way to specify a fixed path that doesn't begin with two slashes
             // is the drive, colon, slash format- i.e. C:\
-            return !((path.Length >= 3)
-                && (path[1] == VolumeSeparatorChar)
+            return !(path.Length >= 3
+                && path[1] == VolumeSeparatorChar
                 && IsDirectorySeparator(path[2])
                 // To match old behavior we'll check the drive character for validity as the path is technically
                 // not qualified if you don't have a valid drive. "=:\" is the "=" file's default data stream.

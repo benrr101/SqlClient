@@ -28,7 +28,9 @@ namespace Microsoft.Data.SqlClient
             BaseTableName = _metadata.tableName;
             ColumnName = _metadata.column;
             ColumnOrdinal = _metadata.ordinal;
-            ColumnSize = (_metadata.metaType.IsSizeInCharacters && (_metadata.length != 0x7fffffff)) ? (_metadata.length / 2) : _metadata.length;
+            ColumnSize = _metadata.metaType.IsSizeInCharacters && _metadata.length != 0x7fffffff
+                ? _metadata.length / 2
+                : _metadata.length;
             IsAutoIncrement = _metadata.IsIdentity;
             IsIdentity = _metadata.IsIdentity;
             IsLong = _metadata.metaType.IsLong;

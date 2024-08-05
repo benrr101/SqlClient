@@ -35,7 +35,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     bcp.WriteToServer(table);
                 }
 
-                using (SqlDataReader reader = (new SqlCommand("select * from  " + dstTable, dstConn)).ExecuteReader())
+                using (SqlDataReader reader = new SqlCommand("select * from  " + dstTable, dstConn).ExecuteReader())
                 {
                     while (reader.Read())
                     {

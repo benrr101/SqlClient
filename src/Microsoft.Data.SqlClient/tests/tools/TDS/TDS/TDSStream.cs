@@ -420,7 +420,7 @@ namespace Microsoft.SqlServer.TDS
                 }
 
                 // Check if current packet is right
-                IsRightPacket = (IncomingPacketPosition < IncomingPacketHeader.Length);
+                IsRightPacket = IncomingPacketPosition < IncomingPacketHeader.Length;
             }
             while (!IsRightPacket);
 

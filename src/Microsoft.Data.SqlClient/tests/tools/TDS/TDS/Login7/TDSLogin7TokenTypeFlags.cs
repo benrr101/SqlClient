@@ -75,9 +75,9 @@ namespace Microsoft.SqlServer.TDS.Login7
         /// </summary>
         public byte ToByte()
         {
-            return (byte)((((byte)SQL) & 0xF)
-                | (((byte)OleDb) & 0x1) << 4
-                | (((byte)ReadOnlyIntent) & 0x1) << 5);
+            return (byte)(((byte)SQL & 0xF)
+                | ((byte)OleDb & 0x1) << 4
+                | ((byte)ReadOnlyIntent & 0x1) << 5);
         }
     }
 }

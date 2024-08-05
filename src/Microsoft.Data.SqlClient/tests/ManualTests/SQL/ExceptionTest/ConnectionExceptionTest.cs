@@ -248,7 +248,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 Assert.Equal(severity.Value, exception.Class);
             }
 
-            if ((errorNumber.HasValue) && (errorState.HasValue) && (severity.HasValue))
+            if (errorNumber.HasValue && errorState.HasValue && severity.HasValue)
             {
                 string expected = $"Error Number:{errorNumber.Value},State:{errorState.Value},Class:{severity.Value}";
                 Assert.Contains(expected, exception.ToString());

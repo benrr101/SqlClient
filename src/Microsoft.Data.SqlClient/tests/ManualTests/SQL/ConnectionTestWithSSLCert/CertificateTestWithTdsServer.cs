@@ -146,7 +146,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             try
             {
                 connection.Open();
-                Assert.Equal(connectionTestParameters.TestResult, (connection.State == ConnectionState.Open));
+                Assert.Equal(connectionTestParameters.TestResult, connection.State == ConnectionState.Open);
             }
             catch (Exception)
             {

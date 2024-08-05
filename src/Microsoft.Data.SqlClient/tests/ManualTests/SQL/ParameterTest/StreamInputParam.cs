@@ -222,7 +222,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 }
                 Debug.Assert(exc == expectException, "Exception!=Expectation");
 
-                byte[] back = (new SqlCommand("select blob from #blobs where id=1", conn)).ExecuteScalar() as byte[];
+                byte[] back = new SqlCommand("select blob from #blobs where id=1", conn).ExecuteScalar() as byte[];
                 if (!expectException)
                 {
                     AssertEqual(back, val, paramLen);
@@ -230,10 +230,10 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             }
             finally
             {
-                (new SqlCommand("drop table #blobs", conn)).ExecuteNonQuery();
+                new SqlCommand("drop table #blobs", conn).ExecuteNonQuery();
                 if (s_useSP)
                 {
-                    (new SqlCommand("drop procedure #myProc", conn)).ExecuteNonQuery();
+                    new SqlCommand("drop procedure #myProc", conn).ExecuteNonQuery();
                 }
             }
         }
@@ -320,8 +320,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 else
                 {
                     ins.Parameters.Add("@blob", nvarchar ?
-                                                   (oldTypes ? SqlDbType.NText : SqlDbType.NVarChar) :
-                                                   (oldTypes ? SqlDbType.Text : SqlDbType.VarChar), paramLen);
+                                                   oldTypes ? SqlDbType.NText : SqlDbType.NVarChar :
+                                                   oldTypes ? SqlDbType.Text : SqlDbType.VarChar, paramLen);
                     ins.Parameters["@blob"].Direction = ParameterDirection.Input;
                     ins.Parameters["@blob"].Value = reader;
                 }
@@ -358,7 +358,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 }
                 Debug.Assert(exc == expectException, "Exception!=Expectation");
 
-                string back = (new SqlCommand("select blob from #blobs where id=1", conn)).ExecuteScalar() as string;
+                string back = new SqlCommand("select blob from #blobs where id=1", conn).ExecuteScalar() as string;
                 if (paramLen > 0)
                 {
                     s = s.Substring(0, Math.Min(paramLen, s.Length));
@@ -370,10 +370,10 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             }
             finally
             {
-                (new SqlCommand("drop table #blobs", conn)).ExecuteNonQuery();
+                new SqlCommand("drop table #blobs", conn).ExecuteNonQuery();
                 if (s_useSP)
                 {
-                    (new SqlCommand("drop procedure #myProc", conn)).ExecuteNonQuery();
+                    new SqlCommand("drop procedure #myProc", conn).ExecuteNonQuery();
                 }
             }
         }
@@ -674,7 +674,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     {
                         for (int run = 0; run < 2; run++)
                         {
-                            bool sync = (run == 0);
+                            bool sync = run == 0;
                             if (run == 2)
                             {
                                 debugScope.ForceAsyncWriteDelay = 1;

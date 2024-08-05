@@ -185,7 +185,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                                 p2.Scale = 7;
                                 cmd3.ExecuteNonQuery();
 
-                                Assert.True(p0.Value.Equals((new SqlDateTime(1753, 1, 1, 0, 0, 0)).Value), "FAILED: SqlParameter p0 contained incorrect value");
+                                Assert.True(p0.Value.Equals(new SqlDateTime(1753, 1, 1, 0, 0, 0).Value), "FAILED: SqlParameter p0 contained incorrect value");
                                 Assert.True(p1.Value.Equals(new DateTime(1753, 1, 1, 0, 0, 0)), "FAILED: SqlParameter p1 contained incorrect value");
                                 Assert.True(p2.Value.Equals(new TimeSpan(0, 20, 12, 13, 360)), "FAILED: SqlParameter p2 contained incorrect value");
                                 Assert.True(p2.Scale.Equals(7), "FAILED: SqlParameter p2 contained incorrect scale");
@@ -354,7 +354,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                                 p2.Scale = 7;
                                 cmd4.ExecuteNonQuery();
 
-                                Assert.True(p0.Value.Equals((new SqlDateTime(1753, 1, 1, 0, 0, 0)).Value), "FAILED: SqlParameter p0 contained incorrect value");
+                                Assert.True(p0.Value.Equals(new SqlDateTime(1753, 1, 1, 0, 0, 0).Value), "FAILED: SqlParameter p0 contained incorrect value");
                                 Assert.True(p1.Value.Equals(new DateTime(1753, 1, 1, 0, 0, 0)), "FAILED: SqlParameter p1 contained incorrect value");
                                 // This used to be broken for p2/TimeSpan before removing back-compat code for DbType.Date and DbType.Time parameters
                                 Assert.True(p2.Value.Equals(new TimeSpan(0, 20, 12, 13, 360)), "FAILED: SqlParameter p2 contained incorrect value");

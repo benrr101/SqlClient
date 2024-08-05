@@ -416,7 +416,7 @@ namespace Microsoft.Data.ProviderBase
                 bool transactionIsDead;
                 try
                 {
-                    transactionIsDead = (TransactionStatus.Active != enlistedTransaction.TransactionInformation.Status);
+                    transactionIsDead = TransactionStatus.Active != enlistedTransaction.TransactionInformation.Status;
                 }
                 catch (TransactionException)
                 {

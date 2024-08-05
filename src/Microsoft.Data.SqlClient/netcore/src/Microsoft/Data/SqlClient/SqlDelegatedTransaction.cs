@@ -498,7 +498,7 @@ namespace Microsoft.Data.SqlClient
         //  may not be trusted.
         private void ValidateActiveOnConnection(SqlInternalConnection connection)
         {
-            bool valid = _active && (connection == _connection) && (connection.DelegatedTransaction == this);
+            bool valid = _active && connection == _connection && connection.DelegatedTransaction == this;
 
             if (!valid)
             {

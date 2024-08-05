@@ -46,11 +46,10 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         public static void TestReaderNonMars()
         {
             string connString =
-                (new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString)
+                new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString)
                 {
                     MaxPoolSize = 1
-                }
-                ).ConnectionString;
+                }.ConnectionString;
 
             TestReaderNonMarsCase("Case 1: ExecuteReader, Close, ExecuteReader.", connString, ReaderTestType.ReaderClose, ReaderVerificationType.ExecuteReader);
             TestReaderNonMarsCase("Case 2: ExecuteReader, Dispose, ExecuteReader.", connString, ReaderTestType.ReaderDispose, ReaderVerificationType.ExecuteReader);
@@ -78,10 +77,10 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         public static void TestTransactionSingle()
         {
             string connString =
-                (new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString)
+                new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString)
                 {
                     MaxPoolSize = 1
-                }).ConnectionString;
+                }.ConnectionString;
 
             TestTransactionSingleCase("Case 1: BeginTransaction, Rollback.", connString, TransactionTestType.TransactionRollback);
             TestTransactionSingleCase("Case 2: BeginTransaction, Dispose.", connString, TransactionTestType.TransactionDispose);
@@ -104,7 +103,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     cmd.CommandText = COMMAND_TEXT_1;
 
                     SqlDataReader gch = null;
-                    if ((testType != ReaderTestType.ReaderGC) && (testType != ReaderTestType.ReaderGCConnectionClose))
+                    if (testType != ReaderTestType.ReaderGC && testType != ReaderTestType.ReaderGCConnectionClose)
                         gch = cmd.ExecuteReader();
 
                     switch (testType)
@@ -187,7 +186,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 con.Open();
 
                 SqlTransaction gch = null;
-                if ((testType != TransactionTestType.TransactionGC) && (testType != TransactionTestType.TransactionGCConnectionClose))
+                if (testType != TransactionTestType.TransactionGC && testType != TransactionTestType.TransactionGCConnectionClose)
                     gch = con.BeginTransaction();
 
                 switch (testType)

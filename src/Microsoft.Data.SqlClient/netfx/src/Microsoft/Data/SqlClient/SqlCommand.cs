@@ -4668,7 +4668,7 @@ namespace Microsoft.Data.SqlClient
         /// <returns></returns>
         private SqlParameter GetSqlParameterWithQueryText(string queryText)
         {
-            SqlParameter sqlParam = new SqlParameter(null, (queryText.Length << 1) <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText, queryText.Length);
+            SqlParameter sqlParam = new SqlParameter(null, queryText.Length << 1 <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText, queryText.Length);
             sqlParam.Value = queryText;
 
             return sqlParam;
@@ -4703,7 +4703,7 @@ namespace Microsoft.Data.SqlClient
                 text = (string)originalRpcRequest.systemParams[0].Value;
                 //@tsql
                 SqlParameter tsqlParam = describeParameterEncryptionRequest.systemParams[0];
-                tsqlParam.SqlDbType = (text.Length << 1) <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText;
+                tsqlParam.SqlDbType = text.Length << 1 <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText;
                 tsqlParam.Value = text;
                 tsqlParam.Size = text.Length;
                 tsqlParam.Direction = ParameterDirection.Input;
@@ -4721,7 +4721,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     //@tsql
                     SqlParameter tsqlParam = describeParameterEncryptionRequest.systemParams[0];
-                    tsqlParam.SqlDbType = (text.Length << 1) <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText;
+                    tsqlParam.SqlDbType = text.Length << 1 <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText;
                     tsqlParam.Value = text;
                     tsqlParam.Size = text.Length;
                     tsqlParam.Direction = ParameterDirection.Input;
@@ -4796,7 +4796,7 @@ namespace Microsoft.Data.SqlClient
             }
 
             SqlParameter paramsParam = describeParameterEncryptionRequest.systemParams[1];
-            paramsParam.SqlDbType = (parameterList.Length << 1) <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText;
+            paramsParam.SqlDbType = parameterList.Length << 1 <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText;
             paramsParam.Size = parameterList.Length;
             paramsParam.Value = parameterList;
             paramsParam.Direction = ParameterDirection.Input;
@@ -6753,7 +6753,7 @@ namespace Microsoft.Data.SqlClient
             //@batch_params
             string paramList = BuildParamList(_stateObj.Parser, _parameters);
             sqlParam = rpc.systemParams[1];
-            sqlParam.SqlDbType = (paramList.Length << 1) <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText;
+            sqlParam.SqlDbType = paramList.Length << 1 <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText;
             sqlParam.Value = paramList;
             sqlParam.Size = paramList.Length;
             sqlParam.Direction = ParameterDirection.Input;
@@ -6761,7 +6761,7 @@ namespace Microsoft.Data.SqlClient
             //@batch_text
             string text = GetCommandText(behavior);
             sqlParam = rpc.systemParams[2];
-            sqlParam.SqlDbType = (text.Length << 1) <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText;
+            sqlParam.SqlDbType = text.Length << 1 <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText;
             sqlParam.Size = text.Length;
             sqlParam.Value = text;
             sqlParam.Direction = ParameterDirection.Input;
@@ -6906,7 +6906,7 @@ namespace Microsoft.Data.SqlClient
                 commandText = GetCommandText(behavior);
             }
             sqlParam = rpc.systemParams[0];
-            sqlParam.SqlDbType = (commandText.Length << 1) <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText;
+            sqlParam.SqlDbType = commandText.Length << 1 <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText;
             sqlParam.Size = commandText.Length;
             sqlParam.Value = commandText;
             sqlParam.Direction = ParameterDirection.Input;
@@ -6915,7 +6915,7 @@ namespace Microsoft.Data.SqlClient
             {
                 string paramList = BuildParamList(_stateObj.Parser, _batchRPCMode ? parameters : _parameters);
                 sqlParam = rpc.systemParams[1];
-                sqlParam.SqlDbType = (paramList.Length << 1) <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText;
+                sqlParam.SqlDbType = paramList.Length << 1 <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText;
                 sqlParam.Size = paramList.Length;
                 sqlParam.Value = paramList;
                 sqlParam.Direction = ParameterDirection.Input;
@@ -6946,7 +6946,7 @@ namespace Microsoft.Data.SqlClient
                 execStatement.Append(ParseAndQuoteIdentifier(storedProcedureName, false));
                 return new SqlParameter(
                     null,
-                    (execStatement.Length << 1) <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText,
+                    execStatement.Length << 1 <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText,
                     execStatement.Length)
                 {
                     Value = execStatement.ToString()
@@ -7038,7 +7038,7 @@ namespace Microsoft.Data.SqlClient
             }
 
             // Construct @tsql SqlParameter to be returned
-            SqlParameter tsqlParameter = new SqlParameter(null, (execStatement.Length << 1) <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText, execStatement.Length);
+            SqlParameter tsqlParameter = new SqlParameter(null, execStatement.Length << 1 <= TdsEnums.TYPE_SIZE_LIMIT ? SqlDbType.NVarChar : SqlDbType.NText, execStatement.Length);
             tsqlParameter.Value = execStatement.ToString();
 
             return tsqlParameter;
@@ -7214,7 +7214,7 @@ namespace Microsoft.Data.SqlClient
             //  with all parts except trimming separators for leading empty names (null or empty strings,
             //  but not whitespace). Separators in the middle should be added, even if the name part is 
             //  null/empty, to maintain proper location of the parts.
-            for (int i = offset; i < (offset + length); i++)
+            for (int i = offset; i < offset + length; i++)
             {
                 if (bld.Length > 0)
                 {

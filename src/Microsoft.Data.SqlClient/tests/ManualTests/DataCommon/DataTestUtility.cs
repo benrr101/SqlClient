@@ -194,7 +194,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             {
                 AKVBaseUri = new Uri(AKVBaseUri, "/");
                 AKVBaseUrl = AKVBaseUri.AbsoluteUri;
-                AKVUrl = (new Uri(AKVBaseUri, $"/keys/{AKVKeyName}")).AbsoluteUri;
+                AKVUrl = new Uri(AKVBaseUri, $"/keys/{AKVKeyName}").AbsoluteUri;
             }
 
             AKVTenantId = c.AzureKeyVaultTenantId;
@@ -448,7 +448,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
         public static bool IsNotAzureServer()
         {
-            return !AreConnStringsSetup() || !Utils.IsAzureSqlServer(new SqlConnectionStringBuilder((TCPConnectionString)).DataSource);
+            return !AreConnStringsSetup() || !Utils.IsAzureSqlServer(new SqlConnectionStringBuilder(TCPConnectionString).DataSource);
         }
 
         // Synapse: Always Encrypted is not supported with Azure Synapse.
@@ -686,9 +686,9 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
         private static bool CheckException<TException>(Exception ex, string exceptionMessage, bool innerExceptionMustBeNull) where TException : Exception
         {
-            return ((ex != null) && (ex is TException) &&
-                ((string.IsNullOrEmpty(exceptionMessage)) || (ex.Message.Contains(exceptionMessage))) &&
-                ((!innerExceptionMustBeNull) || (ex.InnerException == null)));
+            return ex != null && ex is TException &&
+                   (string.IsNullOrEmpty(exceptionMessage) || ex.Message.Contains(exceptionMessage)) &&
+                   (!innerExceptionMustBeNull || ex.InnerException == null);
         }
 
         public static void AssertEqualsWithDescription(object expectedValue, object actualValue, string failMessage)
@@ -773,9 +773,9 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             {
                 foreach (string exceptionMessage in exceptionMessages)
                 {
-                    if ((CheckException<TException>(ex, exceptionMessage, innerExceptionMustBeNull)) && ((customExceptionVerifier == null) || (customExceptionVerifier(ex as TException))))
+                    if (CheckException<TException>(ex, exceptionMessage, innerExceptionMustBeNull) && (customExceptionVerifier == null || customExceptionVerifier(ex as TException)))
                     {
-                        return (ex as TException);
+                        return ex as TException;
                     }
                 }
                 throw;

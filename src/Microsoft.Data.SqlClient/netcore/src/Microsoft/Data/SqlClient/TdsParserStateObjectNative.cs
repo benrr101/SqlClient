@@ -85,7 +85,7 @@ namespace Microsoft.Data.SqlClient
 
                 result = SNINativeMethodWrapper.SniGetProviderNumber(Handle, ref providerNumber);
                 Debug.Assert(result == TdsEnums.SNI_SUCCESS, "Unexpected failure state upon calling SniGetProviderNumber");
-                _parser.isTcpProtocol = (providerNumber == SNINativeMethodWrapper.ProviderEnum.TCP_PROV);
+                _parser.isTcpProtocol = providerNumber == SNINativeMethodWrapper.ProviderEnum.TCP_PROV;
             }
             else if (userProtocol == TdsEnums.TCP)
             {
@@ -334,11 +334,9 @@ namespace Microsoft.Data.SqlClient
         internal override bool IsValidPacket(PacketHandle packetPointer)
         {
             Debug.Assert(packetPointer.Type == PacketHandle.NativePointerType || packetPointer.Type == PacketHandle.NativePacketType, "unexpected packet type when requiring NativePointer");
-            return (
-                (packetPointer.Type == PacketHandle.NativePointerType && packetPointer.NativePointer != IntPtr.Zero)
-                ||
-                (packetPointer.Type == PacketHandle.NativePacketType && packetPointer.NativePacket != null)
-            );
+            return (packetPointer.Type == PacketHandle.NativePointerType && packetPointer.NativePointer != IntPtr.Zero)
+                   ||
+                   (packetPointer.Type == PacketHandle.NativePacketType && packetPointer.NativePacket != null);
         }
 
         internal override PacketHandle GetResetWritePacket(int dataSize)

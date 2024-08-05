@@ -21,7 +21,7 @@ namespace Microsoft.SqlServer.TDS.PreLogin
         /// </summary>
         public ushort TokenLength
         {
-            get { return (ushort)(Type != TDSPreLoginTokenOptionType.Terminator ? (sizeof(byte) + sizeof(ushort) + sizeof(ushort)) : sizeof(byte)); }
+            get { return (ushort)(Type != TDSPreLoginTokenOptionType.Terminator ? sizeof(byte) + sizeof(ushort) + sizeof(ushort) : sizeof(byte)); }
         }
 
         /// <summary>

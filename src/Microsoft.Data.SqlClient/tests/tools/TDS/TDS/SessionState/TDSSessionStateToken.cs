@@ -85,7 +85,7 @@ namespace Microsoft.SqlServer.TDS.SessionState
             }
 
             // Parse status
-            IsRecoverable = ((status & 0x01) != 0);
+            IsRecoverable = (status & 0x01) != 0;
 
             // Read while we have data
             while (tokenLength > inflationOffset)

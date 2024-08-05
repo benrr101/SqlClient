@@ -26,7 +26,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
         private void RunTest()
         {
-            MultipleErrorHandling(new SqlConnection((new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { MultipleActiveResultSets = true }).ConnectionString));
+            MultipleErrorHandling(new SqlConnection(new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { MultipleActiveResultSets = true }.ConnectionString));
         }
 
         private void MultipleErrorHandling(DbConnection connection)
@@ -178,7 +178,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
                 if (e is COMException)
                 {
-                    _globalBuilder.Append("0x").Append((((COMException)e).HResult).ToString("X8"));
+                    _globalBuilder.Append("0x").Append(((COMException)e).HResult.ToString("X8"));
                     if (expected != e.GetType())
                     {
                         _globalBuilder.Append(": ").Append(e.ToString());

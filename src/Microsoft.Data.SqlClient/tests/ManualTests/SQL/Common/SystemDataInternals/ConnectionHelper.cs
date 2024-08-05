@@ -46,7 +46,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.SystemDataInternals
         {
             VerifyObjectIsConnection(connection);
             object internalConnection = s_sqlConnectionInternalConnection.GetValue(connection, null);
-            Debug.Assert(((internalConnection != null) && (s_dbConnectionInternal.IsInstanceOfType(internalConnection))), "Connection provided has an invalid internal connection");
+            Debug.Assert(internalConnection != null && s_dbConnectionInternal.IsInstanceOfType(internalConnection), "Connection provided has an invalid internal connection");
             return internalConnection;
         }
 
@@ -75,7 +75,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.SystemDataInternals
         public static bool IsEnlistedInTransaction(object internalConnection)
         {
             VerifyObjectIsInternalConnection(internalConnection);
-            return (dbConnectionInternalEnlistedTrans.GetValue(internalConnection, null) != null);
+            return dbConnectionInternalEnlistedTrans.GetValue(internalConnection, null) != null;
         }
 
         public static bool IsTransactionRoot(object internalConnection)

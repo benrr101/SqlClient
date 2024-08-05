@@ -394,13 +394,13 @@ namespace Microsoft.SqlServer.TDS.Row
                 case TDSDataType.Int2:
                     {
                         // SmallInt, 2 byte data representation
-                        TDSUtilities.WriteUShort(destination, unchecked((ushort)((short)data)));
+                        TDSUtilities.WriteUShort(destination, unchecked((ushort)(short)data));
                         break;
                     }
                 case TDSDataType.Int4:
                     {
                         // Int, 4 byte data representation
-                        TDSUtilities.WriteUInt(destination, unchecked((uint)((int)data)));
+                        TDSUtilities.WriteUInt(destination, unchecked((uint)(int)data));
                         break;
                     }
                 case TDSDataType.Float8:
@@ -413,7 +413,7 @@ namespace Microsoft.SqlServer.TDS.Row
                 case TDSDataType.Int8:
                     {
                         // BigInt (8 byte data representation)
-                        TDSUtilities.WriteULong(destination, unchecked((ulong)((long)data)));
+                        TDSUtilities.WriteULong(destination, unchecked((ulong)(long)data));
                         break;
                     }
                 case TDSDataType.BitN:

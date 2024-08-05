@@ -100,7 +100,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             if (connection == null)
                 throw new ArgumentNullException(nameof(connection));
 
-            return (_internalConnection == connection.GetInternalConnection());
+            return _internalConnection == connection.GetInternalConnection();
         }
 
 
@@ -224,7 +224,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             bool areEquals = false;
 
             InternalConnectionWrapper objAsWrapper = obj as InternalConnectionWrapper;
-            if ((objAsWrapper != null) && (objAsWrapper._internalConnection == _internalConnection))
+            if (objAsWrapper != null && objAsWrapper._internalConnection == _internalConnection)
                 areEquals = true;
 
             return areEquals;

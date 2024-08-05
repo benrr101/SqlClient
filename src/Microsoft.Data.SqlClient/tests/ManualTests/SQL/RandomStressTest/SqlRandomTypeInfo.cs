@@ -191,7 +191,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             if (expectedType != expected.GetType())
                 throw new ArgumentException("Wrong type!");
 
-            return (expectedType == actual.GetType());
+            return expectedType == actual.GetType();
         }
 
         /// <summary>

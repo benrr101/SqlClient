@@ -13,8 +13,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
     public static class SqlCommandCancelTest
     {
         // Shrink the packet size - this should make timeouts more likely
-        private static readonly string tcp_connStr = (new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { PacketSize = 512 }).ConnectionString;
-        private static readonly string np_connStr = (new SqlConnectionStringBuilder(DataTestUtility.NPConnectionString) { PacketSize = 512 }).ConnectionString;
+        private static readonly string tcp_connStr = new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { PacketSize = 512 }.ConnectionString;
+        private static readonly string np_connStr = new SqlConnectionStringBuilder(DataTestUtility.NPConnectionString) { PacketSize = 512 }.ConnectionString;
 
         // Synapse: Remove dependency on Northwind database + WAITFOR not supported + ';' not supported
         [ConditionalFact(typeof(DataTestUtility), nameof(DataTestUtility.AreConnStringsSetup), nameof(DataTestUtility.IsNotAzureSynapse))]
@@ -34,14 +34,14 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         [ConditionalFact(typeof(DataTestUtility), nameof(DataTestUtility.AreConnStringsSetup), nameof(DataTestUtility.IsNotAzureSynapse))]
         public static void PlainMARSCancelTest()
         {
-            PlainCancel((new SqlConnectionStringBuilder(tcp_connStr) { MultipleActiveResultSets = true }).ConnectionString);
+            PlainCancel(new SqlConnectionStringBuilder(tcp_connStr) { MultipleActiveResultSets = true }.ConnectionString);
         }
 
         [ConditionalFact(typeof(DataTestUtility), nameof(DataTestUtility.AreConnStringsSetup), nameof(DataTestUtility.IsNotAzureServer))]
         [PlatformSpecific(TestPlatforms.Windows)]
         public static void PlainMARSCancelTestNP()
         {
-            PlainCancel((new SqlConnectionStringBuilder(np_connStr) { MultipleActiveResultSets = true }).ConnectionString);
+            PlainCancel(new SqlConnectionStringBuilder(np_connStr) { MultipleActiveResultSets = true }.ConnectionString);
         }
 
         // Synapse: Remove dependency on Northwind database + WAITFOR not supported + ';' not supported
@@ -62,14 +62,14 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         [ConditionalFact(typeof(DataTestUtility), nameof(DataTestUtility.AreConnStringsSetup), nameof(DataTestUtility.IsNotAzureSynapse))]
         public static void PlainMARSCancelTestAsync()
         {
-            PlainCancelAsync((new SqlConnectionStringBuilder(tcp_connStr) { MultipleActiveResultSets = true }).ConnectionString);
+            PlainCancelAsync(new SqlConnectionStringBuilder(tcp_connStr) { MultipleActiveResultSets = true }.ConnectionString);
         }
 
         [ConditionalFact(typeof(DataTestUtility), nameof(DataTestUtility.AreConnStringsSetup), nameof(DataTestUtility.IsNotAzureServer))]
         [PlatformSpecific(TestPlatforms.Windows)]
         public static void PlainMARSCancelTestAsyncNP()
         {
-            PlainCancelAsync((new SqlConnectionStringBuilder(np_connStr) { MultipleActiveResultSets = true }).ConnectionString);
+            PlainCancelAsync(new SqlConnectionStringBuilder(np_connStr) { MultipleActiveResultSets = true }.ConnectionString);
         }
 
         private static void PlainCancel(string connString)

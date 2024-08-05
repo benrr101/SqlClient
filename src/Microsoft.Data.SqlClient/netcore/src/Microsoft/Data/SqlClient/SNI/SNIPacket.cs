@@ -89,7 +89,7 @@ namespace Microsoft.Data.SqlClient.SNI
         /// <summary>
         /// Length of data left to process
         /// </summary>
-        public int DataLeft => (_dataLength - _dataOffset);
+        public int DataLeft => _dataLength - _dataOffset;
 
         /// <summary>
         /// Indicates that the packet should be sent out of band bypassing the normal send-recieve lock

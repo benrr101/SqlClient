@@ -83,18 +83,18 @@ namespace Microsoft.SqlServer.TDS.ColMetadata
         public TDSColumnDataFlags(ushort flags)
         {
             // Extract flags per TDS specification, section 2.2.7.4
-            IsNullable = ((flags & 0x1) != 0);
-            IsCaseSensitive = (((flags >> 1) & 0x1) != 0);
+            IsNullable = (flags & 0x1) != 0;
+            IsCaseSensitive = ((flags >> 1) & 0x1) != 0;
             Updatable = (TDSColumnDataUpdatableFlag)((flags >> 2) & 0x3);
-            IsIdentity = (((flags >> 4) & 0x1) != 0);
-            IsComputed = (((flags >> 5) & 0x1) != 0);
+            IsIdentity = ((flags >> 4) & 0x1) != 0;
+            IsComputed = ((flags >> 5) & 0x1) != 0;
             ReservedODBC = (byte)((flags >> 6) & 0x3);
-            IsFixedLengthCLR = (((flags >> 8) & 0x1) != 0);
-            IsDefault = (((flags >> 9) & 0x1) != 0);
-            IsSparseColumnSet = (((flags >> 10) & 0x1) != 0);
-            IsHidden = (((flags >> 13) & 0x1) != 0);
-            IsKey = (((flags >> 14) & 0x1) != 0);
-            IsNullableUnknown = (((flags >> 15) & 0x1) != 0);
+            IsFixedLengthCLR = ((flags >> 8) & 0x1) != 0;
+            IsDefault = ((flags >> 9) & 0x1) != 0;
+            IsSparseColumnSet = ((flags >> 10) & 0x1) != 0;
+            IsHidden = ((flags >> 13) & 0x1) != 0;
+            IsKey = ((flags >> 14) & 0x1) != 0;
+            IsNullableUnknown = ((flags >> 15) & 0x1) != 0;
         }
 
         /// <summary>
@@ -102,18 +102,18 @@ namespace Microsoft.SqlServer.TDS.ColMetadata
         /// </summary>
         public ushort ToUShort()
         {
-            return (ushort)(((ushort)(IsNullable ? 0x1 : 0x0))
-                | ((ushort)(IsCaseSensitive ? 0x1 : 0x0)) << 1
-                | ((ushort)Updatable) << 2
-                | ((ushort)(IsIdentity ? 0x1 : 0x0)) << 4
-                | ((ushort)(IsComputed ? 0x1 : 0x0)) << 5
-                | ((ushort)ReservedODBC) << 6
-                | ((ushort)(IsFixedLengthCLR ? 0x1 : 0x0)) << 8
-                | ((ushort)(IsDefault ? 0x1 : 0x0)) << 9
-                | ((ushort)(IsHidden ? 0x1 : 0x0)) << 10
-                | ((ushort)(IsSparseColumnSet ? 0x1 : 0x0)) << 13
-                | ((ushort)(IsKey ? 0x1 : 0x0)) << 14
-                | ((ushort)(IsNullableUnknown ? 0x1 : 0x0)) << 15);
+            return (ushort)((ushort)(IsNullable ? 0x1 : 0x0)
+                | (ushort)(IsCaseSensitive ? 0x1 : 0x0) << 1
+                | (ushort)Updatable << 2
+                | (ushort)(IsIdentity ? 0x1 : 0x0) << 4
+                | (ushort)(IsComputed ? 0x1 : 0x0) << 5
+                | (ushort)ReservedODBC << 6
+                | (ushort)(IsFixedLengthCLR ? 0x1 : 0x0) << 8
+                | (ushort)(IsDefault ? 0x1 : 0x0) << 9
+                | (ushort)(IsHidden ? 0x1 : 0x0) << 10
+                | (ushort)(IsSparseColumnSet ? 0x1 : 0x0) << 13
+                | (ushort)(IsKey ? 0x1 : 0x0) << 14
+                | (ushort)(IsNullableUnknown ? 0x1 : 0x0) << 15);
         }
     }
 }
