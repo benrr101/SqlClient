@@ -36,7 +36,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 };
 
             SqlInfoMessageEventHandler handler = new SqlInfoMessageEventHandler(warningCallback);
-            using (SqlConnection sqlConnection = new SqlConnection((new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { Pooling = false }).ConnectionString))
+            using (SqlConnection sqlConnection = new SqlConnection(new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { Pooling = false }.ConnectionString))
             {
                 sqlConnection.InfoMessage += handler;
                 sqlConnection.Open();
@@ -62,7 +62,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 string db = conn.DataSource;
                 cmd.CommandText = $"SELECT object_id FROM sys.fulltext_indexes WHERE object_id = object_id('{db}.dbo.Employees')";
 
-                return (cmd.ExecuteScalar() != null);
+                return cmd.ExecuteScalar() != null;
             }
         }
 
@@ -132,10 +132,10 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         private static bool CheckThatExceptionsAreDistinctButHaveSameData(SqlException e1, SqlException e2)
         {
             Assert.True(e1 != e2, "FAILED: verification of exception cloning in subsequent connection attempts");
-            Assert.False((e1 == null) || (e2 == null), "FAILED: One of exceptions is null, another is not");
+            Assert.False(e1 == null || e2 == null, "FAILED: One of exceptions is null, another is not");
 
-            bool equal = (e1.Message == e2.Message) && (e1.HelpLink == e2.HelpLink) && (e1.InnerException == e2.InnerException)
-                && (e1.Source == e2.Source) && (e1.Data.Count == e2.Data.Count) && (e1.Errors.Count == e2.Errors.Count);
+            bool equal = e1.Message == e2.Message && e1.HelpLink == e2.HelpLink && e1.InnerException == e2.InnerException
+                && e1.Source == e2.Source && e1.Data.Count == e2.Data.Count && e1.Errors.Count == e2.Errors.Count;
 
             for (int i = 0; i < e1.Errors.Count; i++)
             {
@@ -158,7 +158,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 if (!enum1.MoveNext())
                     break;
                 enum2.MoveNext();
-                equal = (enum1.Key == enum2.Key) && (enum2.Value == enum2.Value);
+                equal = enum1.Key == enum2.Key && enum2.Value == enum2.Value;
             }
 
             Assert.True(equal, string.Format("FAILED: exceptions do not contain the same data (besides call stack):\nFirst: {0}\nSecond: {1}\n", e1, e2));
@@ -383,7 +383,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 Assert.True(severity.Value == exception.Class, string.Format("FAILED: Severity of exception is incorrect. Expected: {0}. Actual: {1}.", severity.Value, exception.Class));
             }
 
-            if ((errorNumber.HasValue) && (errorState.HasValue) && (severity.HasValue))
+            if (errorNumber.HasValue && errorState.HasValue && severity.HasValue)
             {
                 string detailsText = string.Format("Error Number:{0},State:{1},Class:{2}", errorNumber.Value, errorState.Value, severity.Value);
                 Assert.True(exception.ToString().Contains(detailsText), string.Format("FAILED: SqlException.ToString does not contain the error number, state and severity information"));
@@ -392,7 +392,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             // verify that the this[] function on the collection works, as well as the All function
             SqlError[] errors = new SqlError[exception.Errors.Count];
             exception.Errors.CopyTo(errors, 0);
-            Assert.True((errors[0].Message).Equals(exception.Errors[0].Message), string.Format("FAILED: verification of Exception! ErrorCollection indexer/CopyTo resulted in incorrect value."));
+            Assert.True(errors[0].Message.Equals(exception.Errors[0].Message), string.Format("FAILED: verification of Exception! ErrorCollection indexer/CopyTo resulted in incorrect value."));
 
             return true;
         }

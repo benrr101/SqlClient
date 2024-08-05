@@ -158,7 +158,7 @@ namespace Microsoft.Data.SqlClient
             IsIdentity = 1 << 6,
             IsColumnSet = 1 << 7,
 
-            IsUpdatableMask = (Updatable | UpdateableUnknown) // two bit field (0 is read only, 1 is updatable, 2 is updatability unknown)
+            IsUpdatableMask = Updatable | UpdateableUnknown // two bit field (0 is read only, 1 is updatable, 2 is updatability unknown)
         }
 
         internal string column;

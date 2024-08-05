@@ -542,22 +542,22 @@ namespace System.Net
                     descrs[0] = new EventData
                     {
                         DataPointer = (IntPtr)string1Bytes,
-                        Size = ((arg1.Length + 1) * 2)
+                        Size = (arg1.Length + 1) * 2
                     };
                     descrs[1] = new EventData
                     {
                         DataPointer = (IntPtr)string2Bytes,
-                        Size = ((arg2.Length + 1) * 2)
+                        Size = (arg2.Length + 1) * 2
                     };
                     descrs[2] = new EventData
                     {
                         DataPointer = (IntPtr)string3Bytes,
-                        Size = ((arg3.Length + 1) * 2)
+                        Size = (arg3.Length + 1) * 2
                     };
                     descrs[3] = new EventData
                     {
                         DataPointer = (IntPtr)string4Bytes,
-                        Size = ((arg4.Length + 1) * 2)
+                        Size = (arg4.Length + 1) * 2
                     };
 
                     WriteEventCore(eventId, NumEventDatas, descrs);
@@ -626,7 +626,7 @@ namespace System.Net
 
                     descrs[0] = new EventData
                     {
-                        DataPointer = (IntPtr)(arg1Ptr),
+                        DataPointer = (IntPtr)arg1Ptr,
                         Size = (arg1.Length + 1) * sizeof(char)
                     };
                     descrs[1] = new EventData
@@ -668,7 +668,7 @@ namespace System.Net
 
                     descrs[0] = new EventData
                     {
-                        DataPointer = (IntPtr)(arg1Ptr),
+                        DataPointer = (IntPtr)arg1Ptr,
                         Size = (arg1.Length + 1) * sizeof(char)
                     };
                     descrs[1] = new EventData
@@ -678,7 +678,7 @@ namespace System.Net
                     };
                     descrs[2] = new EventData
                     {
-                        DataPointer = (IntPtr)(arg3Ptr),
+                        DataPointer = (IntPtr)arg3Ptr,
                         Size = (arg3.Length + 1) * sizeof(char)
                     };
 
@@ -705,12 +705,12 @@ namespace System.Net
 
                     descrs[0] = new EventData
                     {
-                        DataPointer = (IntPtr)(arg1Ptr),
+                        DataPointer = (IntPtr)arg1Ptr,
                         Size = (arg1.Length + 1) * sizeof(char)
                     };
                     descrs[1] = new EventData
                     {
-                        DataPointer = (IntPtr)(arg2Ptr),
+                        DataPointer = (IntPtr)arg2Ptr,
                         Size = (arg2.Length + 1) * sizeof(char)
                     };
                     descrs[2] = new EventData
@@ -745,17 +745,17 @@ namespace System.Net
 
                     descrs[0] = new EventData
                     {
-                        DataPointer = (IntPtr)(arg1Ptr),
+                        DataPointer = (IntPtr)arg1Ptr,
                         Size = (arg1.Length + 1) * sizeof(char)
                     };
                     descrs[1] = new EventData
                     {
-                        DataPointer = (IntPtr)(arg2Ptr),
+                        DataPointer = (IntPtr)arg2Ptr,
                         Size = (arg2.Length + 1) * sizeof(char)
                     };
                     descrs[2] = new EventData
                     {
-                        DataPointer = (IntPtr)(arg3Ptr),
+                        DataPointer = (IntPtr)arg3Ptr,
                         Size = (arg3.Length + 1) * sizeof(char)
                     };
                     descrs[3] = new EventData

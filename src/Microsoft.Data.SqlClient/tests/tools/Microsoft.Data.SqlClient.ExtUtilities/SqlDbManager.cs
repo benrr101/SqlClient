@@ -48,7 +48,7 @@ namespace Microsoft.Data.SqlClient.ExtUtilities
 
                 foreach (KeyValuePair<string, string> activeConnString in s_activeConnectionStrings)
                 {
-                    SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder((activeConnString.Value));
+                    SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(activeConnString.Value);
                     if (!Utils.IsAzureSqlServer(builder.DataSource))
                     {
                         builder.InitialCatalog = DB_Master;

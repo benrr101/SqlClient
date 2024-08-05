@@ -168,8 +168,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                 switch (parameterTypes[columnsRead])
                 {
                     case "string":
-                        Assert.True((string.Equals(sqlDataReader.GetString(columnsRead), @"Microsoft", StringComparison.Ordinal))
-                            || (string.Equals(sqlDataReader.GetString(columnsRead), @"Corporation", StringComparison.Ordinal)),
+                        Assert.True(string.Equals(sqlDataReader.GetString(columnsRead), @"Microsoft", StringComparison.Ordinal)
+                            || string.Equals(sqlDataReader.GetString(columnsRead), @"Corporation", StringComparison.Ordinal),
                             "FAILED: read string value isn't expected.");
                         break;
 

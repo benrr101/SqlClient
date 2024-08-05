@@ -61,7 +61,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
                             Assert.True(reader2[0] is int, "Unexpected Field(0) type: " + reader2[0].GetType());
 
-                            Assert.True((int)(reader2[0]) == 333, "Unexpected Field(0) value: " + reader2[0]);
+                            Assert.True((int)reader2[0] == 333, "Unexpected Field(0) value: " + reader2[0]);
                         }
                     }
                 }

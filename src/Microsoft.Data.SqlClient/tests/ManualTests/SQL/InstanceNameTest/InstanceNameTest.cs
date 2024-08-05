@@ -199,10 +199,10 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
         private static bool IsSPNPortNumberTestForTCP()
         {
-            return (IsInstanceNameValid(DataTestUtility.TCPConnectionString)
-                 && DataTestUtility.IsUsingManagedSNI()
-                 && DataTestUtility.IsNotAzureServer()
-                 && DataTestUtility.IsNotAzureSynapse());
+            return IsInstanceNameValid(DataTestUtility.TCPConnectionString)
+                   && DataTestUtility.IsUsingManagedSNI()
+                   && DataTestUtility.IsNotAzureServer()
+                   && DataTestUtility.IsNotAzureSynapse();
         }
 
         private static bool IsInstanceNameValid(string connectionString)

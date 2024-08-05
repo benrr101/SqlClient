@@ -41,7 +41,7 @@ namespace Microsoft.SqlServer.TDS.SessionState
             byte[] value = new byte[1];
 
             // Put transaction isolation level into it
-            value[0] = (byte)(((byte)TransactionIsolationLevel) & 0xf);
+            value[0] = (byte)((byte)TransactionIsolationLevel & 0xf);
 
             // Store the value
             DeflateValue(destination, value);
@@ -61,7 +61,7 @@ namespace Microsoft.SqlServer.TDS.SessionState
             byte[] value = InflateValue(source);
 
             // Get transaction isolation level
-            TransactionIsolationLevel = (TransactionIsolationLevelType)((byte)(value[0] & 0xf));
+            TransactionIsolationLevel = (TransactionIsolationLevelType)(byte)(value[0] & 0xf);
 
             // Inflation is complete
             return true;

@@ -82,7 +82,7 @@ namespace Microsoft.SqlServer.TDS.SSPI
             _inflationOffset += readSize;
 
             // Check if we're done
-            return (_inflationOffset >= _length);
+            return _inflationOffset >= _length;
         }
 
         /// <summary>

@@ -415,7 +415,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     continue;
                 }
 
-                bool isNull = (rowValues[ci] == DBNull.Value || rowValues[ci] == null);
+                bool isNull = rowValues[ci] == DBNull.Value || rowValues[ci] == null;
 
                 if (isNull)
                 {
@@ -467,7 +467,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             if (tableName == null || selectBuilder == null)
                 throw new ArgumentNullException("tableName == null || selectBuilder == null");
 
-            int maxIndicesLength = (columnIndices == null) ? _columns.Length : columnIndices.Length;
+            int maxIndicesLength = columnIndices == null ? _columns.Length : columnIndices.Length;
             if (indicesOffset == -1)
             {
                 indicesOffset = 0;
@@ -481,7 +481,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             {
                 indicesCount = maxIndicesLength;
             }
-            else if (indicesCount < 1 || (indicesCount + indicesOffset) > maxIndicesLength)
+            else if (indicesCount < 1 || indicesCount + indicesOffset > maxIndicesLength)
             {
                 // at least one index required
                 throw new ArgumentOutOfRangeException("indicesCount");
@@ -491,7 +491,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             int countAdded = 0;
 
             // append the first
-            int columnIndex = (columnIndices == null) ? indicesOffset : columnIndices[indicesOffset];
+            int columnIndex = columnIndices == null ? indicesOffset : columnIndices[indicesOffset];
             selectBuilder.AppendFormat("SELECT [{0}]", _columnNames[columnIndex]);
             totalRowSize += _columns[columnIndex].GetInRowSize(null);
             countAdded++;
@@ -500,7 +500,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             int end = indicesOffset + indicesCount;
             for (int c = indicesOffset + 1; c < end; c++)
             {
-                columnIndex = (columnIndices == null) ? c : columnIndices[c];
+                columnIndex = columnIndices == null ? c : columnIndices[c];
                 totalRowSize += _columns[columnIndex].GetInRowSize(null);
                 if (totalRowSize > MaxRowSize)
                 {
@@ -580,7 +580,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     // there is a column set, enforce sparse from this point
                     isSparse = true;
                 }
-                else if (i == (MaxNonSparseColumns - 1) && hasSparseColumns && !hasColumnSet)
+                else if (i == MaxNonSparseColumns - 1 && hasSparseColumns && !hasColumnSet)
                 {
                     // we almost reached the limit of regular & sparse columns with, but no column set added
                     // to increase chances for >1024 columns, enforce column set now
@@ -607,7 +607,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     {
                         sparseProbability = 10;
                     }
-                    else if (totalRowSize < (MaxBytesPerRowWithSparse - s_columnSetSafetyRange))
+                    else if (totalRowSize < MaxBytesPerRowWithSparse - s_columnSetSafetyRange)
                     {
                         sparseProbability = 50;
                     }
@@ -629,7 +629,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
                     if (!isColumnSet)
                     {
-                        isSparse = (rand.Next(100) < sparseProbability);
+                        isSparse = rand.Next(100) < sparseProbability;
 
                         if (!isSparse && !hasColumnSet)
                         {

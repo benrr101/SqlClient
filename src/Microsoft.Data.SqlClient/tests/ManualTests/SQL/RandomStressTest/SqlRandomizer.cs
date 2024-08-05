@@ -412,7 +412,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             else
                 lastDigit = 7;
 
-            totalMilliseconds = (totalMilliseconds / 10) * 10 + lastDigit;
+            totalMilliseconds = totalMilliseconds / 10 * 10 + lastDigit;
             return new DateTime(totalMilliseconds * TimeSpan.TicksPerMillisecond);
         }
 
@@ -486,8 +486,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
             double rand01 = base.NextDouble();
 
-            if (((minValue >= 0) && (maxValueExclusive >= 0)) ||
-                ((minValue <= 0) && (maxValueExclusive <= 0)))
+            if ((minValue >= 0 && maxValueExclusive >= 0) ||
+                (minValue <= 0 && maxValueExclusive <= 0))
             {
                 // safe to diff
                 double diff = maxValueExclusive - minValue;

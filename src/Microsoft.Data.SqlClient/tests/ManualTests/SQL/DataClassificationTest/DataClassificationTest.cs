@@ -126,8 +126,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         private static void VerifyInfoType(InformationType informationType, int i)
         {
             Assert.True(informationType != null);
-            Assert.Equal(i == 1 ? "COMPANY" : (i == 2 ? "NAME" : "CONTACT"), informationType.Id);
-            Assert.Equal(i == 1 ? "Company Name" : (i == 2 ? "Person Name" : "Contact Information"), informationType.Name);
+            Assert.Equal(i == 1 ? "COMPANY" : i == 2 ? "NAME" : "CONTACT", informationType.Id);
+            Assert.Equal(i == 1 ? "Company Name" : i == 2 ? "Person Name" : "Contact Information", informationType.Name);
         }
 
         private static void CreateTable(SqlCommand sqlCommand)

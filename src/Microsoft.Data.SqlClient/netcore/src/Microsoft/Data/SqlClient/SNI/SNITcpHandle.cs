@@ -339,7 +339,7 @@ namespace Microsoft.Data.SqlClient.SNI
 
             connectTask = ParallelConnectAsync(serverAddresses, port);
 
-            if (!(connectTask.Wait(isInfiniteTimeOut ? -1: timeout.MillisecondsRemainingInt)))
+            if (!connectTask.Wait(isInfiniteTimeOut ? -1: timeout.MillisecondsRemainingInt))
             {
                 callerReportError = false;
                 SqlClientEventSource.Log.TrySNITraceEvent(nameof(SNITCPHandle), EventType.ERR, "Connection Id {0} Connection timed out, Exception: {1}", args0: _connectionId, args1: Strings.SNI_ERROR_40);

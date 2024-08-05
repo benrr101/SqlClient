@@ -493,17 +493,24 @@ namespace Microsoft.Data.SqlClient.SNI
 
             PopulateProtocol();
 
-            _dataSourceAfterTrimmingProtocol = (firstIndexOfColon > -1) && ResolvedProtocol != Protocol.None
-                ? _workingDataSource.Substring(firstIndexOfColon + 1).Trim() : _workingDataSource;
+            _dataSourceAfterTrimmingProtocol = firstIndexOfColon > -1 && ResolvedProtocol != Protocol.None
+                ? _workingDataSource.Substring(firstIndexOfColon + 1).Trim()
+                : _workingDataSource;
 
             if (_dataSourceAfterTrimmingProtocol.Contains(Slash)) // Pipe paths only allow back slashes
             {
                 if (ResolvedProtocol == Protocol.None)
+                {
                     ReportSNIError(SNIProviders.INVALID_PROV);
+                }
                 else if (ResolvedProtocol == Protocol.NP)
+                {
                     ReportSNIError(SNIProviders.NP_PROV);
+                }
                 else if (ResolvedProtocol == Protocol.TCP)
+                {
                     ReportSNIError(SNIProviders.TCP_PROV);
+                }
             }
         }
 
@@ -636,7 +643,9 @@ namespace Microsoft.Data.SqlClient.SNI
             if (commaIndex > -1)
             {
                 string parameter = backSlashIndex > -1
-                        ? ((commaIndex > backSlashIndex) ? tokensByCommaAndSlash[2].Trim() : tokensByCommaAndSlash[1].Trim())
+                        ? commaIndex > backSlashIndex 
+                            ? tokensByCommaAndSlash[2].Trim()
+                            : tokensByCommaAndSlash[1].Trim()
                         : tokensByCommaAndSlash[1].Trim();
 
                 // Bad Data Source like "server, "

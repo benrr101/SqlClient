@@ -334,7 +334,7 @@ namespace Microsoft.SqlServer.TDS.Login7
                     property.Property.SetValue(this, TDSUtilities.ReadPasswordString(source, (ushort)(property.Length * 2)), null);
 
                     // Advance the position
-                    inflationOffset += (property.Length * 2);
+                    inflationOffset += property.Length * 2;
                 }
                 else if (property.Property.Name == "SSPI")
                 {
@@ -400,7 +400,7 @@ namespace Microsoft.SqlServer.TDS.Login7
                     property.Property.SetValue(this, TDSUtilities.ReadString(source, (ushort)(property.Length * 2)), null);
 
                     // Advance the position
-                    inflationOffset += (property.Length * 2);
+                    inflationOffset += property.Length * 2;
                 }
 
                 // Advance to the next property

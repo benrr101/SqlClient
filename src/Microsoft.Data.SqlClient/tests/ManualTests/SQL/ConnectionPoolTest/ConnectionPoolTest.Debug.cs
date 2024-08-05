@@ -13,7 +13,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         [ClassData(typeof(ConnectionPoolConnectionStringProvider))]
         public static void ReplacementConnectionUsesSemaphoreTest(string connectionString)
         {
-            string newConnectionString = (new SqlConnectionStringBuilder(connectionString) { MaxPoolSize = 2, ConnectTimeout = 5 }).ConnectionString;
+            string newConnectionString = new SqlConnectionStringBuilder(connectionString) { MaxPoolSize = 2, ConnectTimeout = 5 }.ConnectionString;
             SqlConnection.ClearAllPools();
 
             using SqlConnection liveConnection = new(newConnectionString);
@@ -28,7 +28,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
             Task<InternalConnectionWrapper>[] tasks = new Task<InternalConnectionWrapper>[3];
             Barrier syncBarrier = new(tasks.Length);
-            Func<InternalConnectionWrapper> taskFunction = (() => ReplacementConnectionUsesSemaphoreTask(newConnectionString, syncBarrier));
+            Func<InternalConnectionWrapper> taskFunction = () => ReplacementConnectionUsesSemaphoreTask(newConnectionString, syncBarrier);
             for (int i = 0; i < tasks.Length; i++)
             {
                 tasks[i] = Task.Factory.StartNew(taskFunction);
@@ -45,7 +45,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     if (item.Status == TaskStatus.Faulted)
                     {
                         // One task should have a timeout exception
-                        if ((!taskWithCorrectException) && (item.Exception.InnerException is InvalidOperationException) && (item.Exception.InnerException.Message.StartsWith(SystemDataResourceManager.Instance.ADP_PooledOpenTimeout)))
+                        if (!taskWithCorrectException && item.Exception.InnerException is InvalidOperationException && item.Exception.InnerException.Message.StartsWith(SystemDataResourceManager.Instance.ADP_PooledOpenTimeout))
                             taskWithCorrectException = true;
                         else if (!taskWithCorrectException)
                         {
@@ -156,7 +156,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         [ClassData(typeof(ConnectionPoolConnectionStringProvider))]
         public static void ReplacementConnectionObeys0TimeoutTest(string connectionString)
         {
-            string newConnectionString = (new SqlConnectionStringBuilder(connectionString) { ConnectTimeout = 0 }).ConnectionString;
+            string newConnectionString = new SqlConnectionStringBuilder(connectionString) { ConnectTimeout = 0 }.ConnectionString;
             SqlConnection.ClearAllPools();
 
             // Kick off proxy

@@ -55,7 +55,7 @@ namespace Microsoft.SqlServer.TDS
         /// </summary>
         internal static uint ReadUInt(Stream source)
         {
-            return (uint)(source.ReadByte())
+            return (uint)source.ReadByte()
                 + (uint)(source.ReadByte() << 8)
                 + (uint)(source.ReadByte() << 16)
                 + (uint)(source.ReadByte() << 24);
@@ -80,7 +80,7 @@ namespace Microsoft.SqlServer.TDS
         /// </summary>
         internal static int ReadInt(Stream source)
         {
-            return (int)(source.ReadByte())
+            return (int)source.ReadByte()
                 + (int)(source.ReadByte() << 8)
                 + (int)(source.ReadByte() << 16)
                 + (int)(source.ReadByte() << 24);
@@ -384,7 +384,7 @@ namespace Microsoft.SqlServer.TDS
                 int index = 0;
 
                 // Log values
-                foreach (object o in (instance as System.Collections.IEnumerable))
+                foreach (object o in instance as System.Collections.IEnumerable)
                 {
                     Log(log, string.Format("{0}[{1}]", prefix, index++), o);
                 }
@@ -401,7 +401,7 @@ namespace Microsoft.SqlServer.TDS
                 string preparedLine = string.Format("{0}: [", prefix);
 
                 // Log values
-                foreach (object o in (instance as Array))
+                foreach (object o in instance as Array)
                 {
                     preparedLine += string.Format("{0:X} ", o);
                 }

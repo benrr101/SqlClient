@@ -66,7 +66,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             var executedProcessList = new List<string>();
 
             //for shared connection we need to add MARS capabilities
-            using (var conn = new SqlConnection((new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { MultipleActiveResultSets = true }).ConnectionString))
+            using (var conn = new SqlConnection(new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { MultipleActiveResultSets = true }.ConnectionString))
             {
                 conn.Open();
                 var task1 = ExecuteCommandWithSharedConnectionAsync(conn, "C", "SELECT top 10 * FROM Orders", executedProcessList);

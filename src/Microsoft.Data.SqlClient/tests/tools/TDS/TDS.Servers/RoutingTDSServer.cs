@@ -84,7 +84,7 @@ namespace Microsoft.SqlServer.TDS.Servers
                 RoutingTDSServerArguments ServerArguments = Arguments as RoutingTDSServerArguments;
 
                 // Check filter
-                if (ServerArguments.RequireReadOnly && (loginRequest.TypeFlags.ReadOnlyIntent != TDSLogin7TypeFlagsReadOnlyIntent.ReadOnly))
+                if (ServerArguments.RequireReadOnly && loginRequest.TypeFlags.ReadOnlyIntent != TDSLogin7TypeFlagsReadOnlyIntent.ReadOnly)
                 {
                     // Log request
                     TDSUtilities.Log(Arguments.Log, "Request", loginRequest);

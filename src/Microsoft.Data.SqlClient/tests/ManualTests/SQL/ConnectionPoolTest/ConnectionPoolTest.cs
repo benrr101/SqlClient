@@ -13,8 +13,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 {
     public class ConnectionPoolConnectionStringProvider : IEnumerable<object[]>
     {
-        private static readonly string _TCPConnectionString = (new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { MultipleActiveResultSets = false, Pooling = true }).ConnectionString;
-        private static readonly string _tcpMarsConnStr = (new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { MultipleActiveResultSets = true, Pooling = true }).ConnectionString;
+        private static readonly string _TCPConnectionString = new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { MultipleActiveResultSets = false, Pooling = true }.ConnectionString;
+        private static readonly string _tcpMarsConnStr = new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { MultipleActiveResultSets = true, Pooling = true }.ConnectionString;
 
         public IEnumerator<object[]> GetEnumerator()
         {
@@ -148,7 +148,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         [ClassData(typeof(ConnectionPoolConnectionStringProvider))]
         public static void ReclaimEmancipatedOnOpenTest(string connectionString)
         {
-            string newConnectionString = (new SqlConnectionStringBuilder(connectionString) { MaxPoolSize = 1 }).ConnectionString;
+            string newConnectionString = new SqlConnectionStringBuilder(connectionString) { MaxPoolSize = 1 }.ConnectionString;
             SqlConnection.ClearAllPools();
 
             InternalConnectionWrapper internalConnection = CreateEmancipatedConnection(newConnectionString);
@@ -175,7 +175,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         [ClassData(typeof(ConnectionPoolConnectionStringProvider))]
         public static void MaxPoolWaitForConnectionTest(string connectionString)
         {
-            string newConnectionString = (new SqlConnectionStringBuilder(connectionString) { MaxPoolSize = 1 }).ConnectionString;
+            string newConnectionString = new SqlConnectionStringBuilder(connectionString) { MaxPoolSize = 1 }.ConnectionString;
             SqlConnection.ClearAllPools();
 
             using SqlConnection connection1 = new SqlConnection(newConnectionString);

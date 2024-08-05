@@ -309,11 +309,9 @@ namespace Microsoft.Data.SqlClient.SNI
         internal override bool IsValidPacket(PacketHandle packet)
         {
             Debug.Assert(packet.Type == PacketHandle.ManagedPacketType, "unexpected packet type when requiring ManagedPacket");
-            return (
-                packet.Type == PacketHandle.ManagedPacketType &&
-                packet.ManagedPacket != null &&
-                !packet.ManagedPacket.IsInvalid
-             );
+            return packet.Type == PacketHandle.ManagedPacketType &&
+                   packet.ManagedPacket != null &&
+                   !packet.ManagedPacket.IsInvalid;
         }
 
         internal override PacketHandle GetResetWritePacket(int dataSize)

@@ -230,7 +230,7 @@ namespace Microsoft.SqlServer.TDS.Login7
 
             // Calculate Feature Data length
             uint optionDataLength = (uint)(sizeof(byte) // Options size (library and Echo)
-                                    + ((Token == null && IsRequestingAuthenticationInfo) ? 0 : sizeof(uint)) // Fedauth token length
+                                    + (Token == null && IsRequestingAuthenticationInfo ? 0 : sizeof(uint)) // Fedauth token length
                                     + (Token == null ? 0 : (uint)Token.Length) // Fedauth Token
                                     + (Nonce == null ? 0 : s_nonceDataLength) // Nonce
                                     + (ChannelBingingToken == null ? 0 : (uint)ChannelBingingToken.Length) // Channel binding
@@ -241,7 +241,7 @@ namespace Microsoft.SqlServer.TDS.Login7
             TDSUtilities.WriteUInt(destination, optionDataLength);
 
             // Construct a byte from fedauthlibrary and fedauth echo.
-            byte temp = (byte)((((byte)(Library) << 1) | (byte)(Echo)));
+            byte temp = (byte)(((byte)Library << 1) | (byte)Echo);
             destination.WriteByte(temp);
 
             // Write FederatedAuthenticationRequired token.

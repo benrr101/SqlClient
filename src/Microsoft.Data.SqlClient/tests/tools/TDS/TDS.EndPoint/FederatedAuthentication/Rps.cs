@@ -116,8 +116,8 @@ namespace Microsoft.SqlServer.TDS.EndPoint.FederatedAuthentication
             for (int i = 0; i < toConvert.Length; i++)
             {
                 byte[] charAsBytes = BitConverter.GetBytes(toConvert[i]);
-                convertedBytes[(2 * i)] = charAsBytes[0];
-                convertedBytes[(2 * i) + 1] = charAsBytes[1];
+                convertedBytes[2 * i] = charAsBytes[0];
+                convertedBytes[2 * i + 1] = charAsBytes[1];
             }
 
             return convertedBytes;

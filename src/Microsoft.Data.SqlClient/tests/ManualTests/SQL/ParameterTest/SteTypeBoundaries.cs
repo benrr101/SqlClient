@@ -164,7 +164,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 { SteAttributeKey.Value, (decimal)0 },
                 { SteAttributeKey.Value, decimal.MaxValue / 10000000000 },
                 { SteAttributeKey.Value, new SqlDecimal(0) },
-                { SteAttributeKey.Value, ((SqlDecimal)1234567890123456.789012345678M) * 100 }, // Bigger than a Decimal
+                { SteAttributeKey.Value, (SqlDecimal)1234567890123456.789012345678M * 100 }, // Bigger than a Decimal
                 { SteAttributeKey.Value, null },
                 { SteAttributeKey.Value, DBNull.Value }
             };
@@ -204,12 +204,12 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 { SteAttributeKey.SqlDbType, SqlDbType.Money },
                 { SteAttributeKey.SqlDbType, SqlDbType.SmallMoney },
                 { SteAttributeKey.Value, (decimal)0 },
-                { SteAttributeKey.Value, (decimal)unchecked(((long)0x8000000000000000L) / 10000) },
+                { SteAttributeKey.Value, (decimal)unchecked((long)0x8000000000000000L / 10000) },
                 { SteAttributeKey.Value, (decimal)0x7FFFFFFFFFFFFFFFL / 10000 },
                 { SteAttributeKey.Value, new decimal(-214748.3648) }, // smallmoney min
                 { SteAttributeKey.Value, new decimal(214748.3647) }, // smallmoney max
-                { SteAttributeKey.Value, new SqlMoney(((decimal)int.MaxValue) / 10000) },
-                { SteAttributeKey.Value, new SqlMoney(((decimal)int.MinValue) / 10000) },
+                { SteAttributeKey.Value, new SqlMoney((decimal)int.MaxValue / 10000) },
+                { SteAttributeKey.Value, new SqlMoney((decimal)int.MinValue / 10000) },
                 { SteAttributeKey.Value, null },
                 { SteAttributeKey.Value, DBNull.Value }
             };

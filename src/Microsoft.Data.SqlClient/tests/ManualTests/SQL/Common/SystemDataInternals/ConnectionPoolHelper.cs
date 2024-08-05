@@ -40,7 +40,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.SystemDataInternals
             ICollection oldStack = (ICollection)s_dbConnectionPoolStackOld.GetValue(pool);
             ICollection newStack = (ICollection)s_dbConnectionPoolStackNew.GetValue(pool);
 
-            return (oldStack.Count + newStack.Count);
+            return oldStack.Count + newStack.Count;
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.SystemDataInternals
                 if (args[1] != null)
                 {
                     object poolCollection = s_dbConnectionPoolGroupPoolCollection.GetValue(args[1]);
-                    IEnumerable poolList = (IEnumerable)(s_dictPoolIdentityPoolValues.GetValue(poolCollection));
+                    IEnumerable poolList = (IEnumerable)s_dictPoolIdentityPoolValues.GetValue(poolCollection);
                     foreach (object pool in poolList)
                     {
                         connectionPools.Add(new Tuple<object, object>(pool, item));
@@ -86,7 +86,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.SystemDataInternals
             object AllPoolGroups = s_dbConnectionFactoryPoolGroupList.GetValue(factorySingleton);
             object[] args = new object[] { connectionString, null };
             bool found = (bool)s_dictStringPoolGroupTryGetValue.Invoke(AllPoolGroups, args);
-            if ((found) && (args[1] != null))
+            if (found && args[1] != null)
             {
                 ICollection poolList = (ICollection)s_dictPoolIdentityPoolValues.GetValue(args[1]);
                 if (poolList.Count == 1)

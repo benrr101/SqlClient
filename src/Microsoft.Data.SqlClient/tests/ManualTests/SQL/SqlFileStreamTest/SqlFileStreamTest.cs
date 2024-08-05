@@ -55,7 +55,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                             {
                                 // Read the contents as bytes.
                                 retrievedValue = new byte[fileStream.Length];
-                                fileStream.Read(retrievedValue, 0, (int)(fileStream.Length));
+                                fileStream.Read(retrievedValue, 0, (int)fileStream.Length);
 
                                 // Reverse the byte array, if the system architecture is little-endian.
                                 if (BitConverter.IsLittleEndian)
@@ -120,7 +120,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                             // Create the SqlFileStream  
                             using Stream fileStream = new SqlFileStream(path, transactionContext, FileAccess.Write, FileOptions.SequentialScan, allocationSize: 0);
                             // Overwrite the first row in the table
-                            fileStream.Write((insertedValue), 0, 4);
+                            fileStream.Write(insertedValue, 0, 4);
                         }
                     }
                     transaction.Commit();

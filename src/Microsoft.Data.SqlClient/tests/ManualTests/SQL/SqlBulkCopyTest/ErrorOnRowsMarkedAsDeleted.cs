@@ -37,15 +37,15 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
                 // run several cases, using DataTable or RowsList as an input method
                 // no need to duplicate tests since from dev point they are sharing the same code
-                RunCase(destConn, "empty table", SqlBulkCopyInputType.DataTable, tablePrefix + (tableIdx++), "D");
-                RunCase(destConn, "single deleted row", SqlBulkCopyInputType.RowsList, tablePrefix + (tableIdx++), "D");
-                RunCase(destConn, "deleted row is first", SqlBulkCopyInputType.DataTable, tablePrefix + (tableIdx++), "DRR");
-                RunCase(destConn, "deleted row is last", SqlBulkCopyInputType.RowsList, tablePrefix + (tableIdx++), "RRD");
-                RunCase(destConn, "continues deleted rows", SqlBulkCopyInputType.DataTable, tablePrefix + (tableIdx++), "RDDDDR");
-                RunCase(destConn, "deleted row is in the middle", SqlBulkCopyInputType.RowsList, tablePrefix + (tableIdx++), "RDR");
-                RunCase(destConn, "empty table", SqlBulkCopyInputType.DataTable, tablePrefix + (tableIdx++), "");
-                RunCase(destConn, "no deleted rows", SqlBulkCopyInputType.RowsList, tablePrefix + (tableIdx++), "RR");
-                RunCase(destConn, "big bang", SqlBulkCopyInputType.DataTable, tablePrefix + (tableIdx++), "DRRDRRRDDDDDDDDRRDRDDRDRDDDRRD");
+                RunCase(destConn, "empty table", SqlBulkCopyInputType.DataTable, tablePrefix + tableIdx++, "D");
+                RunCase(destConn, "single deleted row", SqlBulkCopyInputType.RowsList, tablePrefix + tableIdx++, "D");
+                RunCase(destConn, "deleted row is first", SqlBulkCopyInputType.DataTable, tablePrefix + tableIdx++, "DRR");
+                RunCase(destConn, "deleted row is last", SqlBulkCopyInputType.RowsList, tablePrefix + tableIdx++, "RRD");
+                RunCase(destConn, "continues deleted rows", SqlBulkCopyInputType.DataTable, tablePrefix + tableIdx++, "RDDDDR");
+                RunCase(destConn, "deleted row is in the middle", SqlBulkCopyInputType.RowsList, tablePrefix + tableIdx++, "RDR");
+                RunCase(destConn, "empty table", SqlBulkCopyInputType.DataTable, tablePrefix + tableIdx++, "");
+                RunCase(destConn, "no deleted rows", SqlBulkCopyInputType.RowsList, tablePrefix + tableIdx++, "RR");
+                RunCase(destConn, "big bang", SqlBulkCopyInputType.DataTable, tablePrefix + tableIdx++, "DRRDRRRDDDDDDDDRRDRDDRDRDDDRRD");
             }
         }
 

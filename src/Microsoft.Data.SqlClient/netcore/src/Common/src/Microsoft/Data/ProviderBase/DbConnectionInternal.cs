@@ -63,7 +63,7 @@ namespace Microsoft.Data.ProviderBase
         {
             get
             {
-                return (!_connectionIsDoomed && !_cannotBePooled && !_owningObject.TryGetTarget(out _));
+                return !_connectionIsDoomed && !_cannotBePooled && !_owningObject.TryGetTarget(out _);
             }
         }
 
@@ -102,7 +102,7 @@ namespace Microsoft.Data.ProviderBase
                 // of the pool and it's owning object is no longer around to
                 // return it.
 
-                return (_pooledCount < 1) && !_owningObject.TryGetTarget(out _);
+                return _pooledCount < 1 && !_owningObject.TryGetTarget(out _);
             }
         }
 
@@ -111,7 +111,7 @@ namespace Microsoft.Data.ProviderBase
             get
             {
                 Debug.Assert(_pooledCount <= 1 && _pooledCount >= -1, "Pooled count for object is invalid");
-                return (_pooledCount == 1);
+                return _pooledCount == 1;
             }
         }
 
@@ -241,7 +241,7 @@ namespace Microsoft.Data.ProviderBase
                 // doom it if it's lifetime has elapsed.
 
                 DateTime now = DateTime.UtcNow;
-                if ((now.Ticks - _createTime.Ticks) > Pool.LoadBalanceTimeout.Ticks)
+                if (now.Ticks - _createTime.Ticks > Pool.LoadBalanceTimeout.Ticks)
                 {
                     DoNotPoolThisConnection();
                 }

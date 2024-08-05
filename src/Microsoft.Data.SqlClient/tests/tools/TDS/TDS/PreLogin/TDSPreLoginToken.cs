@@ -238,7 +238,7 @@ namespace Microsoft.SqlServer.TDS.PreLogin
                             if (option.Length >= 1)
                             {
                                 // Read byte
-                                IsMARS = (source.ReadByte() == 0x01);
+                                IsMARS = source.ReadByte() == 0x01;
 
                                 // Update the offset
                                 inflationOffset += 1;

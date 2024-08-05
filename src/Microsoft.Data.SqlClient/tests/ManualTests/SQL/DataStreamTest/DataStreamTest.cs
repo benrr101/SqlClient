@@ -607,7 +607,7 @@ CREATE TABLE {tableName} (id INT, foo VARBINARY(MAX))
                             Assert.True(bufEntry1.Equals(bufEntry2.ToString()),
                                 string.Format("FAILED: Should have same value with both buffer entries. Buf2 value: {0}. Buf2 value: {1}", bufEntry1, bufEntry2));
 
-                            buf = (buf == buf_small) ? buf_big : buf_small;
+                            buf = buf == buf_small ? buf_big : buf_small;
                         }
                     }
                 }
@@ -941,7 +941,7 @@ CREATE TABLE {tableName} (id INT, foo VARBINARY(MAX))
                         long actualLength = reader.GetBytes(i, 0, null, 0, 0);
                         cb = reader.GetBytes(i, 0, data, 0, 13);
                         sqlbin = reader.GetSqlBinary(i);
-                        DataTestUtility.AssertEqualsWithDescription((actualLength - 13), (long)sqlbin.Length, "FAILED: Did not receive expected number of bytes");
+                        DataTestUtility.AssertEqualsWithDescription(actualLength - 13, (long)sqlbin.Length, "FAILED: Did not receive expected number of bytes");
                     }
 
                     using (reader = cmd.ExecuteReader(CommandBehavior.SequentialAccess))
@@ -1152,7 +1152,7 @@ CREATE TABLE {tableName} (id INT, foo VARBINARY(MAX))
                 {
                     cmd.CommandText = "select EmployeeID, FirstName, LastName from Employees where Title = @vm ";
 
-                    (cmd.Parameters.Add("@vm", SqlDbType.VarChar)).Value = new SqlChars("Vice President, Sales");
+                    cmd.Parameters.Add("@vm", SqlDbType.VarChar).Value = new SqlChars("Vice President, Sales");
 
                     using (reader = cmd.ExecuteReader())
                     {
@@ -1169,7 +1169,7 @@ CREATE TABLE {tableName} (id INT, foo VARBINARY(MAX))
                     cmd.CommandText = "select EmployeeID, FirstName, LastName from Employees where EmployeeID = 2 and Convert(binary(5), Photo) = @bn ";
 
                     byte[] barr = new byte[5] { 0x15, 0x1c, 0x2F, 0x00, 0x02 };
-                    (cmd.Parameters.Add("@bn", SqlDbType.VarBinary)).Value = new SqlBytes(barr);
+                    cmd.Parameters.Add("@bn", SqlDbType.VarBinary).Value = new SqlBytes(barr);
 
                     using (reader = cmd.ExecuteReader())
                     {
@@ -1249,25 +1249,25 @@ CREATE TABLE {tableName} (id INT, foo VARBINARY(MAX))
                             Assert.False(stream.Read(buffer, 0, buffer.Length) > 0, "FAILED: Read more than 0 bytes from a null stream");
 
                             // Get column before current column
-                            Action action = (() => reader.GetStream(0));
+                            Action action = () => reader.GetStream(0);
                             SeqAccessFailureWrapper<InvalidOperationException>(action, behavior);
 
                             // Two streams on same column
                             reader.GetStream(4);
-                            action = (() => reader.GetStream(4));
+                            action = () => reader.GetStream(4);
                             SeqAccessFailureWrapper<InvalidOperationException>(action, behavior);
 
                             // GetStream then GetBytes on same column
                             reader.GetStream(5);
-                            action = (() => reader.GetBytes(5, 0, null, 0, 0));
+                            action = () => reader.GetBytes(5, 0, null, 0, 0);
                             SeqAccessFailureWrapper<InvalidOperationException>(action, behavior);
 
-                            action = (() => reader.GetBytes(5, 0, buffer, 0, buffer.Length));
+                            action = () => reader.GetBytes(5, 0, buffer, 0, buffer.Length);
                             SeqAccessFailureWrapper<InvalidOperationException>(action, behavior);
 
                             // GetBytes then GetStream on same column
                             reader.GetBytes(6, 0, null, 0, 0);
-                            action = (() => reader.GetStream(6));
+                            action = () => reader.GetStream(6);
                             SeqAccessFailureWrapper<InvalidOperationException>(action, behavior);
 
                             reader.GetBytes(6, 0, buffer, 0, buffer.Length);
@@ -1361,25 +1361,25 @@ CREATE TABLE {tableName} (id INT, foo VARBINARY(MAX))
                                 Assert.False(textReader.Read(buffer, 0, buffer.Length) > 0, "FAILED: Read more than 0 chars from a null TextReader");
 
                                 // Get column before current column
-                                Action action = (() => reader.GetTextReader(0));
+                                Action action = () => reader.GetTextReader(0);
                                 SeqAccessFailureWrapper<InvalidOperationException>(action, behavior);
 
                                 // Two TextReaders on same column
                                 reader.GetTextReader(4);
-                                action = (() => reader.GetTextReader(4));
+                                action = () => reader.GetTextReader(4);
                                 SeqAccessFailureWrapper<InvalidOperationException>(action, behavior);
 
                                 // GetTextReader then GetBytes on same column
                                 reader.GetTextReader(5);
-                                action = (() => reader.GetChars(0, 0, null, 0, 0));
+                                action = () => reader.GetChars(0, 0, null, 0, 0);
                                 SeqAccessFailureWrapper<InvalidOperationException>(action, behavior);
 
-                                action = (() => reader.GetChars(5, 0, buffer, 0, buffer.Length));
+                                action = () => reader.GetChars(5, 0, buffer, 0, buffer.Length);
                                 SeqAccessFailureWrapper<InvalidOperationException>(action, behavior);
 
                                 // GetBytes then GetTextReader on same column
                                 reader.GetChars(6, 0, null, 0, 0);
-                                action = (() => reader.GetTextReader(6));
+                                action = () => reader.GetTextReader(6);
                                 SeqAccessFailureWrapper<InvalidOperationException>(action, behavior);
 
                                 reader.GetChars(6, 0, buffer, 0, buffer.Length);
@@ -1467,12 +1467,12 @@ CREATE TABLE {tableName} (id INT, foo VARBINARY(MAX))
                             Assert.False(xmlReader.Read(), "FAILED: Successfully read on a null XmlReader");
 
                             // Get column before current column
-                            Action action = (() => reader.GetXmlReader(0));
+                            Action action = () => reader.GetXmlReader(0);
                             SeqAccessFailureWrapper<InvalidOperationException>(action, behavior);
 
                             // Two XmlReaders on same column
                             reader.GetXmlReader(4);
-                            action = (() => reader.GetXmlReader(4));
+                            action = () => reader.GetXmlReader(4);
                             SeqAccessFailureWrapper<InvalidOperationException>(action, behavior);
 #if DEBUG
                             // GetXmlReader while async is pending
@@ -1521,14 +1521,14 @@ CREATE TABLE {tableName} (id INT, foo VARBINARY(MAX))
                                 // Testing stream properties
                                 stream.Flush();
                                 DataTestUtility.AssertThrowsWrapper<NotSupportedException>(() => stream.SetLength(1));
-                                Action<Stream> performOnStream = ((s) => { int i = s.WriteTimeout; });
+                                Action<Stream> performOnStream = (s) => { int i = s.WriteTimeout; };
                                 DataTestUtility.AssertThrowsWrapper<InvalidOperationException>(() => performOnStream(stream));
                                 if (behavior == CommandBehavior.SequentialAccess)
                                 {
                                     DataTestUtility.AssertThrowsWrapper<NotSupportedException>(() => stream.Seek(0, SeekOrigin.Begin));
-                                    performOnStream = ((s) => { long i = s.Position; });
+                                    performOnStream = (s) => { long i = s.Position; };
                                     DataTestUtility.AssertThrowsWrapper<NotSupportedException>(() => performOnStream(stream));
-                                    performOnStream = ((s) => { long i = s.Length; });
+                                    performOnStream = (s) => { long i = s.Length; };
                                     DataTestUtility.AssertThrowsWrapper<NotSupportedException>(() => performOnStream(stream));
                                 }
                                 else
@@ -1567,7 +1567,7 @@ CREATE TABLE {tableName} (id INT, foo VARBINARY(MAX))
                         }
 
                         // Once Reader is closed
-                        action = (() => stream.Read(buffer, 0, buffer.Length));
+                        action = () => stream.Read(buffer, 0, buffer.Length);
                         SeqAccessFailureWrapper<ObjectDisposedException>(action, behavior);
                     }
 
@@ -1580,7 +1580,7 @@ CREATE TABLE {tableName} (id INT, foo VARBINARY(MAX))
                             stream = reader.GetStream(0);
                             reader.GetInt32(1);
 
-                            action = (() => stream.Read(buffer, 0, buffer.Length));
+                            action = () => stream.Read(buffer, 0, buffer.Length);
                             SeqAccessFailureWrapper<ObjectDisposedException>(action, behavior);
                         }
                     }
@@ -1728,7 +1728,7 @@ CREATE TABLE {tableName} (id INT, foo VARBINARY(MAX))
                             }
 
                             // Once Reader is closed
-                            action = (() => textReader.Read(buffer, 0, buffer.Length));
+                            action = () => textReader.Read(buffer, 0, buffer.Length);
                             SeqAccessFailureWrapper<ObjectDisposedException>(action, behavior);
                         }
 
@@ -1740,7 +1740,7 @@ CREATE TABLE {tableName} (id INT, foo VARBINARY(MAX))
                             textReader = reader.GetTextReader(0);
                             reader.GetInt32(1);
 
-                            action = (() => textReader.Read(buffer, 0, buffer.Length));
+                            action = () => textReader.Read(buffer, 0, buffer.Length);
                             SeqAccessFailureWrapper<ObjectDisposedException>(action, behavior);
                         }
 
@@ -1854,13 +1854,13 @@ CREATE TABLE {tableName} (id INT, foo VARBINARY(MAX))
                         reader.Read();
                         XmlReader xmlReader = reader.GetXmlReader(0);
                         bool match = true;
-                        while ((match) && (xmlReader.Read()))
+                        while (match && xmlReader.Read())
                         {
                             match = correctXmlReader.Read();
                             if (match)
                             {
-                                match &= (correctXmlReader.Name == xmlReader.Name);
-                                match &= (correctXmlReader.Value == xmlReader.Value);
+                                match &= correctXmlReader.Name == xmlReader.Name;
+                                match &= correctXmlReader.Value == xmlReader.Value;
                             }
                         }
 
@@ -2115,7 +2115,7 @@ CREATE TABLE {tableName} (id INT, foo VARBINARY(MAX))
             {
                 return true;
             }
-            return (v1.Equals(v2));
+            return v1.Equals(v2);
         }
 
         internal static void VerifyData(SqlDataReader reader, object[] buffer)

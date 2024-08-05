@@ -136,12 +136,12 @@ namespace Microsoft.SqlServer.TDS.Login7
         public byte ToByte()
         {
             return (byte)((byte)Order
-                | ((byte)CharacterSet) << 1
-                | ((byte)FloatingPoint) << 2
-                | ((byte)DumpLoad) << 4
-                | ((byte)UseDB) << 5
-                | ((byte)Database) << 6
-                | ((byte)Language) << 7);
+                | (byte)CharacterSet << 1
+                | (byte)FloatingPoint << 2
+                | (byte)DumpLoad << 4
+                | (byte)UseDB << 5
+                | (byte)Database << 6
+                | (byte)Language << 7);
         }
     }
 }

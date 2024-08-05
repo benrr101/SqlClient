@@ -52,7 +52,7 @@ namespace Microsoft.Data.SqlClient
             }
             else if (sqlOwningConnection != null)
             {
-                userOpt = (SqlConnectionString)(sqlOwningConnection.UserConnectionOptions);
+                userOpt = (SqlConnectionString)sqlOwningConnection.UserConnectionOptions;
             }
 
             if (sqlOwningConnection != null)
@@ -221,7 +221,7 @@ namespace Microsoft.Data.SqlClient
 
         override internal DbConnectionPoolGroup GetConnectionPoolGroup(DbConnection connection)
         {
-            SqlConnection c = (connection as SqlConnection);
+            SqlConnection c = connection as SqlConnection;
             if (c != null)
             {
                 return c.PoolGroup;
@@ -231,7 +231,7 @@ namespace Microsoft.Data.SqlClient
 
         override internal DbConnectionInternal GetInnerConnection(DbConnection connection)
         {
-            SqlConnection c = (connection as SqlConnection);
+            SqlConnection c = connection as SqlConnection;
             if (c != null)
             {
                 return c.InnerConnection;
@@ -241,7 +241,7 @@ namespace Microsoft.Data.SqlClient
 
         override protected int GetObjectId(DbConnection connection)
         {
-            SqlConnection c = (connection as SqlConnection);
+            SqlConnection c = connection as SqlConnection;
             if (c != null)
             {
                 return c.ObjectID;
@@ -251,7 +251,7 @@ namespace Microsoft.Data.SqlClient
 
         override internal void PermissionDemand(DbConnection outerConnection)
         {
-            SqlConnection c = (outerConnection as SqlConnection);
+            SqlConnection c = outerConnection as SqlConnection;
             if (c != null)
             {
                 c.PermissionDemand();
@@ -260,7 +260,7 @@ namespace Microsoft.Data.SqlClient
 
         override internal void SetConnectionPoolGroup(DbConnection outerConnection, DbConnectionPoolGroup poolGroup)
         {
-            SqlConnection c = (outerConnection as SqlConnection);
+            SqlConnection c = outerConnection as SqlConnection;
             if (c != null)
             {
                 c.PoolGroup = poolGroup;
@@ -269,7 +269,7 @@ namespace Microsoft.Data.SqlClient
 
         override internal void SetInnerConnectionEvent(DbConnection owningObject, DbConnectionInternal to)
         {
-            SqlConnection c = (owningObject as SqlConnection);
+            SqlConnection c = owningObject as SqlConnection;
             if (c != null)
             {
                 c.SetInnerConnectionEvent(to);
@@ -278,7 +278,7 @@ namespace Microsoft.Data.SqlClient
 
         override internal bool SetInnerConnectionFrom(DbConnection owningObject, DbConnectionInternal to, DbConnectionInternal from)
         {
-            SqlConnection c = (owningObject as SqlConnection);
+            SqlConnection c = owningObject as SqlConnection;
             if (c != null)
             {
                 return c.SetInnerConnectionFrom(to, from);
@@ -288,7 +288,7 @@ namespace Microsoft.Data.SqlClient
 
         override internal void SetInnerConnectionTo(DbConnection owningObject, DbConnectionInternal to)
         {
-            SqlConnection c = (owningObject as SqlConnection);
+            SqlConnection c = owningObject as SqlConnection;
             if (c != null)
             {
                 c.SetInnerConnectionTo(to);

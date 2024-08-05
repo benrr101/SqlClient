@@ -14,38 +14,38 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         public static void Map(StePermutation perm, SqlParameter param)
         {
             bool didSetSqlDbType = false;
-            if (perm.TryGetValue(SteAttributeKey.SqlDbType, out object attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.SqlDbType, out object attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 param.SqlDbType = (SqlDbType)attr;
                 didSetSqlDbType = true;
             }
 
-            if (perm.TryGetValue(SteAttributeKey.MaxLength, out attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.MaxLength, out attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 param.Size = (int)attr;
             }
 
-            if (perm.TryGetValue(SteAttributeKey.Precision, out attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.Precision, out attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 param.Precision = (byte)attr;
             }
 
-            if (perm.TryGetValue(SteAttributeKey.Scale, out attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.Scale, out attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 param.Scale = (byte)attr;
             }
 
-            if (perm.TryGetValue(SteAttributeKey.LocaleId, out attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.LocaleId, out attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 param.LocaleId = (int)attr;
             }
 
-            if (perm.TryGetValue(SteAttributeKey.CompareOptions, out attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.CompareOptions, out attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 param.CompareInfo = (SqlCompareOptions)attr;
             }
 
-            if (perm.TryGetValue(SteAttributeKey.TypeName, out attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.TypeName, out attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 if (didSetSqlDbType && SqlDbType.Structured == param.SqlDbType)
                 {
@@ -59,7 +59,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 }
             }
 
-            if (perm.TryGetValue(SteAttributeKey.Offset, out attr) && (attr != SteTypeBoundaries.s_doNotUseMarker))
+            if (perm.TryGetValue(SteAttributeKey.Offset, out attr) && attr != SteTypeBoundaries.s_doNotUseMarker)
             {
                 param.Offset = (int)attr;
             }

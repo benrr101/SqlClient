@@ -124,7 +124,9 @@ namespace Microsoft.Data.SqlClient.SNI
             _currentHeader.flags = (byte)flags;
             _currentHeader.sessionId = _sessionId;
             _currentHeader.length = (uint)SNISMUXHeader.HEADER_LENGTH + (uint)length;
-            _currentHeader.sequenceNumber = ((flags == SNISMUXFlags.SMUX_FIN) || (flags == SNISMUXFlags.SMUX_ACK)) ? _sequenceNumber - 1 : _sequenceNumber++;
+            _currentHeader.sequenceNumber = flags == SNISMUXFlags.SMUX_FIN || flags == SNISMUXFlags.SMUX_ACK
+                ? _sequenceNumber - 1
+                : _sequenceNumber++;
             _currentHeader.highwater = _receiveHighwater;
             _receiveHighwaterLastAck = _currentHeader.highwater;
         }

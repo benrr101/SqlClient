@@ -37,7 +37,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 // Execute
                 command.ExecuteNonQuery();
                 // Validate
-                if (((decimal)decimalParam.Value) != new decimal(1.23))
+                if ((decimal)decimalParam.Value != new decimal(1.23))
                 {
                     Console.WriteLine("FAIL: Value is incorrect: {0}", decimalParam.Value);
                 }

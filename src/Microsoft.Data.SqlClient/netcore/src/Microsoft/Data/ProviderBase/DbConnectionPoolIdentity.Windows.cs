@@ -31,7 +31,10 @@ namespace Microsoft.Data.ProviderBase
                 bool isRestricted = Win32NativeMethods.IsTokenRestrictedWrapper(token);
 
                 var lastIdentity = s_lastIdentity;
-                if ((lastIdentity != null) && (lastIdentity._sidString == sidString) && (lastIdentity._isRestricted == isRestricted) && (lastIdentity._isNetwork == isNetwork))
+                if (lastIdentity != null && 
+                    lastIdentity._sidString == sidString &&
+                    lastIdentity._isRestricted == isRestricted &&
+                    lastIdentity._isNetwork == isNetwork)
                 {
                     current = lastIdentity;
                 }

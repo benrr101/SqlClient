@@ -87,7 +87,7 @@ namespace Microsoft.SqlServer.TDS.FeatureExtAck
             destination.WriteByte((byte)TDSFeatureID.FederatedAuthentication);
 
             // Write the data length
-            TDSUtilities.WriteUInt(destination, ((ClientNonce != null) ? s_nonceDataLength : 0) + ((Signature != null) ? s_signatureDataLength : 0));
+            TDSUtilities.WriteUInt(destination, (ClientNonce != null ? s_nonceDataLength : 0) + (Signature != null ? s_signatureDataLength : 0));
 
             if (ClientNonce != null)
             {

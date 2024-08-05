@@ -78,10 +78,10 @@ namespace Microsoft.SqlServer.TDS.Login7
         public byte ToByte()
         {
             return (byte)((byte)ChangePassword
-                | ((byte)(IsUserInstance ? 1 : 0)) << 1
-                | ((byte)(SendYukonBinaryXML ? 1 : 0)) << 2
-                | ((byte)UnknownCollation) << 3
-                | ((byte)(ExtensionFlag ? 1 : 0)) << 4);
+                | (byte)(IsUserInstance ? 1 : 0) << 1
+                | (byte)(SendYukonBinaryXML ? 1 : 0) << 2
+                | (byte)UnknownCollation << 3
+                | (byte)(ExtensionFlag ? 1 : 0) << 4);
         }
     }
 }

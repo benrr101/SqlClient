@@ -233,7 +233,7 @@ namespace Microsoft.Data.SqlClient.Tests
             cmd.Parameters.AddWithValue("@BirthDate", DateTime.Now);
             cmd.UpdatedRowSource = UpdateRowSource.OutputParameters;
 
-            SqlCommand clone = (((ICloneable)(cmd)).Clone()) as SqlCommand;
+            SqlCommand clone = ((ICloneable)cmd).Clone() as SqlCommand;
             Assert.Equal("sp_insert", clone.CommandText);
             Assert.Equal(100, clone.CommandTimeout);
             Assert.Equal(CommandType.StoredProcedure, clone.CommandType);
@@ -300,7 +300,7 @@ namespace Microsoft.Data.SqlClient.Tests
         {
             SqlCommand cmd = new SqlCommand();
 
-            ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(() => cmd.CommandType = (CommandType)(666));
+            ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(() => cmd.CommandType = (CommandType)666);
             // The CommandType enumeration value, 666, is invalid
             Assert.Null(ex.InnerException);
             Assert.NotNull(ex.Message);

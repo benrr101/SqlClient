@@ -83,7 +83,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
         private void OpenMarsConnection(string cmdText)
         {
-            using (SqlConnection conn = new SqlConnection((new SqlConnectionStringBuilder(BaseConnString) { MultipleActiveResultSets = true }).ConnectionString))
+            using (SqlConnection conn = new SqlConnection(new SqlConnectionStringBuilder(BaseConnString) { MultipleActiveResultSets = true }.ConnectionString))
             {
                 conn.Open();
                 using (SqlCommand cmd1 = new SqlCommand(cmdText, conn))

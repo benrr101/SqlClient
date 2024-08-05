@@ -115,7 +115,7 @@ namespace Microsoft.SqlServer.TDS.Authentication
 
             // Length of all of the options' FedAuthInfoID, FedAuthInfoDataLen, and FedAuthInfoDataOffset fields.
             // For each option, 1 byte for ID, 4 bytes for DataLen, 4 bytes for offset.
-            uint optionsLen = ((uint)Options.Count) * 9;
+            uint optionsLen = (uint)Options.Count * 9;
 
             // Total length of the token, not including token identifier.
             // 4 bytes for CountOfInfoIDs, plus optionsLen. FedAuthInfoData length is added below.

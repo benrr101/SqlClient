@@ -14,7 +14,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 {
     public static class MARSTest
     {
-        private static readonly string _connStr = (new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { MultipleActiveResultSets = true }).ConnectionString;
+        private static readonly string _connStr = new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { MultipleActiveResultSets = true }.ConnectionString;
 
         private static Dictionary<int, string> companyNames = new()
         {
@@ -216,7 +216,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             {
                 conn.Open();
 
-                using (SqlDataReader reader1 = (new SqlCommand(query, conn)).ExecuteReader())
+                using (SqlDataReader reader1 = new SqlCommand(query, conn).ExecuteReader())
                 {
                     int rows1 = 0;
                     while (reader1.Read())
@@ -227,7 +227,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     }
                     Assert.True(rows1 == rowCount / 2, "MARSSyncBusyReaderTest Failure, #1");
 
-                    using (SqlDataReader reader2 = (new SqlCommand(query, conn)).ExecuteReader())
+                    using (SqlDataReader reader2 = new SqlCommand(query, conn).ExecuteReader())
                     {
                         int rows2 = 0;
                         while (reader2.Read())
@@ -367,11 +367,11 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             {
                 conn.Open();
 
-                using (SqlDataReader reader1 = (new SqlCommand(query, conn)).ExecuteReader())
-                using (SqlDataReader reader2 = (new SqlCommand(query, conn)).ExecuteReader())
-                using (SqlDataReader reader3 = (new SqlCommand(query, conn)).ExecuteReader())
-                using (SqlDataReader reader4 = (new SqlCommand(query, conn)).ExecuteReader())
-                using (SqlDataReader reader5 = (new SqlCommand(query, conn)).ExecuteReader())
+                using (SqlDataReader reader1 = new SqlCommand(query, conn).ExecuteReader())
+                using (SqlDataReader reader2 = new SqlCommand(query, conn).ExecuteReader())
+                using (SqlDataReader reader3 = new SqlCommand(query, conn).ExecuteReader())
+                using (SqlDataReader reader4 = new SqlCommand(query, conn).ExecuteReader())
+                using (SqlDataReader reader5 = new SqlCommand(query, conn).ExecuteReader())
                 {
                     int rows = 0;
                     while (reader1.Read())
@@ -450,11 +450,11 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             {
                 conn.Open();
 
-                using (SqlDataReader reader1 = (new SqlCommand("select 1", conn)).ExecuteReader())
-                using (SqlDataReader reader2 = (new SqlCommand("select 1", conn)).ExecuteReader())
-                using (SqlDataReader reader3 = (new SqlCommand("select 1", conn)).ExecuteReader())
-                using (SqlDataReader reader4 = (new SqlCommand("select 1", conn)).ExecuteReader())
-                using (SqlDataReader reader5 = (new SqlCommand("select 1", conn)).ExecuteReader())
+                using (SqlDataReader reader1 = new SqlCommand("select 1", conn).ExecuteReader())
+                using (SqlDataReader reader2 = new SqlCommand("select 1", conn).ExecuteReader())
+                using (SqlDataReader reader3 = new SqlCommand("select 1", conn).ExecuteReader())
+                using (SqlDataReader reader4 = new SqlCommand("select 1", conn).ExecuteReader())
+                using (SqlDataReader reader5 = new SqlCommand("select 1", conn).ExecuteReader())
                 {
                     Assert.True(reader1.Read() && reader2.Read() && reader3.Read() && reader4.Read() && reader5.Read(), "MARSSyncExecuteReaderTest2 Failure #1");
                     Assert.False(reader1.Read() || reader2.Read() || reader3.Read() || reader4.Read() || reader5.Read(), "MARSSyncExecuteReaderTest2 Failure #2");
@@ -505,11 +505,11 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             {
                 conn.Open();
 
-                using (SqlDataReader reader1 = (new SqlCommand("select 1", conn)).ExecuteReader())
-                using (SqlDataReader reader2 = (new SqlCommand("select 1", conn)).ExecuteReader())
-                using (SqlDataReader reader3 = (new SqlCommand("select 1", conn)).ExecuteReader())
-                using (SqlDataReader reader4 = (new SqlCommand("select 1", conn)).ExecuteReader())
-                using (SqlDataReader reader5 = (new SqlCommand("select 1", conn)).ExecuteReader())
+                using (SqlDataReader reader1 = new SqlCommand("select 1", conn).ExecuteReader())
+                using (SqlDataReader reader2 = new SqlCommand("select 1", conn).ExecuteReader())
+                using (SqlDataReader reader3 = new SqlCommand("select 1", conn).ExecuteReader())
+                using (SqlDataReader reader4 = new SqlCommand("select 1", conn).ExecuteReader())
+                using (SqlDataReader reader5 = new SqlCommand("select 1", conn).ExecuteReader())
                 {
                     Assert.True(reader1.Read() && reader2.Read() && reader3.Read() && reader4.Read() && reader5.Read(), "MARSSyncExecuteReaderTest3 Failure #1");
 
@@ -556,9 +556,9 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             {
                 conn.Open();
 
-                using (SqlDataReader reader1 = (new SqlCommand("select 1", conn)).ExecuteReader())
-                using (SqlDataReader reader2 = (new SqlCommand("select 2", conn)).ExecuteReader())
-                using (SqlDataReader reader3 = (new SqlCommand("select 3", conn)).ExecuteReader())
+                using (SqlDataReader reader1 = new SqlCommand("select 1", conn).ExecuteReader())
+                using (SqlDataReader reader2 = new SqlCommand("select 2", conn).ExecuteReader())
+                using (SqlDataReader reader3 = new SqlCommand("select 3", conn).ExecuteReader())
                 {
                     Assert.True(reader1.Read() && reader2.Read() && reader3.Read(), "MARSSyncExecuteReaderTest4 failure #1");
 

@@ -107,7 +107,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             if (connection == null)
                 throw new ArgumentNullException(nameof(connection));
 
-            return (_connectionPool == ConnectionHelper.GetConnectionPool(connection.GetInternalConnection()));
+            return _connectionPool == ConnectionHelper.GetConnectionPool(connection.GetInternalConnection());
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         public override bool Equals(object obj)
         {
             var objAsPool = obj as ConnectionPoolWrapper;
-            return ((objAsPool != null) && (objAsPool._connectionPool == _connectionPool));
+            return objAsPool != null && objAsPool._connectionPool == _connectionPool;
         }
 
         public override int GetHashCode()

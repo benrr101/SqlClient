@@ -11,7 +11,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
     {
         private static string GenerateCommandText()
         {
-            int suffix = (new Random()).Next(5000);
+            int suffix = new Random().Next(5000);
 
             string commandText =
                 $"CREATE TABLE #Shippers{suffix}(" +

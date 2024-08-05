@@ -19,7 +19,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
         public UdtTest2()
         {
-            _connStr = (new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { InitialCatalog = DataTestUtility.UdtTestDbName }).ConnectionString;
+            _connStr = new SqlConnectionStringBuilder(DataTestUtility.TCPConnectionString) { InitialCatalog = DataTestUtility.UdtTestDbName }.ConnectionString;
         }
 
         [ConditionalFact(typeof(DataTestUtility), nameof(DataTestUtility.IsUdtTestDatabasePresent), nameof(DataTestUtility.AreConnStringsSetup))]
@@ -46,7 +46,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     DataTestUtility.AssertEqualsWithDescription(
-                        (new Point(250, 250)).ToString(), p.Value.ToString(),
+                        new Point(250, 250).ToString(), p.Value.ToString(),
                         "Unexpected Point value.");
                 }
             }
@@ -267,10 +267,10 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
                     cmd.ExecuteNonQuery();
                     DataTestUtility.AssertEqualsWithDescription(
-                        "141.42135623731", ((Point)(p.Value)).Distance().ToString(),
+                        "141.42135623731", ((Point)p.Value).Distance().ToString(),
                         "Unexpected distance value.");
                     DataTestUtility.AssertEqualsWithDescription(
-                        "141.42135623731", ((Point)(p.Value)).Distance().ToString(),
+                        "141.42135623731", ((Point)p.Value).Distance().ToString(),
                         "Unexpected distance value after reading out param again.");
 
                     cmd.Parameters.Clear();
@@ -577,13 +577,13 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             SqlUserDefinedAggregateAttribute attribute3 = create(SqlUserDefinedAggregateAttribute.MaxByteSizeValue);
 
             string udtError = SystemDataResourceManager.Instance.SQLUDT_MaxByteSizeValue;
-            string errorMessage = (new ArgumentOutOfRangeException("MaxByteSize", 8001, udtError)).Message;
+            string errorMessage = new ArgumentOutOfRangeException("MaxByteSize", 8001, udtError).Message;
 
             DataTestUtility.AssertThrowsWrapper<ArgumentOutOfRangeException>(
                 () => create(SqlUserDefinedAggregateAttribute.MaxByteSizeValue + 1),
                 errorMessage);
 
-            errorMessage = (new ArgumentOutOfRangeException("MaxByteSize", -2, udtError)).Message;
+            errorMessage = new ArgumentOutOfRangeException("MaxByteSize", -2, udtError).Message;
             DataTestUtility.AssertThrowsWrapper<ArgumentOutOfRangeException>(
                 () => create(-2),
                 errorMessage);

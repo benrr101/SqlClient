@@ -647,11 +647,13 @@ namespace Microsoft.Data.SqlClient
             {
                 if (obj != null && obj is PublicClientAppKey pcaKey)
                 {
-                    return string.CompareOrdinal(_authority, pcaKey._authority) == 0
-                           && string.CompareOrdinal(_redirectUri, pcaKey._redirectUri) == 0
-                           && string.CompareOrdinal(_applicationClientId, pcaKey._applicationClientId) == 0
+                    return (string.CompareOrdinal(_authority, pcaKey._authority) == 0
+                        && string.CompareOrdinal(_redirectUri, pcaKey._redirectUri) == 0
+                        && string.CompareOrdinal(_applicationClientId, pcaKey._applicationClientId) == 0
 #if NETFRAMEWORK
-                           && pcaKey._iWin32WindowFunc == _iWin32WindowFunc;
+                        && pcaKey._iWin32WindowFunc == _iWin32WindowFunc
+#endif
+                    );
                 }
                 return false;
             }

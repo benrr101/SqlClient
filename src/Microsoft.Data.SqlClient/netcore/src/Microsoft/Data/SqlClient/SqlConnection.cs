@@ -458,7 +458,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                return (_collectstats);
+                return _collectstats;
             }
             set
             {
@@ -558,7 +558,7 @@ namespace Microsoft.Data.SqlClient
             bool result = false;
             if (opt != null)
             {
-                result = (!string.IsNullOrEmpty(opt.UserID) || !string.IsNullOrEmpty(opt.Password));
+                result = !string.IsNullOrEmpty(opt.UserID) || !string.IsNullOrEmpty(opt.Password);
             }
             return result;
         }
@@ -746,7 +746,7 @@ namespace Microsoft.Data.SqlClient
             // just return what the connection string had.
             get
             {
-                SqlInternalConnection innerConnection = (InnerConnection as SqlInternalConnection);
+                SqlInternalConnection innerConnection = InnerConnection as SqlInternalConnection;
                 string result;
 
                 if (innerConnection != null)
@@ -769,7 +769,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                SqlInternalConnectionTds innerConnection = (InnerConnection as SqlInternalConnectionTds);
+                SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
                 string result;
 
                 if (innerConnection != null)
@@ -792,7 +792,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                SqlInternalConnectionTds innerConnection = (InnerConnection as SqlInternalConnectionTds);
+                SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
                 string result;
 
                 if (innerConnection != null)
@@ -817,7 +817,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                SqlInternalConnection innerConnection = (InnerConnection as SqlInternalConnection);
+                SqlInternalConnection innerConnection = InnerConnection as SqlInternalConnection;
                 string result;
 
                 if (innerConnection != null)
@@ -844,7 +844,7 @@ namespace Microsoft.Data.SqlClient
             // can just return what the connection string had.
             get
             {
-                SqlInternalConnectionTds innerConnection = (InnerConnection as SqlInternalConnectionTds);
+                SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
                 int result;
 
                 if (innerConnection != null)
@@ -868,7 +868,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                SqlInternalConnectionTds innerConnection = (InnerConnection as SqlInternalConnectionTds);
+                SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
 
                 if (innerConnection != null)
                 {
@@ -878,7 +878,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     Task reconnectTask = _currentReconnectionTask;
                     // Connection closed but previously open should return the correct ClientConnectionId
-                    DbConnectionClosedPreviouslyOpened innerConnectionClosed = (InnerConnection as DbConnectionClosedPreviouslyOpened);
+                    DbConnectionClosedPreviouslyOpened innerConnectionClosed = InnerConnection as DbConnectionClosedPreviouslyOpened;
                     if ((reconnectTask != null && !reconnectTask.IsCompleted) || innerConnectionClosed != null)
                     {
                         return _originalConnectionId;
@@ -1372,11 +1372,11 @@ namespace Microsoft.Data.SqlClient
                 // For non-pooled connections we need to make sure that if the SqlConnection was not closed,
                 // then we release the GCHandle on the stateObject to allow it to be GCed
                 // For pooled connections, we will rely on the pool reclaiming the connection
-                var innerConnection = (InnerConnection as SqlInternalConnectionTds);
-                if ((innerConnection != null) && (!innerConnection.ConnectionOptions.Pooling))
+                var innerConnection = InnerConnection as SqlInternalConnectionTds;
+                if (innerConnection != null && !innerConnection.ConnectionOptions.Pooling)
                 {
                     var parser = innerConnection.Parser;
-                    if ((parser != null) && (parser._physicalStateObj != null))
+                    if (parser != null && parser._physicalStateObj != null)
                     {
                         parser._physicalStateObj.DecrementPendingCallbacks(release: false);
                     }
@@ -1942,7 +1942,9 @@ namespace Microsoft.Data.SqlClient
                 }
             }
 
-            _applyTransientFaultHandling = (!overrides.HasFlag(SqlConnectionOverrides.OpenWithoutRetry) && connectionOptions != null && connectionOptions.ConnectRetryCount > 0);
+            _applyTransientFaultHandling = !overrides.HasFlag(SqlConnectionOverrides.OpenWithoutRetry) &&
+                                           connectionOptions != null &&
+                                           connectionOptions.ConnectRetryCount > 0;
 
             if (connectionOptions != null &&
                 (connectionOptions.Authentication == SqlAuthenticationMethod.SqlPassword ||
@@ -2101,7 +2103,7 @@ namespace Microsoft.Data.SqlClient
             Debug.Assert(exception != null && exception.Errors.Count != 0, "SqlConnection: OnError called with null or empty exception!");
 
 
-            if (breakConnection && (ConnectionState.Open == State))
+            if (breakConnection && ConnectionState.Open == State)
             {
                 if (wrapCloseInAction != null)
                 {
@@ -2145,7 +2147,7 @@ namespace Microsoft.Data.SqlClient
 
         internal SqlInternalConnectionTds GetOpenTdsConnection()
         {
-            SqlInternalConnectionTds innerConnection = (InnerConnection as SqlInternalConnectionTds);
+            SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
             if (innerConnection == null)
             {
                 throw ADP.ClosedConnectionError();
@@ -2155,7 +2157,7 @@ namespace Microsoft.Data.SqlClient
 
         internal SqlInternalConnectionTds GetOpenTdsConnection(string method)
         {
-            SqlInternalConnectionTds innerConnection = (InnerConnection as SqlInternalConnectionTds);
+            SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
             if (innerConnection == null)
             {
                 throw ADP.OpenConnectionRequired(method, InnerConnection.State);
