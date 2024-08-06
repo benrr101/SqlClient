@@ -33,8 +33,8 @@ namespace Microsoft.Data.Common
 
             void JoinTransaction(
                 [In, MarshalAs(UnmanagedType.Interface)] object punkTransactionCoord,
-                [In] Int32 isoLevel,
-                [In] Int32 isoFlags,
+                [In] int isoLevel,
+                [In] int isoFlags,
                 [In] IntPtr pOtherOptions);
         }
 

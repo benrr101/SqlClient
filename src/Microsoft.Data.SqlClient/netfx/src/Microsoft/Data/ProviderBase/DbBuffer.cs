@@ -96,7 +96,7 @@ namespace Microsoft.Data.ProviderBase
             return value;
         }
 
-        internal String PtrToStringUni(int offset, int length)
+        internal string PtrToStringUni(int offset, int length)
         {
             offset += BaseOffset;
             Validate(offset, 2 * length);
@@ -181,7 +181,7 @@ namespace Microsoft.Data.ProviderBase
             return destination;
         }
 
-        internal Char ReadChar(int offset)
+        internal char ReadChar(int offset)
         {
             short value = ReadInt16(offset);
             return unchecked((char)value);
@@ -214,13 +214,13 @@ namespace Microsoft.Data.ProviderBase
             return destination;
         }
 
-        internal Double ReadDouble(int offset)
+        internal double ReadDouble(int offset)
         {
-            Int64 value = ReadInt64(offset);
+            long value = ReadInt64(offset);
             return BitConverter.Int64BitsToDouble(value);
         }
 
-        internal Int16 ReadInt16(int offset)
+        internal short ReadInt16(int offset)
         {
             offset += BaseOffset;
             ValidateCheck(offset, 2);
@@ -272,7 +272,7 @@ namespace Microsoft.Data.ProviderBase
             }
         }
 
-        internal Int32 ReadInt32(int offset)
+        internal int ReadInt32(int offset)
         {
             offset += BaseOffset;
             ValidateCheck(offset, 4);
@@ -324,7 +324,7 @@ namespace Microsoft.Data.ProviderBase
             }
         }
 
-        internal Int64 ReadInt64(int offset)
+        internal long ReadInt64(int offset)
         {
             offset += BaseOffset;
             ValidateCheck(offset, 8);
@@ -376,10 +376,10 @@ namespace Microsoft.Data.ProviderBase
             return value;
         }
 
-        internal unsafe Single ReadSingle(int offset)
+        internal unsafe float ReadSingle(int offset)
         {
-            Int32 value = ReadInt32(offset);
-            return *(Single*)&value;
+            int value = ReadInt32(offset);
+            return *(float*)&value;
         }
 
         protected override bool ReleaseHandle()
@@ -495,7 +495,7 @@ namespace Microsoft.Data.ProviderBase
             }
         }
 
-        internal void WriteDouble(int offset, Double value)
+        internal void WriteDouble(int offset, double value)
         {
             WriteInt64(offset, BitConverter.DoubleToInt64Bits(value));
         }
@@ -648,9 +648,9 @@ namespace Microsoft.Data.ProviderBase
             }
         }
 
-        internal unsafe void WriteSingle(int offset, Single value)
+        internal unsafe void WriteSingle(int offset, float value)
         {
-            WriteInt32(offset, *(Int32*)&value);
+            WriteInt32(offset, *(int*)&value);
         }
 
         internal void ZeroMemory()
@@ -753,7 +753,7 @@ namespace Microsoft.Data.ProviderBase
             WriteInt32(offset + 12, ticks);
         }
 
-        internal Decimal ReadNumeric(int offset)
+        internal decimal ReadNumeric(int offset)
         {
             byte[] bits = new byte[20];
             ReadBytes(offset, bits, 1, 19);
@@ -771,17 +771,17 @@ namespace Microsoft.Data.ProviderBase
             {
                 throw ADP.NumericToDecimalOverflow();
             }
-            return new Decimal(buffer);
+            return new decimal(buffer);
         }
 
-        internal void WriteNumeric(int offset, Decimal value, byte precision)
+        internal void WriteNumeric(int offset, decimal value, byte precision)
         {
-            int[] tmp = Decimal.GetBits(value);
+            int[] tmp = decimal.GetBits(value);
             byte[] buffer = new byte[20];
 
             buffer[1] = precision;
             Buffer.BlockCopy(tmp, 14, buffer, 2, 2); // copy sign and scale
-            buffer[3] = (Byte)((0 == buffer[3]) ? 1 : 0); // flip sign for native
+            buffer[3] = (byte)((0 == buffer[3]) ? 1 : 0); // flip sign for native
             Buffer.BlockCopy(tmp, 0, buffer, 4, 12);
             buffer[16] = 0;
             buffer[17] = 0;

@@ -62,7 +62,7 @@ namespace Microsoft.Data.SqlTypes
                 byte[] transactionContext,
                 System.IO.FileAccess access,
                 System.IO.FileOptions options,
-                Int64 allocationSize
+                long allocationSize
             )
         {
             using (TryEventScope.Create(SqlClientEventSource.Log.TryScopeEnterEvent("<sc.SqlFileStream.ctor|API> {0} access={1} options={2} path='{3}'", ObjectID, (int)access, (int)options, path)))
@@ -312,7 +312,7 @@ namespace Microsoft.Data.SqlTypes
 
         /// <include file='../../../../../../../doc/snippets/Microsoft.Data.SqlTypes/SqlFileStream.xml' path='docs/members[@name="SqlFileStream"]/BeginRead/*' />
         [HostProtection(ExternalThreading = true)]
-        public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, Object state)
+        public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
         {
             if (m_disposed)
                 throw ADP.ObjectDisposed(this);
@@ -331,7 +331,7 @@ namespace Microsoft.Data.SqlTypes
 
         /// <include file='../../../../../../../doc/snippets/Microsoft.Data.SqlTypes/SqlFileStream.xml' path='docs/members[@name="SqlFileStream"]/BeginWrite/*' />
         [HostProtection(ExternalThreading = true)]
-        public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, Object state)
+        public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
         {
             if (m_disposed)
                 throw ADP.ObjectDisposed(this);
@@ -446,7 +446,7 @@ namespace Microsoft.Data.SqlTypes
         // 2. GetFullPathName API of kernel32 does not accept paths with length (in chars) greater than 32766
         //    (32766 is actually Int16.MaxValue - 1, while (-1) is for NULL termination)
         // We must check for the lowest value between the the two
-        private const int MaxWin32PathLength = Int16.MaxValue - 1;
+        private const int MaxWin32PathLength = short.MaxValue - 1;
 
         [ConditionalAttribute("DEBUG")]
         private static void AssertPathFormat(string path)
@@ -594,7 +594,7 @@ namespace Microsoft.Data.SqlTypes
                 byte[] transactionContext,
                 System.IO.FileAccess access,
                 System.IO.FileOptions options,
-                Int64 allocationSize
+                long allocationSize
             )
         {
             //-----------------------------------------------------------------
@@ -634,8 +634,8 @@ namespace Microsoft.Data.SqlTypes
 
             int nDesiredAccess = UnsafeNativeMethods.FILE_READ_ATTRIBUTES | UnsafeNativeMethods.SYNCHRONIZE;
 
-            UInt32 dwCreateOptions = 0;
-            UInt32 dwCreateDisposition = 0;
+            uint dwCreateOptions = 0;
+            uint dwCreateDisposition = 0;
 
             System.IO.FileShare shareAccess = System.IO.FileShare.None;
 
@@ -852,7 +852,7 @@ namespace Microsoft.Data.SqlTypes
             string formatPath = @"\??\UNC\{0}\{1}";
 
             string uniqueId = Guid.NewGuid().ToString("N");
-            return String.Format(CultureInfo.InvariantCulture, formatPath, path.Trim('\\'), uniqueId);
+            return string.Format(CultureInfo.InvariantCulture, formatPath, path.Trim('\\'), uniqueId);
         }
 
         #endregion
@@ -894,11 +894,11 @@ namespace Microsoft.Data.SqlTypes
         private void Initialize(string path)
         {
             // pre-condition should be validated in public interface
-            System.Diagnostics.Debug.Assert(path.Length <= (UInt16.MaxValue / sizeof(char)));
+            System.Diagnostics.Debug.Assert(path.Length <= (ushort.MaxValue / sizeof(char)));
 
             UnsafeNativeMethods.UNICODE_STRING objectName;
-            objectName.length = (UInt16)(path.Length * sizeof(char));
-            objectName.maximumLength = (UInt16)(path.Length * sizeof(char));
+            objectName.length = (ushort)(path.Length * sizeof(char));
+            objectName.maximumLength = (ushort)(path.Length * sizeof(char));
             objectName.buffer = path;
 
             IntPtr pbBuffer = IntPtr.Zero;
@@ -1050,7 +1050,7 @@ namespace Microsoft.Data.SqlTypes
 
         private void InitializeEaBuffer(byte[] transactionContext)
         {
-            if (transactionContext.Length >= UInt16.MaxValue)
+            if (transactionContext.Length >= ushort.MaxValue)
                 throw ADP.ArgumentOutOfRange("transactionContext");
 
             UnsafeNativeMethods.FILE_FULL_EA_INFORMATION eaBuffer;
@@ -1095,7 +1095,7 @@ namespace Microsoft.Data.SqlTypes
                 byte[] asciiName = ascii.GetBytes(EA_NAME_STRING);
 
                 // calculate offset at which to write the name/value pair
-                System.Diagnostics.Debug.Assert(Marshal.OffsetOf(typeof(UnsafeNativeMethods.FILE_FULL_EA_INFORMATION), "EaName").ToInt64() <= (Int64)Int32.MaxValue);
+                System.Diagnostics.Debug.Assert(Marshal.OffsetOf(typeof(UnsafeNativeMethods.FILE_FULL_EA_INFORMATION), "EaName").ToInt64() <= (long)int.MaxValue);
                 int cbOffset = Marshal.OffsetOf(typeof(UnsafeNativeMethods.FILE_FULL_EA_INFORMATION), "EaName").ToInt32();
                 for (int i = 0; cbOffset < m_cbBuffer && i < eaBuffer.EaNameLength; i++, cbOffset++)
                 {

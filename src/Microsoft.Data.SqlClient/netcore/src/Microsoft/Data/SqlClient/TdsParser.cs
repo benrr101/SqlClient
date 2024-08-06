@@ -1789,7 +1789,7 @@ namespace Microsoft.Data.SqlClient
         //
         internal byte[] SerializeFloat(float v)
         {
-            if (Single.IsInfinity(v) || Single.IsNaN(v))
+            if (float.IsInfinity(v) || float.IsNaN(v))
             {
                 throw ADP.ParameterValueOutOfRange(v.ToString());
             }
@@ -4579,7 +4579,7 @@ namespace Microsoft.Data.SqlClient
             if (0 != collation._sortId)
             {
                 codePage = TdsEnums.CODE_PAGE_FROM_SORT_ID[collation._sortId];
-                Debug.Assert(0 != codePage, "GetCodePage accessed codepage array and produced 0!, sortID =" + ((Byte)(collation._sortId)).ToString((IFormatProvider)null));
+                Debug.Assert(0 != codePage, "GetCodePage accessed codepage array and produced 0!, sortID =" + ((byte)(collation._sortId)).ToString((IFormatProvider)null));
             }
             else
             {
@@ -5015,7 +5015,7 @@ namespace Microsoft.Data.SqlClient
 
         private bool IsVarTimeTds(byte tdsType) => tdsType == TdsEnums.SQLTIME || tdsType == TdsEnums.SQLDATETIME2 || tdsType == TdsEnums.SQLDATETIMEOFFSET;
 
-        private TdsOperationStatus TryProcessTypeInfo(TdsParserStateObject stateObj, SqlMetaDataPriv col, UInt32 userType)
+        private TdsOperationStatus TryProcessTypeInfo(TdsParserStateObject stateObj, SqlMetaDataPriv col, uint userType)
         {
             byte byteLen;
             byte tdsType;
@@ -5673,7 +5673,7 @@ namespace Microsoft.Data.SqlClient
                     // We only read up to 2Gb. Throw if data is larger. Very large data
                     // should be read in chunks in sequential read mode
                     // For Plp columns, we may have gotten only the length of the first chunk
-                    result = TryReadSqlValue(data, md, md.metaType.IsPlp ? (Int32.MaxValue) : (int)len, stateObj, SqlCommandColumnEncryptionSetting.Disabled /*Column Encryption Disabled for Bulk Copy*/, md.column);
+                    result = TryReadSqlValue(data, md, md.metaType.IsPlp ? (int.MaxValue) : (int)len, stateObj, SqlCommandColumnEncryptionSetting.Disabled /*Column Encryption Disabled for Bulk Copy*/, md.column);
                     if (result != TdsOperationStatus.Done)
                     {
                         return result;
@@ -6081,9 +6081,9 @@ namespace Microsoft.Data.SqlClient
                     if (tdsType == TdsEnums.SQLINT1 || denormalizedLength == 1)
                         value.Byte = (byte)longValue;
                     else if (tdsType == TdsEnums.SQLINT2 || denormalizedLength == 2)
-                        value.Int16 = (Int16)longValue;
+                        value.Int16 = (short)longValue;
                     else if (tdsType == TdsEnums.SQLINT4 || denormalizedLength == 4)
-                        value.Int32 = (Int32)longValue;
+                        value.Int32 = (int)longValue;
                     else
                         value.Int64 = longValue;
 
@@ -6160,8 +6160,8 @@ namespace Microsoft.Data.SqlClient
                         return false;
                     }
 
-                    daypartShort = (UInt16)((unencryptedBytes[1] << 8) + unencryptedBytes[0]);
-                    timepartShort = (UInt16)((unencryptedBytes[3] << 8) + unencryptedBytes[2]);
+                    daypartShort = (ushort)((unencryptedBytes[1] << 8) + unencryptedBytes[0]);
+                    timepartShort = (ushort)((unencryptedBytes[3] << 8) + unencryptedBytes[2]);
                     value.SetToDateTime(daypartShort, timepartShort * SqlDateTime.SQLTicksPerMinute);
                     break;
 
@@ -7344,10 +7344,10 @@ namespace Microsoft.Data.SqlClient
             }
         }
 
-        private byte[] SerializeCurrency(Decimal value, int length, TdsParserStateObject stateObj)
+        private byte[] SerializeCurrency(decimal value, int length, TdsParserStateObject stateObj)
         {
             SqlMoney m = new SqlMoney(value);
-            int[] bits = Decimal.GetBits(m.Value);
+            int[] bits = decimal.GetBits(m.Value);
 
             // this decimal should be scaled by 10000 (regardless of what the incoming decimal was scaled by)
             bool isNeg = (0 != (bits[3] & unchecked((int)0x80000000)));
@@ -7498,7 +7498,7 @@ namespace Microsoft.Data.SqlClient
             Buffer.BlockCopy(bytesPart, 0, bytes, current, length - 2);
             current += length - 2;
 
-            Int16 offset = (Int16)value.Offset.TotalMinutes;
+            short offset = (short)value.Offset.TotalMinutes;
             bytes[current++] = (byte)(offset & 0xff);
             bytes[current++] = (byte)((offset >> 8) & 0xff);
 
@@ -7659,7 +7659,7 @@ namespace Microsoft.Data.SqlClient
 
         private byte[] SerializeDecimal(decimal value, TdsParserStateObject stateObj)
         {
-            int[] decimalBits = Decimal.GetBits(value);
+            int[] decimalBits = decimal.GetBits(value);
             if (stateObj._bDecimalBytes == null)
             {
                 stateObj._bDecimalBytes = new byte[17];
@@ -9541,16 +9541,16 @@ namespace Microsoft.Data.SqlClient
                     }
                     else
                     {
-                        value = AdjustDecimalScale((Decimal)value, scale);
+                        value = AdjustDecimalScale((decimal)value, scale);
 
-                        SqlDecimal sqlValue = new SqlDecimal((Decimal)value);
+                        SqlDecimal sqlValue = new SqlDecimal((decimal)value);
 
                         // If Precision is specified, verify value precision vs param precision
                         if (precision != 0)
                         {
                             if (precision < sqlValue.Precision)
                             {
-                                throw ADP.ParameterValueOutOfRange((Decimal)value);
+                                throw ADP.ParameterValueOutOfRange((decimal)value);
                             }
                         }
                     }
@@ -10658,7 +10658,7 @@ namespace Microsoft.Data.SqlClient
                     { // TCE Supported
                         if (ShouldEncryptValuesForBulkCopy())
                         { // TCE enabled on connection options
-                            flags |= (UInt16)(md.isEncrypted ? (UInt16)(TdsEnums.IsEncrypted << 8) : (UInt16)0);
+                            flags |= (ushort)(md.isEncrypted ? (ushort)(TdsEnums.IsEncrypted << 8) : (ushort)0);
                         }
                     }
 
@@ -11290,7 +11290,7 @@ namespace Microsoft.Data.SqlClient
                             return true;
                     }
                 }
-                else if ((currentType == typeof(string)) && (((String)value).Length > 0))
+                else if ((currentType == typeof(string)) && (((string)value).Length > 0))
                 {
                     if ((value != null) && (((string)value)[0] & 0xff) != 0xff)
                         return true;
@@ -12271,11 +12271,11 @@ namespace Microsoft.Data.SqlClient
             {
                 case TdsEnums.SQLFLTN:
                     if (type.FixedLength == 4)
-                        return SerializeFloat((Single)value);
+                        return SerializeFloat((float)value);
                     else
                     {
                         Debug.Assert(type.FixedLength == 8, "Invalid length for SqlDouble type!");
-                        return SerializeDouble((Double)value);
+                        return SerializeDouble((double)value);
                     }
 
                 case TdsEnums.SQLBIGBINARY:
@@ -12313,13 +12313,13 @@ namespace Microsoft.Data.SqlClient
                         return SerializeLong((byte)value, stateObj);
 
                     if (type.FixedLength == 2)
-                        return SerializeLong((Int16)value, stateObj);
+                        return SerializeLong((short)value, stateObj);
 
                     if (type.FixedLength == 4)
-                        return SerializeLong((Int32)value, stateObj);
+                        return SerializeLong((int)value, stateObj);
 
                     Debug.Assert(type.FixedLength == 8, "invalid length for SqlIntN type:  " + type.FixedLength.ToString(CultureInfo.InvariantCulture));
-                    return SerializeLong((Int64)value, stateObj);
+                    return SerializeLong((long)value, stateObj);
 
                 case TdsEnums.SQLBIGCHAR:
                 case TdsEnums.SQLBIGVARCHAR:
@@ -12361,7 +12361,7 @@ namespace Microsoft.Data.SqlClient
                     }
                 case TdsEnums.SQLNUMERICN:
                     Debug.Assert(type.FixedLength <= 17, "Decimal length cannot be greater than 17 bytes");
-                    return SerializeDecimal((Decimal)value, stateObj);
+                    return SerializeDecimal((decimal)value, stateObj);
 
                 case TdsEnums.SQLDATETIMN:
                     Debug.Assert(type.FixedLength <= 0xff, "Invalid Fixed Length");
@@ -12370,7 +12370,7 @@ namespace Microsoft.Data.SqlClient
 
                     if (type.FixedLength == 4)
                     {
-                        if (0 > dt.days || dt.days > UInt16.MaxValue)
+                        if (0 > dt.days || dt.days > ushort.MaxValue)
                             throw SQL.SmallDateTimeOverflow(MetaType.ToDateTime(dt.days, dt.time, 4).ToString(CultureInfo.InvariantCulture));
 
                         if (stateObj._bIntBytes == null)
@@ -12411,7 +12411,7 @@ namespace Microsoft.Data.SqlClient
 
                 case TdsEnums.SQLMONEYN:
                     {
-                        return SerializeCurrency((Decimal)value, type.FixedLength, stateObj);
+                        return SerializeCurrency((decimal)value, type.FixedLength, stateObj);
                     }
 
                 case TdsEnums.SQLDATE:
@@ -12525,7 +12525,7 @@ namespace Microsoft.Data.SqlClient
                 case TdsEnums.SQLTEXT:
                     if (value is SqlChars)
                     {
-                        String sch = new String(((SqlChars)value).Value);
+                        string sch = new string(((SqlChars)value).Value);
                         return SerializeEncodingChar(sch, actualLength, offset, _defaultEncoding);
                     }
                     else
@@ -12563,7 +12563,7 @@ namespace Microsoft.Data.SqlClient
 
                     if (type.FixedLength == 4)
                     {
-                        if (0 > dt.DayTicks || dt.DayTicks > UInt16.MaxValue)
+                        if (0 > dt.DayTicks || dt.DayTicks > ushort.MaxValue)
                             throw SQL.SmallDateTimeOverflow(dt.ToString());
 
                         if (stateObj._bIntBytes == null)

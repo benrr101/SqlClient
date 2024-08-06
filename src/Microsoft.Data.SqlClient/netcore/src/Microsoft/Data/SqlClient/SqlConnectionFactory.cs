@@ -176,9 +176,9 @@ namespace Microsoft.Data.SqlClient
                 if (opt.Authentication == SqlAuthenticationMethod.ActiveDirectoryInteractive || opt.Authentication == SqlAuthenticationMethod.ActiveDirectoryDeviceCodeFlow)
                 {
                     // interactive/device code flow mode will always have pool's CreateTimeout = 10 x ConnectTimeout.
-                    if (connectionTimeout >= Int32.MaxValue / 10)
+                    if (connectionTimeout >= int.MaxValue / 10)
                     {
-                        connectionTimeout = Int32.MaxValue;
+                        connectionTimeout = int.MaxValue;
                     }
                     else
                     {

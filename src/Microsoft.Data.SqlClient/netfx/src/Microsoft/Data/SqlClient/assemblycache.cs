@@ -28,7 +28,7 @@ namespace Microsoft.Data.SqlClient
         { /* prevent utility class from being instantiated*/
         }
 
-        internal static int GetLength(Object inst)
+        internal static int GetLength(object inst)
         {
             //caller should have allocated enough, based on MaxByteSize
             return SerializationHelperSql9.SizeInBytes(inst);

@@ -81,7 +81,7 @@ namespace Microsoft.Data.SqlClient
 
         private static bool isSessionLockAcquired = false;
 
-        private static readonly Object lockUpdateSessionLock = new Object();
+        private static readonly object lockUpdateSessionLock = new object();
 
         // It is used to save the attestation url and nonce value across API calls
         protected static readonly MemoryCache ThreadRetryCache = new MemoryCache(new MemoryCacheOptions());

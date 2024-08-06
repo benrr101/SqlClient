@@ -507,45 +507,45 @@ namespace Microsoft.Data.SqlClient
             schemaTable.Locale = CultureInfo.InvariantCulture;
             schemaTable.MinimumCapacity = md.Length;
 
-            DataColumn ColumnName = new DataColumn(SchemaTableColumn.ColumnName, typeof(System.String));
-            DataColumn Ordinal = new DataColumn(SchemaTableColumn.ColumnOrdinal, typeof(System.Int32));
-            DataColumn Size = new DataColumn(SchemaTableColumn.ColumnSize, typeof(System.Int32));
-            DataColumn Precision = new DataColumn(SchemaTableColumn.NumericPrecision, typeof(System.Int16));
-            DataColumn Scale = new DataColumn(SchemaTableColumn.NumericScale, typeof(System.Int16));
+            DataColumn ColumnName = new DataColumn(SchemaTableColumn.ColumnName, typeof(string));
+            DataColumn Ordinal = new DataColumn(SchemaTableColumn.ColumnOrdinal, typeof(int));
+            DataColumn Size = new DataColumn(SchemaTableColumn.ColumnSize, typeof(int));
+            DataColumn Precision = new DataColumn(SchemaTableColumn.NumericPrecision, typeof(short));
+            DataColumn Scale = new DataColumn(SchemaTableColumn.NumericScale, typeof(short));
 
             DataColumn DataType = new DataColumn(SchemaTableColumn.DataType, typeof(System.Type));
             DataColumn ProviderSpecificDataType = new DataColumn(SchemaTableOptionalColumn.ProviderSpecificDataType, typeof(System.Type));
-            DataColumn NonVersionedProviderType = new DataColumn(SchemaTableColumn.NonVersionedProviderType, typeof(System.Int32));
-            DataColumn ProviderType = new DataColumn(SchemaTableColumn.ProviderType, typeof(System.Int32));
+            DataColumn NonVersionedProviderType = new DataColumn(SchemaTableColumn.NonVersionedProviderType, typeof(int));
+            DataColumn ProviderType = new DataColumn(SchemaTableColumn.ProviderType, typeof(int));
 
-            DataColumn IsLong = new DataColumn(SchemaTableColumn.IsLong, typeof(System.Boolean));
-            DataColumn AllowDBNull = new DataColumn(SchemaTableColumn.AllowDBNull, typeof(System.Boolean));
-            DataColumn IsReadOnly = new DataColumn(SchemaTableOptionalColumn.IsReadOnly, typeof(System.Boolean));
-            DataColumn IsRowVersion = new DataColumn(SchemaTableOptionalColumn.IsRowVersion, typeof(System.Boolean));
+            DataColumn IsLong = new DataColumn(SchemaTableColumn.IsLong, typeof(bool));
+            DataColumn AllowDBNull = new DataColumn(SchemaTableColumn.AllowDBNull, typeof(bool));
+            DataColumn IsReadOnly = new DataColumn(SchemaTableOptionalColumn.IsReadOnly, typeof(bool));
+            DataColumn IsRowVersion = new DataColumn(SchemaTableOptionalColumn.IsRowVersion, typeof(bool));
 
-            DataColumn IsUnique = new DataColumn(SchemaTableColumn.IsUnique, typeof(System.Boolean));
-            DataColumn IsKey = new DataColumn(SchemaTableColumn.IsKey, typeof(System.Boolean));
-            DataColumn IsAutoIncrement = new DataColumn(SchemaTableOptionalColumn.IsAutoIncrement, typeof(System.Boolean));
-            DataColumn IsHidden = new DataColumn(SchemaTableOptionalColumn.IsHidden, typeof(System.Boolean));
+            DataColumn IsUnique = new DataColumn(SchemaTableColumn.IsUnique, typeof(bool));
+            DataColumn IsKey = new DataColumn(SchemaTableColumn.IsKey, typeof(bool));
+            DataColumn IsAutoIncrement = new DataColumn(SchemaTableOptionalColumn.IsAutoIncrement, typeof(bool));
+            DataColumn IsHidden = new DataColumn(SchemaTableOptionalColumn.IsHidden, typeof(bool));
 
-            DataColumn BaseCatalogName = new DataColumn(SchemaTableOptionalColumn.BaseCatalogName, typeof(System.String));
-            DataColumn BaseSchemaName = new DataColumn(SchemaTableColumn.BaseSchemaName, typeof(System.String));
-            DataColumn BaseTableName = new DataColumn(SchemaTableColumn.BaseTableName, typeof(System.String));
-            DataColumn BaseColumnName = new DataColumn(SchemaTableColumn.BaseColumnName, typeof(System.String));
+            DataColumn BaseCatalogName = new DataColumn(SchemaTableOptionalColumn.BaseCatalogName, typeof(string));
+            DataColumn BaseSchemaName = new DataColumn(SchemaTableColumn.BaseSchemaName, typeof(string));
+            DataColumn BaseTableName = new DataColumn(SchemaTableColumn.BaseTableName, typeof(string));
+            DataColumn BaseColumnName = new DataColumn(SchemaTableColumn.BaseColumnName, typeof(string));
 
             // unique to SqlClient
-            DataColumn BaseServerName = new DataColumn(SchemaTableOptionalColumn.BaseServerName, typeof(System.String));
-            DataColumn IsAliased = new DataColumn(SchemaTableColumn.IsAliased, typeof(System.Boolean));
-            DataColumn IsExpression = new DataColumn(SchemaTableColumn.IsExpression, typeof(System.Boolean));
-            DataColumn IsIdentity = new DataColumn("IsIdentity", typeof(System.Boolean));
-            DataColumn DataTypeName = new DataColumn("DataTypeName", typeof(System.String));
-            DataColumn UdtAssemblyQualifiedName = new DataColumn("UdtAssemblyQualifiedName", typeof(System.String));
+            DataColumn BaseServerName = new DataColumn(SchemaTableOptionalColumn.BaseServerName, typeof(string));
+            DataColumn IsAliased = new DataColumn(SchemaTableColumn.IsAliased, typeof(bool));
+            DataColumn IsExpression = new DataColumn(SchemaTableColumn.IsExpression, typeof(bool));
+            DataColumn IsIdentity = new DataColumn("IsIdentity", typeof(bool));
+            DataColumn DataTypeName = new DataColumn("DataTypeName", typeof(string));
+            DataColumn UdtAssemblyQualifiedName = new DataColumn("UdtAssemblyQualifiedName", typeof(string));
             // Xml metadata specific
-            DataColumn XmlSchemaCollectionDatabase = new DataColumn("XmlSchemaCollectionDatabase", typeof(System.String));
-            DataColumn XmlSchemaCollectionOwningSchema = new DataColumn("XmlSchemaCollectionOwningSchema", typeof(System.String));
-            DataColumn XmlSchemaCollectionName = new DataColumn("XmlSchemaCollectionName", typeof(System.String));
+            DataColumn XmlSchemaCollectionDatabase = new DataColumn("XmlSchemaCollectionDatabase", typeof(string));
+            DataColumn XmlSchemaCollectionOwningSchema = new DataColumn("XmlSchemaCollectionOwningSchema", typeof(string));
+            DataColumn XmlSchemaCollectionName = new DataColumn("XmlSchemaCollectionName", typeof(string));
             // SparseColumnSet
-            DataColumn IsColumnSet = new DataColumn("IsColumnSet", typeof(System.Boolean));
+            DataColumn IsColumnSet = new DataColumn("IsColumnSet", typeof(bool));
 
             Ordinal.DefaultValue = 0;
             IsLong.DefaultValue = false;
@@ -1084,7 +1084,7 @@ namespace Microsoft.Data.SqlClient
                             // if user called read but didn't fetch any values, skip the row
                             // same applies after NextResult on ALTROW because NextResult starts rowconsumption in that case ...
 
-                            Debug.Assert(SniContext.Snix_Read == stateObj.SniContext, String.Format((IFormatProvider)null, "The SniContext should be Snix_Read but it actually is {0}", stateObj.SniContext));
+                            Debug.Assert(SniContext.Snix_Read == stateObj.SniContext, string.Format((IFormatProvider)null, "The SniContext should be Snix_Read but it actually is {0}", stateObj.SniContext));
 
                             if (_altRowStatus == ALTROWSTATUS.AltRow)
                             {
@@ -1981,7 +1981,7 @@ namespace Microsoft.Data.SqlClient
                     if (dataIndex < 0)
                         throw ADP.NegativeParameter("dataIndex");
 
-                    if (dataIndex > Int32.MaxValue)
+                    if (dataIndex > int.MaxValue)
                     {
                         throw ADP.InvalidSourceBufferIndex(cbytes, dataIndex, "dataIndex");
                     }
@@ -2432,7 +2432,7 @@ namespace Microsoft.Data.SqlClient
 
                 // note that since we are caching in an array, and arrays aren't 64 bit ready yet,
                 // we need can cast to int if the dataIndex is in range
-                if (dataIndex > Int32.MaxValue)
+                if (dataIndex > int.MaxValue)
                 {
                     throw ADP.InvalidSourceBufferIndex(cchars, dataIndex, "dataIndex");
                 }
@@ -2692,7 +2692,7 @@ namespace Microsoft.Data.SqlClient
         }
 
         /// <include file='../../../../../../../doc/snippets/Microsoft.Data.SqlClient/SqlDataReader.xml' path='docs/members[@name="SqlDataReader"]/GetDecimal/*' />
-        public override Decimal GetDecimal(int i)
+        public override decimal GetDecimal(int i)
         {
             ReadColumn(i);
             return _data[i].Decimal;
@@ -2720,21 +2720,21 @@ namespace Microsoft.Data.SqlClient
         }
 
         /// <include file='../../../../../../../doc/snippets/Microsoft.Data.SqlClient/SqlDataReader.xml' path='docs/members[@name="SqlDataReader"]/GetInt16/*' />
-        public override Int16 GetInt16(int i)
+        public override short GetInt16(int i)
         {
             ReadColumn(i);
             return _data[i].Int16;
         }
 
         /// <include file='../../../../../../../doc/snippets/Microsoft.Data.SqlClient/SqlDataReader.xml' path='docs/members[@name="SqlDataReader"]/GetInt32/*' />
-        public override Int32 GetInt32(int i)
+        public override int GetInt32(int i)
         {
             ReadColumn(i);
             return _data[i].Int32;
         }
 
         /// <include file='../../../../../../../doc/snippets/Microsoft.Data.SqlClient/SqlDataReader.xml' path='docs/members[@name="SqlDataReader"]/GetInt64/*' />
-        public override Int64 GetInt64(int i)
+        public override long GetInt64(int i)
         {
             ReadColumn(i);
             return _data[i].Int64;
@@ -4661,7 +4661,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     if (_stateObj._longlen != 0)
                     {
-                        result = _stateObj.Parser.TrySkipPlpValue(UInt64.MaxValue, _stateObj, out _);
+                        result = _stateObj.Parser.TrySkipPlpValue(ulong.MaxValue, _stateObj, out _);
                         if (result != TdsOperationStatus.Done)
                         {
                             return result;

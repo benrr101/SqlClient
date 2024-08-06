@@ -2472,7 +2472,7 @@ namespace Microsoft.Data.SqlClient
                                 SqlAuthenticationParameters parameters = authParamsBuilder;
                                 CancellationTokenSource cts = new();
                                 // Use Connection timeout value to cancel token acquire request after certain period of time.(int)
-                                if (_timeout.MillisecondsRemaining < Int32.MaxValue)
+                                if (_timeout.MillisecondsRemaining < int.MaxValue)
                                 {
                                     cts.CancelAfter((int)_timeout.MillisecondsRemaining);
                                 }

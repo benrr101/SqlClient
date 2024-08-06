@@ -70,12 +70,12 @@ namespace Microsoft.Data.SqlClient
 
             // Get key path length
             int currentIndex = _version.Length;
-            UInt16 keyPathLength = BitConverter.ToUInt16(encryptedColumnEncryptionKey, currentIndex);
-            currentIndex += sizeof(UInt16);
+            ushort keyPathLength = BitConverter.ToUInt16(encryptedColumnEncryptionKey, currentIndex);
+            currentIndex += sizeof(ushort);
 
             // Get ciphertext length
-            UInt16 cipherTextLength = BitConverter.ToUInt16(encryptedColumnEncryptionKey, currentIndex);
-            currentIndex += sizeof(UInt16);
+            ushort cipherTextLength = BitConverter.ToUInt16(encryptedColumnEncryptionKey, currentIndex);
+            currentIndex += sizeof(ushort);
 
             // Skip KeyPath
             // KeyPath exists only for troubleshooting purposes and doesnt need validation.
@@ -157,11 +157,11 @@ namespace Microsoft.Data.SqlClient
 
             // Get the Unicode encoded bytes of cultureinvariant lower case masterKeyPath
             byte[] masterKeyPathBytes = Encoding.Unicode.GetBytes(masterKeyPath.ToLowerInvariant());
-            byte[] keyPathLength = BitConverter.GetBytes((Int16)masterKeyPathBytes.Length);
+            byte[] keyPathLength = BitConverter.GetBytes((short)masterKeyPathBytes.Length);
 
             // Encrypt the plain text
             byte[] cipherText = RSAEncrypt(rsaProvider, columnEncryptionKey);
-            byte[] cipherTextLength = BitConverter.GetBytes((Int16)cipherText.Length);
+            byte[] cipherTextLength = BitConverter.GetBytes((short)cipherText.Length);
             Debug.Assert(cipherText.Length == keySizeInBytes, @"cipherText length does not match the RSA key size");
 
             // Compute hash
@@ -420,7 +420,7 @@ namespace Microsoft.Data.SqlClient
         /// <returns></returns>
         private int GetProviderType(string providerName, string keyPath, bool isSystemOp)
         {
-            string keyName = String.Format(@"SOFTWARE\Microsoft\Cryptography\Defaults\Provider\{0}", providerName);
+            string keyName = string.Format(@"SOFTWARE\Microsoft\Cryptography\Defaults\Provider\{0}", providerName);
             RegistryKey key = Registry.LocalMachine.OpenSubKey(keyName);
             if (key == null)
             {

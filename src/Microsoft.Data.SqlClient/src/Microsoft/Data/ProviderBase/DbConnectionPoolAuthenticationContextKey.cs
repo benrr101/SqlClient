@@ -79,8 +79,8 @@ namespace Microsoft.Data.ProviderBase
                 return false;
             }
 
-            return (String.Equals(StsAuthority, otherKey.StsAuthority, StringComparison.InvariantCultureIgnoreCase)
-                && String.Equals(ServicePrincipalName, otherKey.ServicePrincipalName, StringComparison.InvariantCultureIgnoreCase));
+            return (string.Equals(StsAuthority, otherKey.StsAuthority, StringComparison.InvariantCultureIgnoreCase)
+                && string.Equals(ServicePrincipalName, otherKey.ServicePrincipalName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>

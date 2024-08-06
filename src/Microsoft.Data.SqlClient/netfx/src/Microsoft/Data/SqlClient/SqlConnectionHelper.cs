@@ -211,7 +211,7 @@ namespace Microsoft.Data.SqlClient
         private static System.Security.CodeAccessPermission CreateExecutePermission()
         {
             DBDataPermission p = (DBDataPermission)SqlConnectionFactory.SingletonInstance.ProviderFactory.CreatePermission(System.Security.Permissions.PermissionState.None);
-            p.Add(String.Empty, String.Empty, KeyRestrictionBehavior.AllowOnly);
+            p.Add(string.Empty, string.Empty, KeyRestrictionBehavior.AllowOnly);
             return p;
         }
 

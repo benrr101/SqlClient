@@ -73,18 +73,18 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
             Debug.Assert(key != null && key.Length > 0);
             byte[] encryptedData = null;
 
-            Object columnEncryptionKey = sqlColumnEncryptionKeyConstructor.Invoke(new object[] { key });
+            object columnEncryptionKey = sqlColumnEncryptionKeyConstructor.Invoke(new object[] { key });
             Debug.Assert(columnEncryptionKey != null);
 
-            Object aesFactory = Activator.CreateInstance(sqlAeadAes256CbcHmac256Factory);
+            object aesFactory = Activator.CreateInstance(sqlAeadAes256CbcHmac256Factory);
             Debug.Assert(aesFactory != null);
 
             object[] parameters = new object[] { columnEncryptionKey, encryptionType, SQLSetupStrategy.ColumnEncryptionAlgorithmName };
-            Object authenticatedAES = sqlAeadAes256CbcHmac256FactoryCreate.Invoke(aesFactory, parameters);
+            object authenticatedAES = sqlAeadAes256CbcHmac256FactoryCreate.Invoke(aesFactory, parameters);
             Debug.Assert(authenticatedAES != null);
 
             parameters = new object[] { plainTextData };
-            Object finalCellBlob = sqlClientEncryptionAlgorithmEncryptData.Invoke(authenticatedAES, parameters);
+            object finalCellBlob = sqlClientEncryptionAlgorithmEncryptData.Invoke(authenticatedAES, parameters);
             Debug.Assert(finalCellBlob != null);
 
             encryptedData = (byte[])finalCellBlob;
@@ -201,7 +201,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
             Debug.Assert(x509.HasPrivateKey);
 
             SqlColumnEncryptionCertificateStoreProvider rsaProvider = new SqlColumnEncryptionCertificateStoreProvider();
-            Object RsaDecryptionResult = SqlColumnEncryptionCertificateStoreProviderRSADecrypt.Invoke(rsaProvider, new object[] { ciphertextCek, x509 });
+            object RsaDecryptionResult = SqlColumnEncryptionCertificateStoreProviderRSADecrypt.Invoke(rsaProvider, new object[] { ciphertextCek, x509 });
 
             return (byte[])RsaDecryptionResult;
         }
@@ -214,7 +214,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
             Debug.Assert(x509.HasPrivateKey);
 
             SqlColumnEncryptionCertificateStoreProvider rsaProvider = new SqlColumnEncryptionCertificateStoreProvider();
-            Object RsaVerifySignatureResult = SqlColumnEncryptionCertificateStoreProviderRSAVerifySignature.Invoke(rsaProvider, new object[] { hashedCek, signedCek, x509 });
+            object RsaVerifySignatureResult = SqlColumnEncryptionCertificateStoreProviderRSAVerifySignature.Invoke(rsaProvider, new object[] { hashedCek, signedCek, x509 });
 
             return (bool)RsaVerifySignatureResult;
         }
@@ -229,18 +229,18 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
 
             byte[] decryptedData = null;
 
-            Object columnEncryptionKey = sqlColumnEncryptionKeyConstructor.Invoke(new object[] { key });
+            object columnEncryptionKey = sqlColumnEncryptionKeyConstructor.Invoke(new object[] { key });
             Debug.Assert(columnEncryptionKey != null);
 
-            Object aesFactory = Activator.CreateInstance(sqlAeadAes256CbcHmac256Factory);
+            object aesFactory = Activator.CreateInstance(sqlAeadAes256CbcHmac256Factory);
             Debug.Assert(aesFactory != null);
 
             object[] parameters = new object[] { columnEncryptionKey, encryptionType, SQLSetupStrategy.ColumnEncryptionAlgorithmName };
-            Object authenticatedAES = sqlAeadAes256CbcHmac256FactoryCreate.Invoke(aesFactory, parameters);
+            object authenticatedAES = sqlAeadAes256CbcHmac256FactoryCreate.Invoke(aesFactory, parameters);
             Debug.Assert(authenticatedAES != null);
 
             parameters = new object[] { encryptedCellBlob };
-            Object decryptedValue = sqlClientEncryptionAlgorithmDecryptData.Invoke(authenticatedAES, parameters);
+            object decryptedValue = sqlClientEncryptionAlgorithmDecryptData.Invoke(authenticatedAES, parameters);
             Debug.Assert(decryptedValue != null);
 
             decryptedData = (byte[])decryptedValue;

@@ -48,22 +48,22 @@ namespace Microsoft.Data.SqlClient
                     // Read AttestationInfo
                     int attestationInfoOffset = 0;
                     uint sizeOfTrustedModuleAttestationInfoBuffer = BitConverter.ToUInt32(attestationInfo, attestationInfoOffset);
-                    attestationInfoOffset += sizeof(UInt32);
+                    attestationInfoOffset += sizeof(uint);
                     int sizeOfTrustedModuleAttestationInfoBufferInt = checked((int)sizeOfTrustedModuleAttestationInfoBuffer);
                     Debug.Assert(sizeOfTrustedModuleAttestationInfoBuffer == 0);
 
                     // read secure session info
                     uint sizeOfSecureSessionInfoResponse = BitConverter.ToUInt32(attestationInfo, attestationInfoOffset);
-                    attestationInfoOffset += sizeof(UInt32);
+                    attestationInfoOffset += sizeof(uint);
 
                     byte[] enclaveSessionHandle = new byte[EnclaveSessionHandleSize];
                     Buffer.BlockCopy(attestationInfo, attestationInfoOffset, enclaveSessionHandle, 0, EnclaveSessionHandleSize);
                     attestationInfoOffset += EnclaveSessionHandleSize;
 
                     uint sizeOfTrustedModuleDHPublicKeyBuffer = BitConverter.ToUInt32(attestationInfo, attestationInfoOffset);
-                    attestationInfoOffset += sizeof(UInt32);
+                    attestationInfoOffset += sizeof(uint);
                     uint sizeOfTrustedModuleDHPublicKeySignatureBuffer = BitConverter.ToUInt32(attestationInfo, attestationInfoOffset);
-                    attestationInfoOffset += sizeof(UInt32);
+                    attestationInfoOffset += sizeof(uint);
                     int sizeOfTrustedModuleDHPublicKeyBufferInt = checked((int)sizeOfTrustedModuleDHPublicKeyBuffer);
 
                     byte[] trustedModuleDHPublicKey = new byte[sizeOfTrustedModuleDHPublicKeyBuffer];

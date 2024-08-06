@@ -95,7 +95,7 @@ namespace Microsoft.Data.Common
         [DllImport(ExternDll.Oleaut32, CharSet = CharSet.Unicode)]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         [ResourceExposure(ResourceScope.None)]
-        internal static extern IntPtr SysAllocStringLen(String src, int len);  // BSTR
+        internal static extern IntPtr SysAllocStringLen(string src, int len);  // BSTR
 
         [DllImport(ExternDll.Oleaut32)]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
@@ -106,7 +106,7 @@ namespace Microsoft.Data.Common
         [DllImport(ExternDll.Oleaut32, CharSet = CharSet.Unicode, PreserveSig = false)]
         // TLS values are preserved between threads, need to check that we use this API to clear the error state only.
         [ResourceExposure(ResourceScope.Process)]
-        private static extern void SetErrorInfo(Int32 dwReserved, IntPtr pIErrorInfo);
+        private static extern void SetErrorInfo(int dwReserved, IntPtr pIErrorInfo);
 
         [DllImport(ExternDll.Kernel32, SetLastError = true)]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]

@@ -536,7 +536,7 @@ namespace Microsoft.Data.Common
                 }
                 if (count != restrictions.Length)
                 {
-                    string[] tmp = new String[count];
+                    string[] tmp = new string[count];
                     count = 0;
                     for (int i = 0; i < restrictions.Length; ++i)
                     {

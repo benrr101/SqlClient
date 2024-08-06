@@ -650,7 +650,7 @@ namespace Microsoft.Data.ProviderBase
             get { return _identity != null && DbConnectionPoolIdentity.NoIdentity != _identity; }
         }
 
-        private void CleanupCallback(Object state)
+        private void CleanupCallback(object state)
         {
             // Called when the cleanup-timer ticks over.
 
@@ -1117,7 +1117,7 @@ namespace Microsoft.Data.ProviderBase
             }
         }
 
-        private void ErrorCallback(Object state)
+        private void ErrorCallback(object state)
         {
             SqlClientEventSource.Log.TryPoolerTraceEvent("<prov.DbConnectionPool.ErrorCallback|RES|CPOOL> {0}, Resetting Error handling.", ObjectID);
             _errorOccurred = false;

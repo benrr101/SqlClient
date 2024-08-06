@@ -3070,7 +3070,7 @@ namespace Microsoft.Data.SqlClient
             {
                 Type t = metaData.udt?.Type;
                 Debug.Assert(t != null, "Unexpected null of udtType on GetUdtValue!");
-                o = t.InvokeMember("Null", BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Static, null, null, new Object[] { }, CultureInfo.InvariantCulture);
+                o = t.InvokeMember("Null", BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Static, null, null, new object[] { }, CultureInfo.InvariantCulture);
                 Debug.Assert(o != null);
                 return o;
             }
@@ -3099,7 +3099,7 @@ namespace Microsoft.Data.SqlClient
             maxSize = attr.MaxByteSize;
             format = attr.SerializationFormat;
 
-            if (maxSize < -1 || maxSize >= UInt16.MaxValue)
+            if (maxSize < -1 || maxSize >= ushort.MaxValue)
             { // Do we need this?  Is this the right place?
                 throw new InvalidOperationException(o.GetType() + ": invalid Size");
             }

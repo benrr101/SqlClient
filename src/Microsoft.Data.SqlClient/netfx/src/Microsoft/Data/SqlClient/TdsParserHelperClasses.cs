@@ -301,10 +301,10 @@ namespace Microsoft.Data.SqlClient
     internal class RoutingInfo
     {
         internal byte Protocol { get; private set; }
-        internal UInt16 Port { get; private set; }
+        internal ushort Port { get; private set; }
         internal string ServerName { get; private set; }
 
-        internal RoutingInfo(byte protocol, UInt16 port, string servername)
+        internal RoutingInfo(byte protocol, ushort port, string servername)
         {
             Protocol = protocol;
             Port = port;
@@ -341,7 +341,7 @@ namespace Microsoft.Data.SqlClient
         internal byte minorVersion;
         internal short buildNum;
         internal bool isVersion8;
-        internal UInt32 tdsVersion;
+        internal uint tdsVersion;
     }
 
     internal sealed class SqlFedAuthInfo
@@ -350,13 +350,13 @@ namespace Microsoft.Data.SqlClient
         internal string stsurl;
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "STSURL: {0}, SPN: {1}", stsurl ?? String.Empty, spn ?? String.Empty);
+            return string.Format(CultureInfo.InvariantCulture, "STSURL: {0}, SPN: {1}", stsurl ?? string.Empty, spn ?? string.Empty);
         }
     }
 
     internal sealed class SqlFedAuthToken
     {
-        internal UInt32 dataLen;
+        internal uint dataLen;
         internal byte[] accessToken;
         internal long expirationFileTime;
     }
@@ -492,7 +492,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                return type == SqlDbType.Udt && length == Int32.MaxValue;
+                return type == SqlDbType.Udt && length == int.MaxValue;
             }
         }
 

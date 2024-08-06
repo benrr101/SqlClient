@@ -122,8 +122,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         [ConditionalFact(typeof(DataTestUtility), nameof(DataTestUtility.AreConnStringsSetup), nameof(DataTestUtility.IsNotAzureServer))]
         public static void OldCredentialsShouldFail()
         {
-            String user = "u" + Guid.NewGuid().ToString().Replace("-", "");
-            String passStr = "Pax561O$T5K#jD";
+            string user = "u" + Guid.NewGuid().ToString().Replace("-", "");
+            string passStr = "Pax561O$T5K#jD";
 
             try
             {

@@ -263,18 +263,18 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             Assert.True(key != null && key.Length > 0);
             byte[] encryptedData = null;
 
-            Object columnEncryptionKey = sqlColumnEncryptionKeyConstructor.Invoke(new object[] { key });
+            object columnEncryptionKey = sqlColumnEncryptionKeyConstructor.Invoke(new object[] { key });
             Assert.True(columnEncryptionKey != null);
 
-            Object aesFactory = Activator.CreateInstance(sqlAeadAes256CbcHmac256Factory);
+            object aesFactory = Activator.CreateInstance(sqlAeadAes256CbcHmac256Factory);
             Assert.True(aesFactory != null);
 
             object[] parameters = new object[] { columnEncryptionKey, encryptionType, ColumnEncryptionAlgorithmName };
-            Object authenticatedAES = sqlAeadAes256CbcHmac256FactoryCreate.Invoke(aesFactory, parameters);
+            object authenticatedAES = sqlAeadAes256CbcHmac256FactoryCreate.Invoke(aesFactory, parameters);
             Assert.True(authenticatedAES != null);
 
             parameters = new object[] { plainTextData };
-            Object finalCellBlob = sqlClientEncryptionAlgorithmEncryptData.Invoke(authenticatedAES, parameters);
+            object finalCellBlob = sqlClientEncryptionAlgorithmEncryptData.Invoke(authenticatedAES, parameters);
             Assert.True(finalCellBlob != null);
 
             encryptedData = (byte[])finalCellBlob;
@@ -286,7 +286,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
         /// Adds an entry in SqlCipherMetadat (using reflections).
         /// </summary>
         internal static void AddEncryptionKeyToCipherMD(
-                Object entry,
+                object entry,
                 byte[] encryptedKey,
                 int databaseId,
                 int cekId,
@@ -297,28 +297,28 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
                 string algorithmName)
         {
             // Get the SqlTceCipherInfo contained in the object "entry" and add a record to it
-            Object sqlTceCipherInfoEntry = sqlTceCipherInfoEntryField.GetValue(entry);
+            object sqlTceCipherInfoEntry = sqlTceCipherInfoEntryField.GetValue(entry);
             SqlTceCipherInfoEntryAdd.Invoke(sqlTceCipherInfoEntry,
-                new Object[] { encryptedKey, databaseId, cekId, cekVersion, cekMdVersion, keyPath, keyStoreName, algorithmName });
+                new object[] { encryptedKey, databaseId, cekId, cekVersion, cekMdVersion, keyPath, keyStoreName, algorithmName });
         }
 
-        internal static Object GetSqlCipherMetadata(ushort ordinal, byte cipherAlgorithmId, string cipherAlgorithmName, byte encryptionType, byte normalizationRuleVersion)
+        internal static object GetSqlCipherMetadata(ushort ordinal, byte cipherAlgorithmId, string cipherAlgorithmName, byte encryptionType, byte normalizationRuleVersion)
         {
             Assert.True(SqlCipherMetadataConstructor != null);
             Assert.True(SqlTceCipherInfoEntryConstructor != null);
-            Object entry = SqlTceCipherInfoEntryConstructor.Invoke(new object[] { 1 });// this param is "ordinal"
-            Object[] parameters = new Object[] { entry, ordinal, cipherAlgorithmId, cipherAlgorithmName, encryptionType, normalizationRuleVersion };
+            object entry = SqlTceCipherInfoEntryConstructor.Invoke(new object[] { 1 });// this param is "ordinal"
+            object[] parameters = new object[] { entry, ordinal, cipherAlgorithmId, cipherAlgorithmName, encryptionType, normalizationRuleVersion };
             return SqlCipherMetadataConstructor.Invoke(parameters);
         }
 
-        internal static byte[] DecryptWithKey(byte[] cipherText, Object cipherMd)
+        internal static byte[] DecryptWithKey(byte[] cipherText, object cipherMd)
         {
-            return (byte[])SqlSecurityUtilDecryptWithKey.Invoke(null, new Object[] { cipherText, cipherMd, new SqlConnection(), new SqlCommand() });
+            return (byte[])SqlSecurityUtilDecryptWithKey.Invoke(null, new object[] { cipherText, cipherMd, new SqlConnection(), new SqlCommand() });
         }
 
-        internal static byte[] EncryptWithKey(byte[] plainText, Object cipherMd)
+        internal static byte[] EncryptWithKey(byte[] plainText, object cipherMd)
         {
-            return (byte[])SqlSecurityUtilEncryptWithKey.Invoke(null, new Object[] { plainText, cipherMd, new SqlConnection(), new SqlCommand() });
+            return (byte[])SqlSecurityUtilEncryptWithKey.Invoke(null, new object[] { plainText, cipherMd, new SqlConnection(), new SqlCommand() });
         }
 
         /// <summary>
@@ -331,18 +331,18 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
 
             byte[] decryptedData = null;
 
-            Object columnEncryptionKey = sqlColumnEncryptionKeyConstructor.Invoke(new object[] { key });
+            object columnEncryptionKey = sqlColumnEncryptionKeyConstructor.Invoke(new object[] { key });
             Assert.True(columnEncryptionKey != null);
 
-            Object aesFactory = Activator.CreateInstance(sqlAeadAes256CbcHmac256Factory);
+            object aesFactory = Activator.CreateInstance(sqlAeadAes256CbcHmac256Factory);
             Assert.True(aesFactory != null);
 
             object[] parameters = new object[] { columnEncryptionKey, encryptionType, ColumnEncryptionAlgorithmName };
-            Object authenticatedAES = sqlAeadAes256CbcHmac256FactoryCreate.Invoke(aesFactory, parameters);
+            object authenticatedAES = sqlAeadAes256CbcHmac256FactoryCreate.Invoke(aesFactory, parameters);
             Assert.True(authenticatedAES != null);
 
             parameters = new object[] { encryptedCellBlob };
-            Object decryptedValue = sqlClientEncryptionAlgorithmDecryptData.Invoke(authenticatedAES, parameters);
+            object decryptedValue = sqlClientEncryptionAlgorithmDecryptData.Invoke(authenticatedAES, parameters);
             Assert.True(decryptedValue != null);
 
             decryptedData = (byte[])decryptedValue;
@@ -426,7 +426,7 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
         public class SilentTraceListener : TraceListener
         {
             public SilentTraceListener() : base() { }
-            public SilentTraceListener(String s) : base(s) { }
+            public SilentTraceListener(string s) : base(s) { }
 
             public override void Fail(string message)
             {

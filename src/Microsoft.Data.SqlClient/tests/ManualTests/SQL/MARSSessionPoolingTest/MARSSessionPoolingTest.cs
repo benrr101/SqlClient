@@ -199,11 +199,11 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                         {
                             rdr.Read();
                             int connections = (int)rdr.GetValue(0);
-                            int spid1 = (Int16)rdr.GetValue(1);
+                            int spid1 = (short)rdr.GetValue(1);
                             rdr.NextResult();
                             rdr.Read();
                             int requests = (int)rdr.GetValue(0);
-                            int spid2 = (Int16)rdr.GetValue(1);
+                            int spid2 = (short)rdr.GetValue(1);
 
                             switch (executeType)
                             {

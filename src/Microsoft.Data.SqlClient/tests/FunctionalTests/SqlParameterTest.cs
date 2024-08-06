@@ -555,7 +555,7 @@ namespace Microsoft.Data.SqlClient.Tests
             Assert.Equal(SqlDbType.Float, param.SqlDbType);
             Assert.Equal(DbType.Double, param.DbType);
 
-            value = Double.MinValue;
+            value = double.MinValue;
             param = new SqlParameter();
             param.Value = value;
             Assert.Equal(SqlDbType.Float, param.SqlDbType);

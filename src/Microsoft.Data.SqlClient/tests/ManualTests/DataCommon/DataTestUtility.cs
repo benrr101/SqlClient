@@ -959,7 +959,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
 
             if (dataSource.Contains(","))
             {
-                if (!Int32.TryParse(dataSource.Substring(dataSource.LastIndexOf(",", StringComparison.Ordinal) + 1), out port))
+                if (!int.TryParse(dataSource.Substring(dataSource.LastIndexOf(",", StringComparison.Ordinal) + 1), out port))
                 {
                     return false;
                 }

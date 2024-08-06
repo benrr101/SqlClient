@@ -131,13 +131,13 @@ namespace Microsoft.Data.SqlClient
         internal string stsurl;
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "STSURL: {0}, SPN: {1}", stsurl ?? String.Empty, spn ?? String.Empty);
+            return string.Format(CultureInfo.InvariantCulture, "STSURL: {0}, SPN: {1}", stsurl ?? string.Empty, spn ?? string.Empty);
         }
     }
 
     internal sealed class SqlFedAuthToken
     {
-        internal UInt32 dataLen;
+        internal uint dataLen;
         internal byte[] accessToken;
         internal long expirationFileTime;
     }

@@ -335,7 +335,7 @@ namespace Microsoft.Data.SqlClient
         /// <returns></returns>
         internal static int GetBase64LengthFromByteLength(int byteLength)
         {
-            Debug.Assert(byteLength <= UInt16.MaxValue, @"Encrypted column encryption key cannot be larger than 65536 bytes");
+            Debug.Assert(byteLength <= ushort.MaxValue, @"Encrypted column encryption key cannot be larger than 65536 bytes");
 
             // Base64 encoding uses 1 character to encode 6 bits which means 4 characters for 3 bytes and pads to 4 byte multiples.
             return (int)((double)byteLength * 4 / 3) + 4;

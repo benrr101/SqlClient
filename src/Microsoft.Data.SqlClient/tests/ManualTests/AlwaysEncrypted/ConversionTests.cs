@@ -277,7 +277,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
 
                 foreach (ValueErrorTuple tuple in valueList)
                 {
-                    using (SqlCommand sqlCmd = new SqlCommand(String.Format("INSERT INTO [{0}] VALUES ({1})", encryptedTableName, FirstParamName), sqlConnectionEncrypted, null, SqlCommandColumnEncryptionSetting.Enabled))
+                    using (SqlCommand sqlCmd = new SqlCommand(string.Format("INSERT INTO [{0}] VALUES ({1})", encryptedTableName, FirstParamName), sqlConnectionEncrypted, null, SqlCommandColumnEncryptionSetting.Enabled))
                     {
                         SqlParameter param = new SqlParameter();
                         param.ParameterName = FirstParamName;
@@ -290,7 +290,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                     }
 
                     // Add same value to the unencrypted table
-                    using (SqlCommand sqlCmd = new SqlCommand(String.Format("INSERT INTO [{0}] VALUES ({1})", unencryptedTableName, FirstParamName), sqlConnectionUnencrypted, null, SqlCommandColumnEncryptionSetting.Disabled))
+                    using (SqlCommand sqlCmd = new SqlCommand(string.Format("INSERT INTO [{0}] VALUES ({1})", unencryptedTableName, FirstParamName), sqlConnectionUnencrypted, null, SqlCommandColumnEncryptionSetting.Disabled))
                     {
                         SqlParameter param = new SqlParameter();
                         param.ParameterName = FirstParamName;
@@ -376,8 +376,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                     list.Add(new ValueErrorTuple(new DateTime(2014, 1, 1, 23, 59, 59, 998), false));
                     break;
                 case SqlDbType.Int:
-                    list.Add(new ValueErrorTuple((Int64)Int32.MaxValue + 1, true));
-                    list.Add(new ValueErrorTuple((Int64)Int32.MinValue - 1, true));
+                    list.Add(new ValueErrorTuple((long)int.MaxValue + 1, true));
+                    list.Add(new ValueErrorTuple((long)int.MinValue - 1, true));
                     break;
                 case SqlDbType.Money:
                     list.Add(new ValueErrorTuple(SqlMoney.MaxValue.Value + (decimal)0.0001, true));
@@ -403,8 +403,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                     list.Add(new ValueErrorTuple(new DateTime(2014, 1, 1, 23, 59, 59, 1), false));
                     break;
                 case SqlDbType.SmallInt:
-                    list.Add(new ValueErrorTuple((Int32)Int16.MaxValue + 1, true));
-                    list.Add(new ValueErrorTuple((Int32)Int16.MinValue - 1, true));
+                    list.Add(new ValueErrorTuple((int)short.MaxValue + 1, true));
+                    list.Add(new ValueErrorTuple((int)short.MinValue - 1, true));
                     break;
                 case SqlDbType.SmallMoney:
                     list.Add(new ValueErrorTuple((decimal)214748.3648, true));
@@ -414,7 +414,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                     list.Add(new ValueErrorTuple((decimal)1.00001, false));
                     break;
                 case SqlDbType.TinyInt:
-                    list.Add(new ValueErrorTuple((Int16)byte.MaxValue + 1, true));
+                    list.Add(new ValueErrorTuple((short)byte.MaxValue + 1, true));
                     list.Add(new ValueErrorTuple(-1, true));
                     break;
                 case SqlDbType.Date:
@@ -426,8 +426,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                 case SqlDbType.DateTime2:
                 case SqlDbType.DateTimeOffset:
                     // All values with higher precision will get truncated but not fail.
-                    String timeStringUpper = "23:59:59.";
-                    String timeStringLower = "00:00:00.";
+                    string timeStringUpper = "23:59:59.";
+                    string timeStringLower = "00:00:00.";
 
                     for (int i = 0; i < scale; i++)
                     {
@@ -510,18 +510,18 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                 case SqlDbType.Float:
                     list.Add(new ValueErrorTuple("1.79770e+308", true));
                     list.Add(new ValueErrorTuple("-1.79770e+308", true));
-                    list.Add(new ValueErrorTuple(Double.PositiveInfinity, true));
-                    list.Add(new ValueErrorTuple(Double.NegativeInfinity, true));
-                    list.Add(new ValueErrorTuple(Double.NaN, true));
-                    list.Add(new ValueErrorTuple(Double.Epsilon, false));
+                    list.Add(new ValueErrorTuple(double.PositiveInfinity, true));
+                    list.Add(new ValueErrorTuple(double.NegativeInfinity, true));
+                    list.Add(new ValueErrorTuple(double.NaN, true));
+                    list.Add(new ValueErrorTuple(double.Epsilon, false));
                     break;
                 case SqlDbType.Real:
                     list.Add(new ValueErrorTuple((double)3.40283e+038, true));
                     list.Add(new ValueErrorTuple((double)-3.40283e+038, true));
-                    list.Add(new ValueErrorTuple(Single.PositiveInfinity, true));
-                    list.Add(new ValueErrorTuple(Single.NegativeInfinity, true));
-                    list.Add(new ValueErrorTuple(Single.NaN, true));
-                    list.Add(new ValueErrorTuple(Single.Epsilon, false));
+                    list.Add(new ValueErrorTuple(float.PositiveInfinity, true));
+                    list.Add(new ValueErrorTuple(float.NegativeInfinity, true));
+                    list.Add(new ValueErrorTuple(float.NaN, true));
+                    list.Add(new ValueErrorTuple(float.Epsilon, false));
                     break;
                 default:
                     Assert.Fail("We should never get here");
@@ -724,7 +724,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                     valueArray[i] = GenerateRandomValue(columnInfo);
 
                     // Add value to the encrypted table
-                    using (SqlCommand sqlCmd = new SqlCommand(String.Format("INSERT INTO [{0}] VALUES ({1})", encryptedTableName, FirstParamName), sqlConnection, null, SqlCommandColumnEncryptionSetting.Enabled))
+                    using (SqlCommand sqlCmd = new SqlCommand(string.Format("INSERT INTO [{0}] VALUES ({1})", encryptedTableName, FirstParamName), sqlConnection, null, SqlCommandColumnEncryptionSetting.Enabled))
                     {
                         SqlParameter param = new SqlParameter();
                         param.ParameterName = FirstParamName;
@@ -737,7 +737,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                     }
 
                     // Add same value to the unencrypted table
-                    using (SqlCommand sqlCmd = new SqlCommand(String.Format("INSERT INTO [{0}] VALUES ({1})", unencryptedTableName, FirstParamName), sqlConnection, null, SqlCommandColumnEncryptionSetting.Enabled))
+                    using (SqlCommand sqlCmd = new SqlCommand(string.Format("INSERT INTO [{0}] VALUES ({1})", unencryptedTableName, FirstParamName), sqlConnection, null, SqlCommandColumnEncryptionSetting.Enabled))
                     {
                         SqlParameter param = new SqlParameter();
                         param.ParameterName = FirstParamName;
@@ -773,7 +773,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                     valueArray[i] = GenerateRandomValue(columnInfo);
 
                     // Add same value to the unencrypted table
-                    using (SqlCommand sqlCmd = new SqlCommand(String.Format("INSERT INTO [{0}] VALUES ({1})", unencryptedTableName, FirstParamName), sqlConnection, null, SqlCommandColumnEncryptionSetting.Disabled))
+                    using (SqlCommand sqlCmd = new SqlCommand(string.Format("INSERT INTO [{0}] VALUES ({1})", unencryptedTableName, FirstParamName), sqlConnection, null, SqlCommandColumnEncryptionSetting.Disabled))
                     {
                         SqlParameter param = new SqlParameter();
                         param.ParameterName = FirstParamName;
@@ -807,7 +807,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                 sourceConnection.Open();
 
                 SqlCommand sourceCmd = sourceConnection.CreateCommand();
-                sourceCmd.CommandText = String.Format(@"SELECT * FROM [{0}]", sourceName);
+                sourceCmd.CommandText = string.Format(@"SELECT * FROM [{0}]", sourceName);
 
                 SqlDataReader reader = sourceCmd.ExecuteReader();
 
@@ -847,7 +847,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
             {
                 sqlConnection.Open();
 
-                using (SqlCommand cmdUnencrypted = new SqlCommand(String.Format("SELECT {0} FROM [{1}] ORDER BY {2}", FirstColumnName, unencryptedTableName, IdentityColumnName), sqlConnection, null, SqlCommandColumnEncryptionSetting.Disabled))
+                using (SqlCommand cmdUnencrypted = new SqlCommand(string.Format("SELECT {0} FROM [{1}] ORDER BY {2}", FirstColumnName, unencryptedTableName, IdentityColumnName), sqlConnection, null, SqlCommandColumnEncryptionSetting.Disabled))
                 {
                     using (SqlDataReader readerUnencrypted = cmdUnencrypted.ExecuteReader())
                     {
@@ -859,7 +859,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                             index++;
                         }
 
-                        Assert.True(NumberOfRows == index, String.Format("The number of rows retrieved is {0}", index));
+                        Assert.True(NumberOfRows == index, string.Format("The number of rows retrieved is {0}", index));
                     }
                 }
             }
@@ -881,8 +881,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                 sqlConnectionUnencrypted.Open();
 
                 // Check that the tables contain identical data for the small types.
-                using (SqlCommand cmdEncrypted = new SqlCommand(String.Format("SELECT * FROM [{0}] ORDER BY {1}", encryptedTableName, IdentityColumnName), sqlConnectionEncrypted, null, SqlCommandColumnEncryptionSetting.Enabled))
-                using (SqlCommand cmdUnencrypted = new SqlCommand(String.Format("SELECT * FROM [{0}] ORDER BY {1}", unencryptedTableName, IdentityColumnName), sqlConnectionUnencrypted, null, SqlCommandColumnEncryptionSetting.Disabled))
+                using (SqlCommand cmdEncrypted = new SqlCommand(string.Format("SELECT * FROM [{0}] ORDER BY {1}", encryptedTableName, IdentityColumnName), sqlConnectionEncrypted, null, SqlCommandColumnEncryptionSetting.Enabled))
+                using (SqlCommand cmdUnencrypted = new SqlCommand(string.Format("SELECT * FROM [{0}] ORDER BY {1}", unencryptedTableName, IdentityColumnName), sqlConnectionUnencrypted, null, SqlCommandColumnEncryptionSetting.Disabled))
                 {
                     using (SqlDataReader readerUnencrypted = cmdUnencrypted.ExecuteReader())
                     using (SqlDataReader readerEncrypted = cmdEncrypted.ExecuteReader())
@@ -963,7 +963,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
             switch (columnInfo.ColumnType)
             {
                 case SqlDbType.BigInt:
-                    returnValue = isNegative ? Convert.ToInt64(rand.NextDouble() * Int64.MinValue) : Convert.ToInt64(rand.NextDouble() * Int64.MaxValue);
+                    returnValue = isNegative ? Convert.ToInt64(rand.NextDouble() * long.MinValue) : Convert.ToInt64(rand.NextDouble() * long.MaxValue);
                     break;
 
                 case SqlDbType.Bit:
@@ -999,7 +999,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                     break;
 
                 case SqlDbType.Real:
-                    returnValue = isNegative ? Convert.ToSingle(rand.NextDouble() * Single.MinValue) : Convert.ToSingle(rand.NextDouble() * Single.MaxValue);
+                    returnValue = isNegative ? Convert.ToSingle(rand.NextDouble() * float.MinValue) : Convert.ToSingle(rand.NextDouble() * float.MaxValue);
                     break;
 
                 case SqlDbType.SmallDateTime:
@@ -1014,7 +1014,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                     break;
 
                 case SqlDbType.SmallInt:
-                    returnValue = isNegative ? Convert.ToInt16(rand.NextDouble() * Int16.MinValue) : Convert.ToInt16(rand.NextDouble() * Int16.MaxValue);
+                    returnValue = isNegative ? Convert.ToInt16(rand.NextDouble() * short.MinValue) : Convert.ToInt16(rand.NextDouble() * short.MaxValue);
                     break;
 
                 case SqlDbType.SmallMoney:
@@ -1022,7 +1022,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                     break;
 
                 case SqlDbType.TinyInt:
-                    returnValue = Convert.ToByte(rand.Next(Byte.MinValue, Byte.MaxValue + 1));
+                    returnValue = Convert.ToByte(rand.Next(byte.MinValue, byte.MaxValue + 1));
                     break;
 
                 case SqlDbType.Binary:
@@ -1055,7 +1055,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                         count--;
                     }
 
-                    millisecond = (0 == strBuilder.Length) ? 0 : rand.Next(0, Int32.Parse(strBuilder.ToString()));
+                    millisecond = (0 == strBuilder.Length) ? 0 : rand.Next(0, int.Parse(strBuilder.ToString()));
 
                     if (SqlDbType.DateTime2 == columnInfo.ColumnType)
                     {
@@ -1093,11 +1093,11 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                     break;
 
                 case SqlDbType.Decimal:
-                    returnValue = isNegative ? Convert.ToDecimal((decimal)rand.NextDouble() * Decimal.MinValue) : Convert.ToDecimal((decimal)rand.NextDouble() * Decimal.MaxValue);
+                    returnValue = isNegative ? Convert.ToDecimal((decimal)rand.NextDouble() * decimal.MinValue) : Convert.ToDecimal((decimal)rand.NextDouble() * decimal.MaxValue);
                     break;
 
                 case SqlDbType.Float:
-                    returnValue = isNegative ? rand.NextDouble() * Double.MinValue : rand.NextDouble() * Double.MaxValue;
+                    returnValue = isNegative ? rand.NextDouble() * double.MinValue : rand.NextDouble() * double.MaxValue;
                     break;
 
                 case SqlDbType.VarChar:

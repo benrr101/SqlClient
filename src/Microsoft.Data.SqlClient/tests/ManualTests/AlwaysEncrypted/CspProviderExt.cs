@@ -136,7 +136,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
             {
                 X509Certificate2 cert = CertificateUtilityWin.GetCertificate(certificateName, StoreLocation.CurrentUser);
                 string cspPath = CertificateUtilityWin.GetCspPathFromCertificate(cert);
-                string certificatePath = String.Concat(@"CurrentUser/my/", cert.Thumbprint);
+                string certificatePath = string.Concat(@"CurrentUser/my/", cert.Thumbprint);
 
                 SqlColumnEncryptionCertificateStoreProvider certProvider = new SqlColumnEncryptionCertificateStoreProvider();
                 SqlColumnEncryptionCspProvider cspProvider = new SqlColumnEncryptionCspProvider();
@@ -167,7 +167,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
             try
             {
                 CertificateUtilityWin.RSAPersistKeyInCsp(providerName, keyIdentifier);
-                string cspPath = String.Concat(providerName, @"/", keyIdentifier);
+                string cspPath = string.Concat(providerName, @"/", keyIdentifier);
 
                 SQLSetupStrategyCspExt sqlSetupStrategyCsp = new SQLSetupStrategyCspExt(cspPath);
                 string tableName = sqlSetupStrategyCsp.CspProviderTable.Name;

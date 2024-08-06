@@ -361,7 +361,7 @@ namespace Microsoft.Data.SqlClient
 
         internal static uint SniGetConnectionIPString(SNIHandle pConn, ref string connIPStr)
         {
-            UInt32 ret;
+            uint ret;
             uint connIPLen = 0;
 
             int bufferSize = SniIP6AddrStringBufferLength;

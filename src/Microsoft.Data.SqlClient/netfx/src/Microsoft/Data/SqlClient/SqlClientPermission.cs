@@ -294,20 +294,20 @@ namespace Microsoft.Data.SqlClient
             {
                 throw ADP.NotAPermissionElement();
             }
-            String version = securityElement.Attribute(XmlStr._Version);
+            string version = securityElement.Attribute(XmlStr._Version);
             if (version != null && !version.Equals(XmlStr._VersionNumber))
             {
                 throw ADP.InvalidXMLBadVersion();
             }
 
             string unrestrictedValue = securityElement.Attribute(XmlStr._Unrestricted);
-            _IsUnrestricted = unrestrictedValue != null && Boolean.Parse(unrestrictedValue);
+            _IsUnrestricted = unrestrictedValue != null && bool.Parse(unrestrictedValue);
 
             Clear(); // MDAC 83105
             if (!_IsUnrestricted)
             {
                 string allowNull = securityElement.Attribute(XmlStr._AllowBlankPassword);
-                AllowBlankPassword = allowNull != null && Boolean.Parse(allowNull);
+                AllowBlankPassword = allowNull != null && bool.Parse(allowNull);
 
                 ArrayList children = securityElement.Children;
                 if (children != null)
