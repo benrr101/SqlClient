@@ -970,7 +970,8 @@
     <Compile Include="Microsoft\Data\SqlClientX\SqlConnector.cs" />
     <Compile Include="Microsoft\Data\SqlClientX\SqlDataSource.cs" />
     <Compile Include="Microsoft\Data\SqlClientX\SqlDataSourceBuilder.cs" />
-    <Compile Include="Microsoft\Data\SqlClientX\TdsParser.cs" />
+    <Compile Include="Microsoft\Data\SqlClientX\TdsConstants.cs" />
+    <Compile Include="Microsoft\Data\SqlClientX\TdsParserX.cs" />
     <Compile Include="Microsoft\Data\SqlClientX\TdsParserState.cs" />
     <Compile Include="Microsoft\Data\SqlClientX\UnpooledDataSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

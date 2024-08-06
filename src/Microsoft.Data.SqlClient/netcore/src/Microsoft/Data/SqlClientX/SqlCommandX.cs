@@ -85,7 +85,7 @@ namespace Microsoft.Data.SqlClientX
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior) =>
             ExecuteReader(behavior);
 
-        private TdsParser GetParser(string methodName)
+        private TdsParserX GetParser(string methodName)
         {
             if (Connection is null)
             {

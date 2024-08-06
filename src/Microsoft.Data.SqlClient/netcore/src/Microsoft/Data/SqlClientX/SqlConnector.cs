@@ -21,7 +21,7 @@ namespace Microsoft.Data.SqlClientX
     {
         private static int SpoofedServerProcessId = 1;
         
-        private TdsParser? _tdsParser;
+        private TdsParserX? _tdsParser;
 
         internal SqlConnector(SqlConnectionX owningConnection, SqlDataSource dataSource)
         {
@@ -73,7 +73,7 @@ namespace Microsoft.Data.SqlClientX
             throw new NotImplementedException();
         }
 
-        internal TdsParser GetParser(string methodName)
+        internal TdsParserX GetParser(string methodName)
         {
             if (_tdsParser is null)
             {

@@ -302,7 +302,7 @@ namespace Microsoft.Data.SqlClientX
 
         #endregion
 
-        internal TdsParser GetParser(string methodName)
+        internal TdsParserX GetParser(string methodName)
         {
             if (_internalConnection is null)
             {
