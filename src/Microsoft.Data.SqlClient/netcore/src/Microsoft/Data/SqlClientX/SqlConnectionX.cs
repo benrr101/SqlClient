@@ -27,7 +27,8 @@ namespace Microsoft.Data.SqlClientX
     [DesignerCategory("")]
     internal sealed class SqlConnectionX : DbConnection, ICloneable
     {
-        #region private
+        #region Member Variables
+        
         private static readonly SqlConnectionString DefaultSettings = new SqlConnectionString("");
 
         private SqlCredential? _credential;
@@ -40,9 +41,10 @@ namespace Microsoft.Data.SqlClientX
         private string _connectionString = string.Empty;
         
         private ConnectionState _connectionState = ConnectionState.Closed;
+        
         #endregion
 
-        #region constructors
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlConnectionX"/> class.
@@ -84,7 +86,7 @@ namespace Microsoft.Data.SqlClientX
 
         #endregion
 
-        #region public properties
+        #region Properties
 
         /// <inheritdoc/>
         [Browsable(false)]
@@ -139,10 +141,6 @@ namespace Microsoft.Data.SqlClientX
         public override bool CanCreateBatch
             => throw new NotImplementedException();
 
-        #endregion
-
-        #region protected properties
-
         /// <inheritdoc/>
         protected override DbProviderFactory? DbProviderFactory
             => throw new NotImplementedException();
@@ -165,7 +163,7 @@ namespace Microsoft.Data.SqlClientX
         public object Clone()
             => throw new NotImplementedException();
 
-        #region close
+        #region Close
 
         /// <inheritdoc/>
         public override void Close()
@@ -277,13 +275,15 @@ namespace Microsoft.Data.SqlClientX
         public override Task<DataTable> GetSchemaAsync(string collectionName, string?[] restrictionValues, CancellationToken cancellationToken = default)
             => throw new NotImplementedException();
 
-        #region open
+        #region Open
 
         /// <inheritdoc/>
-        public override void Open() => Open(false, CancellationToken.None).GetAwaiter().GetResult();
+        public override void Open() => 
+            Open(false, CancellationToken.None).GetAwaiter().GetResult();
 
         /// <inheritdoc/>
-        public override Task OpenAsync(CancellationToken cancellationToken) => Open(true, cancellationToken);
+        public override Task OpenAsync(CancellationToken cancellationToken) => 
+            Open(true, cancellationToken);
 
         internal async Task Open(bool async, CancellationToken cancellationToken)
         {
@@ -292,12 +292,26 @@ namespace Microsoft.Data.SqlClientX
                 throw ADP.NoConnectionString();
             }
 
-            _internalConnection = await _dataSource.GetInternalConnection(this, TimeSpan.FromSeconds(ConnectionTimeout), async, cancellationToken).ConfigureAwait(false);
+            _internalConnection = await _dataSource.GetInternalConnection(
+                this,
+                TimeSpan.FromSeconds(ConnectionTimeout),
+                async,
+                cancellationToken).ConfigureAwait(false);
             _connectionState = ConnectionState.Open;
         }
 
         #endregion
 
+        internal TdsParser GetParser(string methodName)
+        {
+            if (_internalConnection is null)
+            {
+                throw ADP.OpenConnectionRequired(methodName, _connectionState);
+            }
+
+            return _internalConnection.GetParser(methodName);
+        }
+        
         /// <inheritdoc/>
         protected override DbTransaction BeginDbTransaction(System.Data.IsolationLevel isolationLevel)
             => throw new NotImplementedException();

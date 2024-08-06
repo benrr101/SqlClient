@@ -8,6 +8,7 @@ using System;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.Common;
 
 #nullable enable
 
@@ -19,6 +20,8 @@ namespace Microsoft.Data.SqlClientX
     internal class SqlConnector
     {
         private static int SpoofedServerProcessId = 1;
+        
+        private TdsParser? _tdsParser;
 
         internal SqlConnector(SqlConnectionX owningConnection, SqlDataSource dataSource)
         {
@@ -29,13 +32,23 @@ namespace Microsoft.Data.SqlClientX
             ServerProcessId = Interlocked.Increment(ref SpoofedServerProcessId);
         }
 
-        #region properties
-        internal SqlConnectionX? OwningConnection { get; set; }
+        #region Properties
 
         /// <summary>
         /// The data source that generated this connector.
         /// </summary>
         internal SqlDataSource DataSource { get; }
+
+        internal bool IsBroken => State == ConnectionState.Broken;
+        
+        internal bool IsClosed => State == ConnectionState.Closed;
+        
+        internal bool IsOpen => State == ConnectionState.Open;
+
+        internal SqlConnectionX? OwningConnection { get; set; }
+        
+        //TODO: set this based on login info
+        internal int ServerProcessId { get; private set; }
 
         /// <summary>
         /// The server version this connector is connected to.
@@ -48,12 +61,6 @@ namespace Microsoft.Data.SqlClientX
         /// TODO: set and change state appropriately
         internal ConnectionState State = ConnectionState.Open;
 
-        internal bool IsOpen => State == ConnectionState.Open;
-        internal bool IsClosed => State == ConnectionState.Closed;
-        internal bool IsBroken => State == ConnectionState.Broken;
-
-        //TODO: set this based on login info
-        internal int ServerProcessId { get; private set; }
         #endregion
 
         /// <summary>
@@ -66,6 +73,16 @@ namespace Microsoft.Data.SqlClientX
             throw new NotImplementedException();
         }
 
+        internal TdsParser GetParser(string methodName)
+        {
+            if (_tdsParser is null)
+            {
+                throw ADP.OpenConnectionRequired(methodName, State);
+            }
+
+            return _tdsParser;
+        }
+        
         /// <summary>
         /// Opens this connection.
         /// </summary>
@@ -90,7 +107,7 @@ namespace Microsoft.Data.SqlClientX
                 return ValueTask.CompletedTask;
             }
         }
-
+        
         /// <summary>
         /// Returns this connection to the data source that generated it.
         /// </summary>
