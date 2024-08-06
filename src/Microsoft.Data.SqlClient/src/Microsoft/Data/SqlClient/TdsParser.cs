@@ -96,7 +96,7 @@ namespace Microsoft.Data.SqlClient
                 cauthInfo.originalNetworkAddress = originalNetworkAddressInfo.Address.GetAddressBytes();
                 cauthInfo.fromDataSecurityProxy = originalNetworkAddressInfo.IsFromDataSecurityProxy;
 
-                UInt32 error = SNINativeMethodWrapper.SNIAddProvider(_physicalStateObj.Handle, SNINativeMethodWrapper.ProviderEnum.CTAIP_PROV, cauthInfo);
+                uint error = SNINativeMethodWrapper.SNIAddProvider(_physicalStateObj.Handle, SNINativeMethodWrapper.ProviderEnum.CTAIP_PROV, cauthInfo);
                 if (error != TdsEnums.SNI_SUCCESS)
                 {
                     _physicalStateObj.AddError(ProcessSNIError(_physicalStateObj));
@@ -245,7 +245,7 @@ namespace Microsoft.Data.SqlClient
             //
             if (originalNetworkAddressInfo != null)
             {
-                UInt32 error = SNINativeMethodWrapper.SNIRemoveProvider(_physicalStateObj.Handle, SNINativeMethodWrapper.ProviderEnum.CTAIP_PROV);
+                uint error = SNINativeMethodWrapper.SNIRemoveProvider(_physicalStateObj.Handle, SNINativeMethodWrapper.ProviderEnum.CTAIP_PROV);
                 if (error != TdsEnums.SNI_SUCCESS)
                 {
                     _physicalStateObj.AddError(ProcessSNIError(_physicalStateObj));

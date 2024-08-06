@@ -29,10 +29,10 @@ namespace Microsoft.Data.SqlClient
 
         internal abstract void GenerateSspiClientContext(ReadOnlyMemory<byte> input, ref byte[] sendBuff, ref uint sendLength, byte[][] _sniSpnBuffer);
 
-        internal void SSPIData(ReadOnlyMemory<byte> receivedBuff, ref byte[] sendBuff, ref UInt32 sendLength, byte[] sniSpnBuffer)
+        internal void SSPIData(ReadOnlyMemory<byte> receivedBuff, ref byte[] sendBuff, ref uint sendLength, byte[] sniSpnBuffer)
             => SSPIData(receivedBuff, ref sendBuff, ref sendLength, new[] { sniSpnBuffer });
 
-        internal void SSPIData(ReadOnlyMemory<byte> receivedBuff, ref byte[] sendBuff, ref UInt32 sendLength, byte[][] sniSpnBuffer)
+        internal void SSPIData(ReadOnlyMemory<byte> receivedBuff, ref byte[] sendBuff, ref uint sendLength, byte[][] sniSpnBuffer)
         {
             using (TrySNIEventScope.Create(nameof(SSPIContextProvider)))
             {

@@ -25,7 +25,7 @@ namespace Microsoft.Data.SqlClient
         {
             if (!ADP.IsEmpty(host))
             {
-                const String folder = "SOFTWARE\\Microsoft\\MSSQLServer\\Client\\ConnectTo";
+                const string folder = "SOFTWARE\\Microsoft\\MSSQLServer\\Client\\ConnectTo";
                 // Put a try...catch... around this so we don't abort ANY connection if we can't read the registry.
                 string aliasLookup = (string)ADP.LocalMachineRegistryValue(folder, host);
                 if (!ADP.IsEmpty(aliasLookup))

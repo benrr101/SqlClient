@@ -1448,9 +1448,9 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                         Assert.True(sqlDataReader.GetOrdinal(@"FirstName") == 1, "FirstName value read from the table was incorrect.");
                         Assert.True(sqlDataReader.GetOrdinal(@"LastName") == 2, "LastName value read from the table was incorrect.");
 
-                        Assert.True(sqlDataReader.GetFieldType(0) == typeof(System.Int32), "CustomerId value read from the table was incorrect.");
-                        Assert.True(sqlDataReader.GetFieldType(1) == typeof(System.String), "FirstName value read from the table was incorrect.");
-                        Assert.True(sqlDataReader.GetFieldType(2) == typeof(System.String), "LastName value read from the table was incorrect.");
+                        Assert.True(sqlDataReader.GetFieldType(0) == typeof(int), "CustomerId value read from the table was incorrect.");
+                        Assert.True(sqlDataReader.GetFieldType(1) == typeof(string), "FirstName value read from the table was incorrect.");
+                        Assert.True(sqlDataReader.GetFieldType(2) == typeof(string), "LastName value read from the table was incorrect.");
 
                         Assert.True(sqlDataReader.GetProviderSpecificFieldType(0) == typeof(System.Data.SqlTypes.SqlInt32), "CustomerId value read from the table was incorrect.");
                         Assert.True(sqlDataReader.GetProviderSpecificFieldType(1) == typeof(System.Data.SqlTypes.SqlString), "FirstName value read from the table was incorrect.");
@@ -2663,7 +2663,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                 sqlConnection.Open();
                 foreach (string name in procNames)
                 {
-                    string procedureName = name.Trim(new Char[] { '[', ']' });
+                    string procedureName = name.Trim(new char[] { '[', ']' });
 
                     using (SqlCommand cmd = new SqlCommand(string.Format("IF EXISTS (SELECT * FROM sys.procedures WHERE name = '{0}') \n DROP PROCEDURE {0}", procedureName), sqlConnection))
                     {
@@ -2824,9 +2824,9 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
 
             if (columnEncryptionSetting != SqlCommandColumnEncryptionSetting.Disabled)
             {
-                Assert.True(sqlDataReader.GetFieldType(0) == typeof(System.Int32), "CustomerId value read from the table was incorrect.");
-                Assert.True(sqlDataReader.GetFieldType(1) == typeof(System.String), "FirstName value read from the table was incorrect.");
-                Assert.True(sqlDataReader.GetFieldType(2) == typeof(System.String), "LastName value read from the table was incorrect.");
+                Assert.True(sqlDataReader.GetFieldType(0) == typeof(int), "CustomerId value read from the table was incorrect.");
+                Assert.True(sqlDataReader.GetFieldType(1) == typeof(string), "FirstName value read from the table was incorrect.");
+                Assert.True(sqlDataReader.GetFieldType(2) == typeof(string), "LastName value read from the table was incorrect.");
 
                 Assert.True(sqlDataReader.GetProviderSpecificFieldType(0) == typeof(System.Data.SqlTypes.SqlInt32), "CustomerId value read from the table was incorrect.");
                 Assert.True(sqlDataReader.GetProviderSpecificFieldType(1) == typeof(System.Data.SqlTypes.SqlString), "FirstName value read from the table was incorrect.");
@@ -2838,9 +2838,9 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
             }
             else
             {
-                Assert.True(sqlDataReader.GetFieldType(0) == typeof(System.Byte[]), "CustomerId value read from the table was incorrect.");
-                Assert.True(sqlDataReader.GetFieldType(1) == typeof(System.Byte[]), "FirstName value read from the table was incorrect.");
-                Assert.True(sqlDataReader.GetFieldType(2) == typeof(System.Byte[]), "LastName value read from the table was incorrect.");
+                Assert.True(sqlDataReader.GetFieldType(0) == typeof(byte[]), "CustomerId value read from the table was incorrect.");
+                Assert.True(sqlDataReader.GetFieldType(1) == typeof(byte[]), "FirstName value read from the table was incorrect.");
+                Assert.True(sqlDataReader.GetFieldType(2) == typeof(byte[]), "LastName value read from the table was incorrect.");
 
                 Assert.True(sqlDataReader.GetProviderSpecificFieldType(0) == typeof(System.Data.SqlTypes.SqlBinary), "CustomerId value read from the table was incorrect.");
                 Assert.True(sqlDataReader.GetProviderSpecificFieldType(1) == typeof(System.Data.SqlTypes.SqlBinary), "FirstName value read from the table was incorrect.");

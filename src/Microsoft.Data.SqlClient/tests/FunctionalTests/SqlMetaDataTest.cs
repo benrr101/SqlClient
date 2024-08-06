@@ -585,10 +585,10 @@ namespace Microsoft.Data.SqlClient.Tests
         }
 
         [Theory]
-        [InlineData((SByte)1)]
-        [InlineData((UInt16)1)]
-        [InlineData((UInt32)1)]
-        [InlineData((UInt64)1)]
+        [InlineData((sbyte)1)]
+        [InlineData((ushort)1)]
+        [InlineData((uint)1)]
+        [InlineData((ulong)1)]
         public void InferFromValueWithInvalidValue_Throws(object value)
         {
             ArgumentException ex = Assert.Throws<ArgumentException>(() =>
@@ -875,9 +875,9 @@ namespace Microsoft.Data.SqlClient.Tests
             new object[] {SqlDbType.Date, new SqlDateTime(DateTime.UtcNow)},
             new object[] {SqlDbType.Bit, SqlXml.Null },
             new object[] {SqlDbType.Bit, (sbyte)0},
-            new object[] {SqlDbType.Bit, (UInt16)1},
-            new object[] {SqlDbType.Bit, (UInt32)1},
-            new object[] {SqlDbType.Bit, (UInt64)1},
+            new object[] {SqlDbType.Bit, (ushort)1},
+            new object[] {SqlDbType.Bit, (uint)1},
+            new object[] {SqlDbType.Bit, (ulong)1},
             new object[] {SqlDbType.Bit, (sbyte)0},
             new object[] {SqlDbType.Int, Guid.Empty},
             new object[] {SqlDbType.NText, 'T'},

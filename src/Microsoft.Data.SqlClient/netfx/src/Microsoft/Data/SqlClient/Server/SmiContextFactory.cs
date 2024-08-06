@@ -60,16 +60,16 @@ namespace Microsoft.Data.SqlClient.Server
                 System.Reflection.FieldInfo buildVersionField = GetStaticField(smiLinkType, "BuildVersion");
                 if (buildVersionField != null)
                 {
-                    UInt32 buildVersion = (UInt32)GetValue(buildVersionField);
+                    uint buildVersion = (uint)GetValue(buildVersionField);
 
                     _majorVersion = (byte)(buildVersion >> 24);
                     _minorVersion = (byte)((buildVersion >> 16) & 0xff);
                     _buildNum = (short)(buildVersion & 0xffff);
-                    _serverVersion = (String.Format((IFormatProvider)null, "{0:00}.{1:00}.{2:0000}", _majorVersion, (short)_minorVersion, _buildNum));
+                    _serverVersion = (string.Format((IFormatProvider)null, "{0:00}.{1:00}.{2:0000}", _majorVersion, (short)_minorVersion, _buildNum));
                 }
                 else
                 {
-                    _serverVersion = String.Empty;  // default value if nothing exists.
+                    _serverVersion = string.Empty;  // default value if nothing exists.
                 }
                 _negotiatedSmiVersion = _smiLink.NegotiateVersion(SmiLink.InterfaceVersion);
                 bool isSupportedVersion = false;

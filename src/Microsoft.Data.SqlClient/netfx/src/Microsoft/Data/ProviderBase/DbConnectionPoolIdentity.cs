@@ -23,7 +23,7 @@ namespace Microsoft.Data.ProviderBase
         private const int Win32_ConvertSidToStringSidW = 4;
         private const int Win32_CreateWellKnownSid = 5;
 
-        public static readonly DbConnectionPoolIdentity NoIdentity = new DbConnectionPoolIdentity(String.Empty, false, true);
+        public static readonly DbConnectionPoolIdentity NoIdentity = new DbConnectionPoolIdentity(string.Empty, false, true);
         private static readonly byte[] NetworkSid = (ADP.s_isWindowsNT ? CreateWellKnownSid(WellKnownSidType.NetworkSid) : null);
         private static DbConnectionPoolIdentity _lastIdentity = null;
 

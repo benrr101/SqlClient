@@ -37,7 +37,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                 var tinyintRow = metaDataTypes.Rows.OfType<DataRow>().Where(p => (string)p["TypeName"] == "tinyint");
                 foreach (var row in tinyintRow)
                 {
-                    Assert.True((String)row["TypeName"] == "tinyint" && (String)row["DataType"] == "System.Byte" && (bool)row["IsUnsigned"]);
+                    Assert.True((string)row["TypeName"] == "tinyint" && (string)row["DataType"] == "System.Byte" && (bool)row["IsUnsigned"]);
                 }
             }
         }

@@ -7619,14 +7619,14 @@ namespace Microsoft.Data.SqlClient
                             {
                                 case SqlDbType.Image:
                                 case SqlDbType.Text:
-                                    if (size != Int32.MaxValue)
+                                    if (size != int.MaxValue)
                                     {
                                         throw SQL.ParameterSizeRestrictionFailure(index);
                                     }
                                     break;
 
                                 case SqlDbType.NText:
-                                    if (size != Int32.MaxValue / 2)
+                                    if (size != int.MaxValue / 2)
                                     {
                                         throw SQL.ParameterSizeRestrictionFailure(index);
                                     }
@@ -7635,7 +7635,7 @@ namespace Microsoft.Data.SqlClient
                                 case SqlDbType.VarBinary:
                                 case SqlDbType.VarChar:
                                     // Allow size==Int32.MaxValue because of DeriveParameters
-                                    if (size > 0 && size != Int32.MaxValue && requestMetaData[index].MaxLength == SmiMetaData.UnlimitedMaxLengthIndicator)
+                                    if (size > 0 && size != int.MaxValue && requestMetaData[index].MaxLength == SmiMetaData.UnlimitedMaxLengthIndicator)
                                     {
                                         throw SQL.ParameterSizeRestrictionFailure(index);
                                     }
@@ -7643,7 +7643,7 @@ namespace Microsoft.Data.SqlClient
 
                                 case SqlDbType.NVarChar:
                                     // Allow size==Int32.MaxValue/2 because of DeriveParameters
-                                    if (size > 0 && size != Int32.MaxValue / 2 && requestMetaData[index].MaxLength == SmiMetaData.UnlimitedMaxLengthIndicator)
+                                    if (size > 0 && size != int.MaxValue / 2 && requestMetaData[index].MaxLength == SmiMetaData.UnlimitedMaxLengthIndicator)
                                     {
                                         throw SQL.ParameterSizeRestrictionFailure(index);
                                     }

@@ -104,7 +104,7 @@ namespace Microsoft.Data
 
         [SuppressUnmanagedCodeSecurity]
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int LocalDBCreateInstanceDelegate([MarshalAs(UnmanagedType.LPWStr)] string version, [MarshalAs(UnmanagedType.LPWStr)] string instance, UInt32 flags);
+        private delegate int LocalDBCreateInstanceDelegate([MarshalAs(UnmanagedType.LPWStr)] string version, [MarshalAs(UnmanagedType.LPWStr)] string instance, uint flags);
 
         static LocalDBCreateInstanceDelegate s_localDBCreateInstance = null;
 
@@ -145,7 +145,7 @@ namespace Microsoft.Data
 
         [SuppressUnmanagedCodeSecurity]
         [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-        private delegate int LocalDBFormatMessageDelegate(int hrLocalDB, UInt32 dwFlags, UInt32 dwLanguageId, StringBuilder buffer, ref UInt32 buflen);
+        private delegate int LocalDBFormatMessageDelegate(int hrLocalDB, uint dwFlags, uint dwLanguageId, StringBuilder buffer, ref uint buflen);
 
         static LocalDBFormatMessageDelegate s_localDBFormatMessage = null;
 
@@ -184,7 +184,7 @@ namespace Microsoft.Data
             }
         }
 
-        const UInt32 const_LOCALDB_TRUNCATE_ERR_MESSAGE = 1;// flag for LocalDBFormatMessage that indicates that message can be truncated if it does not fit in the buffer
+        const uint const_LOCALDB_TRUNCATE_ERR_MESSAGE = 1;// flag for LocalDBFormatMessage that indicates that message can be truncated if it does not fit in the buffer
         const int const_ErrorMessageBufferSize = 1024;      // Buffer size for Local DB error message, according to Serverless team, 1K will be enough for all messages
 
 
@@ -194,11 +194,11 @@ namespace Microsoft.Data
             try
             {
                 StringBuilder buffer = new StringBuilder((int)const_ErrorMessageBufferSize);
-                UInt32 len = (UInt32)buffer.Capacity;
+                uint len = (uint)buffer.Capacity;
 
 
                 // First try for current culture                
-                int hResult = LocalDBFormatMessage(hrLocalDB: hrCode, dwFlags: const_LOCALDB_TRUNCATE_ERR_MESSAGE, dwLanguageId: (UInt32)CultureInfo.CurrentCulture.LCID,
+                int hResult = LocalDBFormatMessage(hrLocalDB: hrCode, dwFlags: const_LOCALDB_TRUNCATE_ERR_MESSAGE, dwLanguageId: (uint)CultureInfo.CurrentCulture.LCID,
                                                  buffer: buffer, buflen: ref len);
                 if (hResult >= 0)
                     return buffer.ToString();
@@ -206,7 +206,7 @@ namespace Microsoft.Data
                 {
                     // Message is not available for current culture, try default 
                     buffer = new StringBuilder((int)const_ErrorMessageBufferSize);
-                    len = (UInt32)buffer.Capacity;
+                    len = (uint)buffer.Capacity;
                     hResult = LocalDBFormatMessage(hrLocalDB: hrCode, dwFlags: const_LOCALDB_TRUNCATE_ERR_MESSAGE, dwLanguageId: 0 /* thread locale with fallback to English */,
                                                  buffer: buffer, buflen: ref len);
                     if (hResult >= 0)
@@ -233,7 +233,7 @@ namespace Microsoft.Data
             if (sniError != 0)
             {
                 string sniErrorMessage = SQL.GetSNIErrorMessage(sniError);
-                errorMessage = String.Format((IFormatProvider)null, "{0} (error: {1} - {2})",
+                errorMessage = string.Format((IFormatProvider)null, "{0} (error: {1} - {2})",
                          errorMessage, sniError, sniErrorMessage);
             }
 

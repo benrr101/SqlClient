@@ -276,7 +276,7 @@ namespace Microsoft.Data.Common
                 for (int i = 0; i < valuetree.Length; ++i)
                 {
                     NameValuePermission permitValue = valuetree[i];
-                    if (String.Equals(keyInQuestion, permitValue._value, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(keyInQuestion, permitValue._value, StringComparison.OrdinalIgnoreCase))
                     {
                         return permitValue;
                     }

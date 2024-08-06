@@ -93,7 +93,7 @@ namespace Microsoft.Data.SqlClient
 
         [ResourceExposure(ResourceScope.Process)] // SxS: there is no way to set scope = Instance, using Process which is wider
         [ResourceConsumption(ResourceScope.Process, ResourceScope.Process)]
-        internal static unsafe void SetData(Byte[] data)
+        internal static unsafe void SetData(byte[] data)
         {
             //cli::pin_ptr<System::Byte> pin_dispatcher = &data[0];
             fixed (byte* pin_dispatcher = &data[0])
@@ -189,7 +189,7 @@ namespace Microsoft.Data.SqlClient
         internal struct CTAIPProviderInfo
         {
             internal byte[] originalNetworkAddress;
-            internal Boolean fromDataSecurityProxy;
+            internal bool fromDataSecurityProxy;
         };
 
         struct SNIAuthProviderInfoWrapper
@@ -962,7 +962,7 @@ namespace Microsoft.Data.SqlClient
 
         internal static uint SNISecGetServerCertificate(SNIHandle pConnectionObject, ref X509Certificate2 certificate)
         {
-            System.UInt32 ret;
+            uint ret;
             CredHandle pSecHandle;
             X509Certificate pCertContext = null;
 
@@ -1022,7 +1022,7 @@ namespace Microsoft.Data.SqlClient
 
         internal static uint SniGetConnectionIPString(SNIHandle pConn, ref string connIPStr)
         {
-            UInt32 ret;
+            uint ret;
             uint ERROR_SUCCESS = 0;
             uint connIPLen = 0;
 
@@ -1114,9 +1114,9 @@ namespace Microsoft.Data.SqlClient
             bool fSync,
             int timeout,
             bool fParallel,
-            Int32 transparentNetworkResolutionStateNo,
-            Int32 totalTimeout,
-            Boolean isAzureSqlServerEndpoint,
+            int transparentNetworkResolutionStateNo,
+            int totalTimeout,
+            bool isAzureSqlServerEndpoint,
             SqlConnectionIPAddressPreference ipPreference,
             SQLDNSInfo cachedDNSInfo,
             string hostNameInCertificate)
@@ -1183,7 +1183,7 @@ namespace Microsoft.Data.SqlClient
                                             ProviderEnum providerEnum,
                                             AuthProviderInfo authInfo)
         {
-            UInt32 ret;
+            uint ret;
             uint ERROR_SUCCESS = 0;
             SNIAuthProviderInfoWrapper sniAuthInfoWrapper;
 
@@ -1214,7 +1214,7 @@ namespace Microsoft.Data.SqlClient
                                             ProviderEnum providerEnum,
                                             CTAIPProviderInfo authInfo)
         {
-            UInt32 ret;
+            uint ret;
             uint ERROR_SUCCESS = 0;
 
 
@@ -1266,10 +1266,10 @@ namespace Microsoft.Data.SqlClient
         //  Up to current release, it is also guaranteed that both password and new change password will fit into a single login packet whose size is fixed to 4096
         //        So, there is no splitting logic is needed.
         internal static void SNIPacketSetData(SNIPacket packet,
-                                      Byte[] data,
-                                      Int32 length,
+                                      byte[] data,
+                                      int length,
                                       SecureString[] passwords,            // pointer to the passwords which need to be written out to SNI Packet
-                                      Int32[] passwordOffsets    // Offset into data buffer where the password to be written out to
+                                      int[] passwordOffsets    // Offset into data buffer where the password to be written out to
                                       )
         {
             Debug.Assert(passwords == null || (passwordOffsets != null && passwords.Length == passwordOffsets.Length), "The number of passwords does not match the number of password offsets");
@@ -1326,8 +1326,8 @@ namespace Microsoft.Data.SqlClient
                                             s = (int)*pwChar;
                                             bLo = (byte)(s & 0xff);
                                             bHi = (byte)((s >> 8) & 0xff);
-                                            *(pByte++) = (Byte)((((bLo & 0x0f) << 4) | (bLo >> 4)) ^ 0xa5);
-                                            *(pByte++) = (Byte)((((bHi & 0x0f) << 4) | (bHi >> 4)) ^ 0xa5);
+                                            *(pByte++) = (byte)((((bLo & 0x0f) << 4) | (bLo >> 4)) ^ 0xa5);
+                                            *(pByte++) = (byte)((((bHi & 0x0f) << 4) | (bHi >> 4)) ^ 0xa5);
                                             ++pwChar;
                                         }
 

@@ -13,62 +13,62 @@ namespace Microsoft.Data.SqlTypes
 
         private SQLResource() { /* prevent utility class from being instantiated*/ }
 
-        internal static readonly String NullString = StringsHelper.GetString(Strings.SqlMisc_NullString);
+        internal static readonly string NullString = StringsHelper.GetString(Strings.SqlMisc_NullString);
 
-        internal static readonly String MessageString = StringsHelper.GetString(Strings.SqlMisc_MessageString);
+        internal static readonly string MessageString = StringsHelper.GetString(Strings.SqlMisc_MessageString);
 
-        internal static readonly String ArithOverflowMessage = StringsHelper.GetString(Strings.SqlMisc_ArithOverflowMessage);
+        internal static readonly string ArithOverflowMessage = StringsHelper.GetString(Strings.SqlMisc_ArithOverflowMessage);
 
-        internal static readonly String DivideByZeroMessage = StringsHelper.GetString(Strings.SqlMisc_DivideByZeroMessage);
+        internal static readonly string DivideByZeroMessage = StringsHelper.GetString(Strings.SqlMisc_DivideByZeroMessage);
 
-        internal static readonly String NullValueMessage = StringsHelper.GetString(Strings.SqlMisc_NullValueMessage);
+        internal static readonly string NullValueMessage = StringsHelper.GetString(Strings.SqlMisc_NullValueMessage);
 
-        internal static readonly String TruncationMessage = StringsHelper.GetString(Strings.SqlMisc_TruncationMessage);
+        internal static readonly string TruncationMessage = StringsHelper.GetString(Strings.SqlMisc_TruncationMessage);
 
-        internal static readonly String DateTimeOverflowMessage = StringsHelper.GetString(Strings.SqlMisc_DateTimeOverflowMessage);
+        internal static readonly string DateTimeOverflowMessage = StringsHelper.GetString(Strings.SqlMisc_DateTimeOverflowMessage);
 
-        internal static readonly String ConcatDiffCollationMessage = StringsHelper.GetString(Strings.SqlMisc_ConcatDiffCollationMessage);
+        internal static readonly string ConcatDiffCollationMessage = StringsHelper.GetString(Strings.SqlMisc_ConcatDiffCollationMessage);
 
-        internal static readonly String CompareDiffCollationMessage = StringsHelper.GetString(Strings.SqlMisc_CompareDiffCollationMessage);
+        internal static readonly string CompareDiffCollationMessage = StringsHelper.GetString(Strings.SqlMisc_CompareDiffCollationMessage);
 
-        internal static readonly String InvalidFlagMessage = StringsHelper.GetString(Strings.SqlMisc_InvalidFlagMessage);
+        internal static readonly string InvalidFlagMessage = StringsHelper.GetString(Strings.SqlMisc_InvalidFlagMessage);
 
-        internal static readonly String NumeToDecOverflowMessage = StringsHelper.GetString(Strings.SqlMisc_NumeToDecOverflowMessage);
+        internal static readonly string NumeToDecOverflowMessage = StringsHelper.GetString(Strings.SqlMisc_NumeToDecOverflowMessage);
 
-        internal static readonly String ConversionOverflowMessage = StringsHelper.GetString(Strings.SqlMisc_ConversionOverflowMessage);
+        internal static readonly string ConversionOverflowMessage = StringsHelper.GetString(Strings.SqlMisc_ConversionOverflowMessage);
 
-        internal static readonly String InvalidDateTimeMessage = StringsHelper.GetString(Strings.SqlMisc_InvalidDateTimeMessage);
+        internal static readonly string InvalidDateTimeMessage = StringsHelper.GetString(Strings.SqlMisc_InvalidDateTimeMessage);
 
-        internal static readonly String TimeZoneSpecifiedMessage = StringsHelper.GetString(Strings.SqlMisc_TimeZoneSpecifiedMessage);
+        internal static readonly string TimeZoneSpecifiedMessage = StringsHelper.GetString(Strings.SqlMisc_TimeZoneSpecifiedMessage);
 
-        internal static readonly String InvalidArraySizeMessage = StringsHelper.GetString(Strings.SqlMisc_InvalidArraySizeMessage);
+        internal static readonly string InvalidArraySizeMessage = StringsHelper.GetString(Strings.SqlMisc_InvalidArraySizeMessage);
 
-        internal static readonly String InvalidPrecScaleMessage = StringsHelper.GetString(Strings.SqlMisc_InvalidPrecScaleMessage);
+        internal static readonly string InvalidPrecScaleMessage = StringsHelper.GetString(Strings.SqlMisc_InvalidPrecScaleMessage);
 
-        internal static readonly String FormatMessage = StringsHelper.GetString(Strings.SqlMisc_FormatMessage);
+        internal static readonly string FormatMessage = StringsHelper.GetString(Strings.SqlMisc_FormatMessage);
 
-        internal static readonly String NotFilledMessage = StringsHelper.GetString(Strings.SqlMisc_NotFilledMessage);
+        internal static readonly string NotFilledMessage = StringsHelper.GetString(Strings.SqlMisc_NotFilledMessage);
 
-        internal static readonly String AlreadyFilledMessage = StringsHelper.GetString(Strings.SqlMisc_AlreadyFilledMessage);
+        internal static readonly string AlreadyFilledMessage = StringsHelper.GetString(Strings.SqlMisc_AlreadyFilledMessage);
 
-        internal static readonly String ClosedXmlReaderMessage = StringsHelper.GetString(Strings.SqlMisc_ClosedXmlReaderMessage);
+        internal static readonly string ClosedXmlReaderMessage = StringsHelper.GetString(Strings.SqlMisc_ClosedXmlReaderMessage);
 
-        internal static String InvalidOpStreamClosed(String method)
+        internal static string InvalidOpStreamClosed(string method)
         {
             return StringsHelper.GetString(Strings.SqlMisc_InvalidOpStreamClosed, method);
         }
 
-        internal static String InvalidOpStreamNonWritable(String method)
+        internal static string InvalidOpStreamNonWritable(string method)
         {
             return StringsHelper.GetString(Strings.SqlMisc_InvalidOpStreamNonWritable, method);
         }
 
-        internal static String InvalidOpStreamNonReadable(String method)
+        internal static string InvalidOpStreamNonReadable(string method)
         {
             return StringsHelper.GetString(Strings.SqlMisc_InvalidOpStreamNonReadable, method);
         }
 
-        internal static String InvalidOpStreamNonSeekable(String method)
+        internal static string InvalidOpStreamNonSeekable(string method)
         {
             return StringsHelper.GetString(Strings.SqlMisc_InvalidOpStreamNonSeekable, method);
         }

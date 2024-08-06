@@ -155,7 +155,7 @@ namespace Microsoft.Data.SqlClient
             }
         }
 
-        public Byte[] Promote()
+        public byte[] Promote()
         {
             // Operations that might be affected by multi-threaded use MUST be done inside the lock.
             //  Don't read values off of the connection outside the lock unless it doesn't really matter

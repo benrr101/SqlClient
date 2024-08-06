@@ -175,17 +175,17 @@ namespace Microsoft.Data.SqlClient
             {    // never pool context connections.
                 int connectionTimeout = opt.ConnectTimeout;
 
-                if ((0 < connectionTimeout) && (connectionTimeout < Int32.MaxValue / 1000))
+                if ((0 < connectionTimeout) && (connectionTimeout < int.MaxValue / 1000))
                     connectionTimeout *= 1000;
-                else if (connectionTimeout >= Int32.MaxValue / 1000)
-                    connectionTimeout = Int32.MaxValue;
+                else if (connectionTimeout >= int.MaxValue / 1000)
+                    connectionTimeout = int.MaxValue;
 
                 if (opt.Authentication == SqlAuthenticationMethod.ActiveDirectoryInteractive)
                 {
                     // interactive mode will always have pool's CreateTimeout = 10 x ConnectTimeout.
-                    if (connectionTimeout >= Int32.MaxValue / 10)
+                    if (connectionTimeout >= int.MaxValue / 10)
                     {
-                        connectionTimeout = Int32.MaxValue;
+                        connectionTimeout = int.MaxValue;
                     }
                     else
                     {

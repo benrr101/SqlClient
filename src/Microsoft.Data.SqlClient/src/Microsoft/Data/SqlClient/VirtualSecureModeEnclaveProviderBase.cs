@@ -388,7 +388,7 @@ namespace Microsoft.Data.SqlClient
 
             if (different)
             {
-                string exceptionMessage = String.Format(Strings.VerifyEnclavePolicyFailedFormat, property, BitConverter.ToString(actual), BitConverter.ToString(expected));
+                string exceptionMessage = string.Format(Strings.VerifyEnclavePolicyFailedFormat, property, BitConverter.ToString(actual), BitConverter.ToString(expected));
                 throw new ArgumentException(exceptionMessage);
             }
         }

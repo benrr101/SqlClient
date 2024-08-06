@@ -100,22 +100,22 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             private const string TCE_InvalidSignature = @"The specified encrypted column encryption key signature does not match the signature computed with the column master key \(asymmetric key\) in 'Microsoft Software Key Storage Provider/KeyName'. The encrypted column encryption key may be corrupt, or the specified path may be incorrect.\s+\(?Parameter (name: )?'?encryptedColumnEncryptionKey('\))?";
             private const string TCE_InvalidCngKeyId = @"Internal error. An error occurred while opening the Microsoft Cryptography API: Next Generation \(CNG\) key: 'Microsoft Software Key Storage Provider/ASKLSAVASLDJAS'. Verify that the CNG provider name 'Microsoft Software Key Storage Provider' is valid, installed on the machine, and the key 'ASKLSAVASLDJAS' exists.\s+\(?Parameter (name: )?'?masterKeyPath('\))?";
 
-            public override IEnumerable<Object[]> GetData(MethodInfo testMethod)
+            public override IEnumerable<object[]> GetData(MethodInfo testMethod)
             {
-                yield return new Object[] { TCE_NullCngPath, typeof(ArgumentNullException), null, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_EmptyCngPath, typeof(ArgumentException), "", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_NullEncryptedColumnEncryptionKey, typeof(ArgumentNullException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, null };
-                yield return new Object[] { TCE_EmptyEncryptedColumnEncryptionKey, typeof(ArgumentException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, new byte[] { } };
-                yield return new Object[] { TCE_NullKeyEncryptionAlgorithm, typeof(ArgumentNullException), MASTER_KEY_PATH, null, GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_InvalidKeyEncryptionAlgorithm, typeof(ArgumentException), MASTER_KEY_PATH, "", GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_InvalidCngPath, typeof(ArgumentException), "KeyName", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_EmptyCngName, typeof(ArgumentException), "/KeyName", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_EmptyCngKeyId, typeof(ArgumentException), "MSSQL_CNG_STORE/", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_InvalidCngKey, typeof(ArgumentException), "MSSQL_CNG_STORE/KeyName", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_InvalidAlgorithmVersion, typeof(ArgumentException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(2, 0, 256, 256) };
-                yield return new Object[] { TCE_InvalidCiphertextLengthInEncryptedCEK, typeof(ArgumentException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 128, 256) };
-                yield return new Object[] { TCE_InvalidSignatureInEncryptedCEK, typeof(ArgumentException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 128) };
-                yield return new Object[] { TCE_InvalidSignature, typeof(ArgumentException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_NullCngPath, typeof(ArgumentNullException), null, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_EmptyCngPath, typeof(ArgumentException), "", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_NullEncryptedColumnEncryptionKey, typeof(ArgumentNullException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, null };
+                yield return new object[] { TCE_EmptyEncryptedColumnEncryptionKey, typeof(ArgumentException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, new byte[] { } };
+                yield return new object[] { TCE_NullKeyEncryptionAlgorithm, typeof(ArgumentNullException), MASTER_KEY_PATH, null, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_InvalidKeyEncryptionAlgorithm, typeof(ArgumentException), MASTER_KEY_PATH, "", GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_InvalidCngPath, typeof(ArgumentException), "KeyName", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_EmptyCngName, typeof(ArgumentException), "/KeyName", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_EmptyCngKeyId, typeof(ArgumentException), "MSSQL_CNG_STORE/", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_InvalidCngKey, typeof(ArgumentException), "MSSQL_CNG_STORE/KeyName", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_InvalidAlgorithmVersion, typeof(ArgumentException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(2, 0, 256, 256) };
+                yield return new object[] { TCE_InvalidCiphertextLengthInEncryptedCEK, typeof(ArgumentException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 128, 256) };
+                yield return new object[] { TCE_InvalidSignatureInEncryptedCEK, typeof(ArgumentException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 128) };
+                yield return new object[] { TCE_InvalidSignature, typeof(ArgumentException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
                 yield return new object[] { TCE_InvalidCngKeyId, typeof(ArgumentException), INVALID_MASTER_KEY, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
             }
         }
@@ -133,19 +133,19 @@ namespace Microsoft.Data.SqlClient.Tests.AlwaysEncryptedTests
             private const string TCE_EmptyCngKeyId = @"Empty key identifier specified in column master key path: 'MSSQL_CNG_STORE/'. Use the following format for a key stored in a Microsoft Cryptography API: Next Generation \(CNG\) provider: <CNG Provider Name>\/<Key Identifier>.\s+\(?Parameter (name: )?'?masterKeyPath('\))?";
             private const string TCE_InvalidCngKey = @"An error occurred while opening the Microsoft Cryptography API: Next Generation \(CNG\) key: 'MSSQL_CNG_STORE/KeyName'. Verify that the CNG provider name 'MSSQL_CNG_STORE' is valid, installed on the machine, and the key 'KeyName' exists.\s+\(?Parameter (name: )?'?masterKeyPath('\))?";
             private const string TCE_InvalidCngKeyId = @"An error occurred while opening the Microsoft Cryptography API: Next Generation \(CNG\) key: 'Microsoft Software Key Storage Provider/ASKLSAVASLDJAS'. Verify that the CNG provider name 'Microsoft Software Key Storage Provider' is valid, installed on the machine, and the key 'ASKLSAVASLDJAS' exists.\s+\(?Parameter (name: )?'?masterKeyPath('\))?";
-            public override IEnumerable<Object[]> GetData(MethodInfo testMethod)
+            public override IEnumerable<object[]> GetData(MethodInfo testMethod)
             {
-                yield return new Object[] { TCE_NullCertificatePath, typeof(ArgumentNullException), null, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_EmptyCertificatePath, typeof(ArgumentException), "", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_NullEncryptedColumnEncryptionKey, typeof(ArgumentNullException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, null };
-                yield return new Object[] { TCE_EmptyEncryptedColumnEncryptionKey, typeof(ArgumentException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, new byte[] { } };
-                yield return new Object[] { TCE_NullKeyEncryptionAlgorithm, typeof(ArgumentNullException), MASTER_KEY_PATH, null, GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_InvalidKeyEncryptionAlgorithm, typeof(ArgumentException), MASTER_KEY_PATH, "", GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_InvalidCngPath, typeof(ArgumentException), "KeyName", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_EmptyCngName, typeof(ArgumentException), "/KeyName", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_EmptyCngKeyId, typeof(ArgumentException), "MSSQL_CNG_STORE/", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_InvalidCngKey, typeof(ArgumentException), "MSSQL_CNG_STORE/KeyName", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
-                yield return new Object[] { TCE_InvalidCngKeyId, typeof(ArgumentException), INVALID_MASTER_KEY, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_NullCertificatePath, typeof(ArgumentNullException), null, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_EmptyCertificatePath, typeof(ArgumentException), "", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_NullEncryptedColumnEncryptionKey, typeof(ArgumentNullException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, null };
+                yield return new object[] { TCE_EmptyEncryptedColumnEncryptionKey, typeof(ArgumentException), MASTER_KEY_PATH, ENCRYPTION_ALGORITHM, new byte[] { } };
+                yield return new object[] { TCE_NullKeyEncryptionAlgorithm, typeof(ArgumentNullException), MASTER_KEY_PATH, null, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_InvalidKeyEncryptionAlgorithm, typeof(ArgumentException), MASTER_KEY_PATH, "", GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_InvalidCngPath, typeof(ArgumentException), "KeyName", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_EmptyCngName, typeof(ArgumentException), "/KeyName", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_EmptyCngKeyId, typeof(ArgumentException), "MSSQL_CNG_STORE/", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_InvalidCngKey, typeof(ArgumentException), "MSSQL_CNG_STORE/KeyName", ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
+                yield return new object[] { TCE_InvalidCngKeyId, typeof(ArgumentException), INVALID_MASTER_KEY, ENCRYPTION_ALGORITHM, GenerateTestEncryptedBytes(1, 0, 256, 256) };
             }
         }
     }

@@ -21,19 +21,19 @@ namespace Microsoft.Data.SqlTypes
 
         [DllImport("NtDll.dll", CharSet = CharSet.Unicode)]
         [ResourceExposure(ResourceScope.Machine)]
-        internal static extern UInt32 NtCreateFile
+        internal static extern uint NtCreateFile
             (
                 out Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle,
-                Int32 desiredAccess,
+                int desiredAccess,
                 ref OBJECT_ATTRIBUTES objectAttributes,
                 out IO_STATUS_BLOCK ioStatusBlock,
-                ref Int64 allocationSize,
-                UInt32 fileAttributes,
+                ref long allocationSize,
+                uint fileAttributes,
                 System.IO.FileShare shareAccess,
-                UInt32 createDisposition,
-                UInt32 createOptions,
+                uint createDisposition,
+                uint createOptions,
                 SafeHandle eaBuffer,
-                UInt32 eaLength
+                uint eaLength
             );
 
         [DllImport("Kernel32.dll", SetLastError = true)]
@@ -65,7 +65,7 @@ namespace Microsoft.Data.SqlTypes
             Debug.Assert(path != null, "path is null?");
             // make sure to test for Int16.MaxValue limit before calling this method
             // see the below comment re GetLastWin32Error for the reason
-            Debug.Assert(path.Length < Int16.MaxValue);
+            Debug.Assert(path.Length < short.MaxValue);
 
             // since we expect network paths, the 'full path' is expected to be the same size
             // as the provided one. we still need to allocate +1 for null termination
@@ -165,9 +165,9 @@ namespace Microsoft.Data.SqlTypes
 
         [DllImport("NtDll.dll")]
         [ResourceExposure(ResourceScope.None)]
-        internal static extern UInt32 RtlNtStatusToDosError
+        internal static extern uint RtlNtStatusToDosError
             (
-                UInt32 status
+                uint status
             );
 
         #region definitions from devioctl.h

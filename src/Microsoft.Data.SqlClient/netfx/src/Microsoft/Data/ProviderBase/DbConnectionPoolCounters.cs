@@ -267,7 +267,7 @@ namespace Microsoft.Data.ProviderBase
             // to PERFMON.  They recommend that we translate them as shown below, to 
             // prevent problems.
 
-            result = String.Format((IFormatProvider)null, "{0}[{1}]", instanceName, pid);
+            result = string.Format((IFormatProvider)null, "{0}[{1}]", instanceName, pid);
             result = result.Replace('(', '[').Replace(')', ']').Replace('#', '_').Replace('/', '_').Replace('\\', '_');
 
             // SQLBUVSTS #94625 - counter instance name cannot be greater than 127
