@@ -923,6 +923,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
+    <Compile Include="Microsoft\Data\SqlClientX\IO\ITdsStreamReader.cs" />
+    <Compile Include="Microsoft\Data\SqlClientX\IO\ITdsStreamWriter.cs" />
     <Compile Include="Microsoft\Data\SqlClientX\IO\TdsBufferManager.cs" />
     <Compile Include="Microsoft\Data\SqlClientX\IO\TdsReader.cs" />
     <Compile Include="Microsoft\Data\SqlClientX\IO\TdsWriter.cs" />
@@ -952,6 +954,7 @@
     <Compile Include="Microsoft\Data\SqlClientX\Handlers\ReturningHandlerChainExceptionBehavior.cs" />
     <Compile Include="Microsoft\Data\SqlClientX\Handlers\Connection\ConnectionHandlerOrchestrator.cs" />
     <Compile Include="Microsoft\Data\SqlClientX\SqlCommandX.cs" />
+    <Compile Include="Microsoft\Data\SqlClientX\SqlDataReaderX.cs" />
     <Compile Include="Microsoft\Data\SqlClientX\SqlUtilsX.cs" />
     <Compile Include="Microsoft\Data\SqlClientX\IO\ITdsReadStream.cs" />
     <Compile Include="Microsoft\Data\SqlClientX\IO\ITdsStream.cs" />
@@ -974,6 +977,7 @@
     <Compile Include="Microsoft\Data\SqlClientX\TdsParserX.cs" />
     <Compile Include="Microsoft\Data\SqlClientX\TdsParserState.cs" />
     <Compile Include="Microsoft\Data\SqlClientX\UnpooledDataSource.cs" />
+    <Compile Include="Microsoft\Data\SqlClientX\Utilities\ValueTaskExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="$(CommonSourceRoot)Resources\Strings.resx">
       <Link>Resources\Strings.resx</Link>

@@ -2,8 +2,11 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Data.Common;
 using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClientX.Utilities;
 
 #if NET8_0_OR_GREATER
 
@@ -54,13 +57,11 @@ namespace Microsoft.Data.SqlClientX
             throw new System.NotImplementedException();
         }
 
-        public new SqlDataReader ExecuteReader() =>
-            ExecuteReader(CommandBehavior.Default);
+        public new SqlDataReaderX ExecuteReader() =>
+            ExecuteReaderAsync(CommandBehavior.Default, false, CancellationToken.None).GetSyncResult();
 
-        public new SqlDataReader ExecuteReader(CommandBehavior commandBehavior)
-        {
-            
-        }
+        public new SqlDataReaderX ExecuteReader(CommandBehavior commandBehavior) =>
+            ExecuteReaderAsync(commandBehavior, false, CancellationToken.None).GetSyncResult();
         
         public override int ExecuteNonQuery()
         {
@@ -83,7 +84,37 @@ namespace Microsoft.Data.SqlClientX
         }
 
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior) =>
-            ExecuteReader(behavior);
+            ExecuteReaderAsync(behavior, false, CancellationToken.None).GetSyncResult();
+
+        #endregion
+
+        #region Base Implementation
+
+        private async ValueTask<SqlDataReaderX> ExecuteReaderAsync(CommandBehavior commandBehavior, bool isAsync, CancellationToken ct)
+        {
+            // @TODO: acknowledge commandbehavior
+            // @TODO: add timeout to cancellation token
+
+            TdsParserX _parser = Connection.GetParser(nameof(ExecuteReader));
+
+            switch (CommandType)
+            {
+                case CommandType.Text:
+                    if (Parameters.Count == 0)
+                    {
+                        await _parser.ExecuteSqlBatch(CommandText, isAsync, ct);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                    return await SqlDataReaderX.FromExecutedParser(_parser, isAsync, ct);
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
 
         private TdsParserX GetParser(string methodName)
         {
@@ -94,7 +125,7 @@ namespace Microsoft.Data.SqlClientX
 
             return Connection.GetParser(methodName);
         }
-        
+
         #endregion
     }
 }

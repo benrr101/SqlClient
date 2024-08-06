@@ -14,7 +14,7 @@ namespace Microsoft.Data.SqlClientX.IO
     /// This class provides helper methods for writing bytes using <see cref="TdsStream"/>
     /// It extends <see cref="TdsBufferManager"/> that manages allocations of bytes buffer for better memory management.
     /// </summary>
-    internal sealed class TdsWriter : TdsBufferManager
+    internal sealed class TdsWriter : TdsBufferManager, ITdsStreamWriter
     {
         private readonly TdsStream _tdsStream;
 

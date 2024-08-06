@@ -6,15 +6,32 @@ namespace Microsoft.Data.SqlClientX.IO
 {
     internal enum TdsStreamPacketType
     {
-        PreLogin = 0x12,
-        Login7 = 0x10,
         SqlBatch = 0x01,
+
+        Login = 0x02,
+
         Rpc = 0x03,
+
+        TabularResult = 0x04,
+
+        // 0x05 is unused
+
         Attention = 0x06,
-        BulkLoadBcp = 0x07,
-        FederatedAuth = 0x08,
-        FedAuthInfo = 0x19,
-        SspiMessage = 0x0A,
+
+        BulkLoad = 0x07,
+
+        FedAuthToken = 0x08,
+
+        // 0x09-0x0D are unused
+
         TransactionManagerRequest = 0x0E,
+
+        // 0x0F is unsed
+
+        Login7 = 0x10,
+
+        SspiMessage = 0x11,
+
+        PreLogin = 0x12,
     }
 }
