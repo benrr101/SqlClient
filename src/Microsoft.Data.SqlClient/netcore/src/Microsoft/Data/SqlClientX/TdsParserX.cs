@@ -85,6 +85,11 @@ namespace Microsoft.Data.SqlClientX
             // Transition to metadata read state
         }
 
+        internal async ValueTask<object> ReadRow(bool isAsync, CancellationToken ct)
+        {
+
+        }
+
         private bool InterlockedTransition(TdsParserState desiredSourceState, TdsParserState desiredTargetState)
         {
             ref int location = ref Unsafe.As<TdsParserState, int>(ref _state);
@@ -92,6 +97,8 @@ namespace Microsoft.Data.SqlClientX
                 Interlocked.CompareExchange(ref location, (int)desiredTargetState, (int)desiredTargetState);
             return sourceValue == (int)desiredSourceState;
         }
+
+        private async ValueTask<bool> InterlockedStateTransition(TdsParserState source)
 
         private async ValueTask<object> ReadMetadata(bool isAsync, CancellationToken ct)
         {
