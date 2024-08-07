@@ -1384,19 +1384,19 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
             SqlRandomTypeInfo subType = DataTestUtility.IsNotAzureSynapse() ? s_variantSubTypes[rand.NextIntInclusive(0, maxValueInclusive: s_variantSubTypes.Length - 1)] : s_variantSubTypesSynapse[rand.NextIntInclusive(0, maxValueInclusive: s_variantSubTypesSynapse.Length - 1)];
             
             object val = subType.CreateRandomValue(rand, new SqlRandomTableColumn(subType, SqlRandomColumnOptions.None, 8000));
-            char[] cval = val as char[];
-            if (cval != null)
+            if (val is char[] cval)
             {
                 int maxLength = IsUnicodeType(subType.Type) ? 4000 : 8000;
                 Debug.Assert(cval.Length < maxLength, "char array length cannot be greater than " + maxLength);
                 // cannot insert char[] into variant
-                val = new string((char[])val);
+                val = new string(cval);
             }
             else
             {
-                byte[] bval = val as byte[];
-                if (bval != null)
+                if (val is byte[] bval)
+                {
                     Debug.Assert(bval.Length < 8000, "byte array length cannot be greater than 8000");
+                }
             }
 
             return val;

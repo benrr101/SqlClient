@@ -39,35 +39,32 @@ namespace Microsoft.SqlServer.TDS.Servers
             TDSLogin7Token loginRequest = request[0] as TDSLogin7Token;
 
             // Check if arguments are of the authenticating TDS server
-            if (Arguments is AuthenticatingTDSServerArguments)
+            if (Arguments is AuthenticatingTDSServerArguments serverArguments)
             {
-                // Cast to authenticating TDS server arguments
-                AuthenticatingTDSServerArguments ServerArguments = Arguments as AuthenticatingTDSServerArguments;
-
                 // Check if we're still processing normal login
-                if (ServerArguments.ApplicationIntentFilter != ApplicationIntentFilterType.All)
+                if (serverArguments.ApplicationIntentFilter != ApplicationIntentFilterType.All)
                 {
                     // Check filter
-                    if ((ServerArguments.ApplicationIntentFilter == ApplicationIntentFilterType.ReadOnly && loginRequest.TypeFlags.ReadOnlyIntent != TDSLogin7TypeFlagsReadOnlyIntent.ReadOnly)
-                        || ServerArguments.ApplicationIntentFilter == ApplicationIntentFilterType.None)
+                    if ((serverArguments.ApplicationIntentFilter == ApplicationIntentFilterType.ReadOnly && loginRequest.TypeFlags.ReadOnlyIntent != TDSLogin7TypeFlagsReadOnlyIntent.ReadOnly)
+                        || serverArguments.ApplicationIntentFilter == ApplicationIntentFilterType.None)
                     {
                         // Log request to which we're about to send a failure
-                        TDSUtilities.Log(Arguments.Log, "Request", loginRequest);
+                        TDSUtilities.Log(serverArguments.Log, "Request", loginRequest);
 
                         // Prepare ERROR token with the denial details
-                        TDSErrorToken errorToken = new TDSErrorToken(18456, 1, 14, "Received application intent: " + loginRequest.TypeFlags.ReadOnlyIntent.ToString(), Arguments.ServerName);
+                        TDSErrorToken errorToken = new TDSErrorToken(18456, 1, 14, "Received application intent: " + loginRequest.TypeFlags.ReadOnlyIntent.ToString(), serverArguments.ServerName);
 
                         // Log response
-                        TDSUtilities.Log(Arguments.Log, "Response", errorToken);
+                        TDSUtilities.Log(serverArguments.Log, "Response", errorToken);
 
                         // Serialize the error token into the response packet
                         TDSMessage responseMessage = new TDSMessage(TDSMessageType.Response, errorToken);
 
                         // Prepare ERROR token for the final decision
-                        errorToken = new TDSErrorToken(18456, 1, 14, "Connection is denied by application intent filter", Arguments.ServerName);
+                        errorToken = new TDSErrorToken(18456, 1, 14, "Connection is denied by application intent filter", serverArguments.ServerName);
 
                         // Log response
-                        TDSUtilities.Log(Arguments.Log, "Response", errorToken);
+                        TDSUtilities.Log(serverArguments.Log, "Response", errorToken);
 
                         // Serialize the error token into the response packet
                         responseMessage.Add(errorToken);
@@ -76,7 +73,7 @@ namespace Microsoft.SqlServer.TDS.Servers
                         TDSDoneToken doneToken = new TDSDoneToken(TDSDoneTokenStatusType.Final | TDSDoneTokenStatusType.Error);
 
                         // Log response
-                        TDSUtilities.Log(Arguments.Log, "Response", doneToken);
+                        TDSUtilities.Log(serverArguments.Log, "Response", doneToken);
 
                         // Serialize DONE token into the response packet
                         responseMessage.Add(doneToken);
@@ -87,31 +84,31 @@ namespace Microsoft.SqlServer.TDS.Servers
                 }
 
                 // Check if we're still processing normal login and there's a filter to check
-                if (ServerArguments.ServerNameFilterType != ServerNameFilterType.None)
+                if (serverArguments.ServerNameFilterType != ServerNameFilterType.None)
                 {
                     // Check each algorithm
-                    if ((ServerArguments.ServerNameFilterType == ServerNameFilterType.Equals && string.Compare(ServerArguments.ServerNameFilter, loginRequest.ServerName, true) != 0)
-                        || (ServerArguments.ServerNameFilterType == ServerNameFilterType.StartsWith && !loginRequest.ServerName.StartsWith(ServerArguments.ServerNameFilter))
-                        || (ServerArguments.ServerNameFilterType == ServerNameFilterType.EndsWith && !loginRequest.ServerName.EndsWith(ServerArguments.ServerNameFilter))
-                        || (ServerArguments.ServerNameFilterType == ServerNameFilterType.Contains && !loginRequest.ServerName.Contains(ServerArguments.ServerNameFilter)))
+                    if ((serverArguments.ServerNameFilterType == ServerNameFilterType.Equals && string.Compare(serverArguments.ServerNameFilter, loginRequest.ServerName, true) != 0)
+                        || (serverArguments.ServerNameFilterType == ServerNameFilterType.StartsWith && !loginRequest.ServerName.StartsWith(serverArguments.ServerNameFilter))
+                        || (serverArguments.ServerNameFilterType == ServerNameFilterType.EndsWith && !loginRequest.ServerName.EndsWith(serverArguments.ServerNameFilter))
+                        || (serverArguments.ServerNameFilterType == ServerNameFilterType.Contains && !loginRequest.ServerName.Contains(serverArguments.ServerNameFilter)))
                     {
                         // Log request to which we're about to send a failure
-                        TDSUtilities.Log(Arguments.Log, "Request", loginRequest);
+                        TDSUtilities.Log(serverArguments.Log, "Request", loginRequest);
 
                         // Prepare ERROR token with the reason
-                        TDSErrorToken errorToken = new TDSErrorToken(18456, 1, 14, string.Format("Received server name \"{0}\", expected \"{1}\" using \"{2}\" algorithm", loginRequest.ServerName, ServerArguments.ServerNameFilter, ServerArguments.ServerNameFilterType), Arguments.ServerName);
+                        TDSErrorToken errorToken = new TDSErrorToken(18456, 1, 14, string.Format("Received server name \"{0}\", expected \"{1}\" using \"{2}\" algorithm", loginRequest.ServerName, serverArguments.ServerNameFilter, serverArguments.ServerNameFilterType), serverArguments.ServerName);
 
                         // Log response
-                        TDSUtilities.Log(Arguments.Log, "Response", errorToken);
+                        TDSUtilities.Log(serverArguments.Log, "Response", errorToken);
 
                         // Serialize the errorToken token into the response packet
                         TDSMessage responseMessage = new TDSMessage(TDSMessageType.Response, errorToken);
 
                         // Prepare ERROR token with the final errorToken
-                        errorToken = new TDSErrorToken(18456, 1, 14, "Connection is denied by server name filter", Arguments.ServerName);
+                        errorToken = new TDSErrorToken(18456, 1, 14, "Connection is denied by server name filter", serverArguments.ServerName);
 
                         // Log response
-                        TDSUtilities.Log(Arguments.Log, "Response", errorToken);
+                        TDSUtilities.Log(serverArguments.Log, "Response", errorToken);
 
                         // Serialize the errorToken token into the response packet
                         responseMessage.Add(errorToken);
@@ -120,7 +117,7 @@ namespace Microsoft.SqlServer.TDS.Servers
                         TDSDoneToken doneToken = new TDSDoneToken(TDSDoneTokenStatusType.Final | TDSDoneTokenStatusType.Error);
 
                         // Log response
-                        TDSUtilities.Log(Arguments.Log, "Response", doneToken);
+                        TDSUtilities.Log(serverArguments.Log, "Response", doneToken);
 
                         // Serialize DONE token into the response packet
                         responseMessage.Add(doneToken);
@@ -131,28 +128,28 @@ namespace Microsoft.SqlServer.TDS.Servers
                 }
 
                 // Check if packet size filter is applied
-                if (ServerArguments.PacketSizeFilter != null)
+                if (serverArguments.PacketSizeFilter != null)
                 {
                     // Check if requested packet size is the same as the filter specified
-                    if (loginRequest.PacketSize != ServerArguments.PacketSizeFilter.Value)
+                    if (loginRequest.PacketSize != serverArguments.PacketSizeFilter.Value)
                     {
                         // Log request to which we're about to send a failure
-                        TDSUtilities.Log(Arguments.Log, "Request", loginRequest);
+                        TDSUtilities.Log(serverArguments.Log, "Request", loginRequest);
 
                         // Prepare ERROR token with the reason
-                        TDSErrorToken errorToken = new TDSErrorToken(1919, 1, 14, string.Format("Received packet size \"{0}\", expected \"{1}\"", loginRequest.PacketSize, ServerArguments.PacketSizeFilter.Value), Arguments.ServerName);
+                        TDSErrorToken errorToken = new TDSErrorToken(1919, 1, 14, string.Format("Received packet size \"{0}\", expected \"{1}\"", loginRequest.PacketSize, serverArguments.PacketSizeFilter.Value), serverArguments.ServerName);
 
                         // Log response
-                        TDSUtilities.Log(Arguments.Log, "Response", errorToken);
+                        TDSUtilities.Log(serverArguments.Log, "Response", errorToken);
 
                         // Serialize the errorToken token into the response packet
                         TDSMessage responseMessage = new TDSMessage(TDSMessageType.Response, errorToken);
 
                         // Prepare ERROR token with the final errorToken
-                        errorToken = new TDSErrorToken(1919, 1, 14, "Connection is denied by packet size filter", Arguments.ServerName);
+                        errorToken = new TDSErrorToken(1919, 1, 14, "Connection is denied by packet size filter", serverArguments.ServerName);
 
                         // Log response
-                        TDSUtilities.Log(Arguments.Log, "Response", errorToken);
+                        TDSUtilities.Log(serverArguments.Log, "Response", errorToken);
 
                         // Serialize the errorToken token into the response packet
                         responseMessage.Add(errorToken);
@@ -161,7 +158,7 @@ namespace Microsoft.SqlServer.TDS.Servers
                         TDSDoneToken doneToken = new TDSDoneToken(TDSDoneTokenStatusType.Final | TDSDoneTokenStatusType.Error);
 
                         // Log response
-                        TDSUtilities.Log(Arguments.Log, "Response", doneToken);
+                        TDSUtilities.Log(serverArguments.Log, "Response", doneToken);
 
                         // Serialize DONE token into the response packet
                         responseMessage.Add(doneToken);
@@ -172,28 +169,28 @@ namespace Microsoft.SqlServer.TDS.Servers
                 }
 
                 // If we have an application name filter
-                if (ServerArguments.ApplicationNameFilter != null)
+                if (serverArguments.ApplicationNameFilter != null)
                 {
                     // If we are supposed to block this connection attempt
-                    if (loginRequest.ApplicationName.Equals(ServerArguments.ApplicationNameFilter, System.StringComparison.OrdinalIgnoreCase))
+                    if (loginRequest.ApplicationName.Equals(serverArguments.ApplicationNameFilter, System.StringComparison.OrdinalIgnoreCase))
                     {
                         // Log request to which we're about to send a failure
-                        TDSUtilities.Log(Arguments.Log, "Request", loginRequest);
+                        TDSUtilities.Log(serverArguments.Log, "Request", loginRequest);
 
                         // Prepare ERROR token with the denial details
-                        TDSErrorToken errorToken = new TDSErrorToken(18456, 1, 14, "Received application name: " + loginRequest.ApplicationName, Arguments.ServerName);
+                        TDSErrorToken errorToken = new TDSErrorToken(18456, 1, 14, "Received application name: " + loginRequest.ApplicationName, serverArguments.ServerName);
 
                         // Log response
-                        TDSUtilities.Log(Arguments.Log, "Response", errorToken);
+                        TDSUtilities.Log(serverArguments.Log, "Response", errorToken);
 
                         // Serialize the error token into the response packet
                         TDSMessage responseMessage = new TDSMessage(TDSMessageType.Response, errorToken);
 
                         // Prepare ERROR token for the final decision
-                        errorToken = new TDSErrorToken(18456, 1, 14, "Connection is denied by application name filter", Arguments.ServerName);
+                        errorToken = new TDSErrorToken(18456, 1, 14, "Connection is denied by application name filter", serverArguments.ServerName);
 
                         // Log response
-                        TDSUtilities.Log(Arguments.Log, "Response", errorToken);
+                        TDSUtilities.Log(serverArguments.Log, "Response", errorToken);
 
                         // Serialize the error token into the response packet
                         responseMessage.Add(errorToken);
@@ -202,7 +199,7 @@ namespace Microsoft.SqlServer.TDS.Servers
                         TDSDoneToken doneToken = new TDSDoneToken(TDSDoneTokenStatusType.Final | TDSDoneTokenStatusType.Error);
 
                         // Log response
-                        TDSUtilities.Log(Arguments.Log, "Response", doneToken);
+                        TDSUtilities.Log(serverArguments.Log, "Response", doneToken);
 
                         // Serialize DONE token into the response packet
                         responseMessage.Add(doneToken);

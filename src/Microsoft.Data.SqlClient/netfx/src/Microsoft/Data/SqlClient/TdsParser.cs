@@ -2556,7 +2556,9 @@ namespace Microsoft.Data.SqlClient
                                 // Otherwise we can go ahead and add it to errors/warnings collection.
                                 SqlConnection connection = null;
                                 if (_connHandler != null)
+                                {
                                     connection = _connHandler.Connection; // SqlInternalConnection holds the user connection object as a weak ref
+                                }
 
                                 if (connection != null &&
                                     connection.FireInfoMessageEventOnUserErrors == true &&
@@ -5729,9 +5731,13 @@ namespace Microsoft.Data.SqlClient
             }
 
             if (tdsType == TdsEnums.SQLXMLTYPE)
-                col.length = TdsEnums.SQL_USHORTVARMAXLEN;  //Use the same length as other plp datatypes
+            {
+                col.length = TdsEnums.SQL_USHORTVARMAXLEN; //Use the same length as other plp datatypes
+            }
             else if (IsVarTimeTds(tdsType))
-                col.length = 0;  // placeholder until we read the scale, just make sure it's not SQL_USHORTVARMAXLEN
+            {
+                col.length = 0; // placeholder until we read the scale, just make sure it's not SQL_USHORTVARMAXLEN
+            }
             else if (tdsType == TdsEnums.SQLDATE)
             {
                 col.length = 3;
@@ -8206,7 +8212,9 @@ namespace Microsoft.Data.SqlClient
             long l = (long)(uint)bits[1] << 0x20 | (uint)bits[0];
 
             if (isNeg)
+            {
                 l = -l;
+            }
 
             if (length == 4)
             {
@@ -8249,7 +8257,9 @@ namespace Microsoft.Data.SqlClient
             long l = (long)(uint)bits[1] << 0x20 | (uint)bits[0];
 
             if (isNeg)
+            {
                 l = -l;
+            }
 
             if (length == 4)
             {
@@ -10466,9 +10476,13 @@ namespace Microsoft.Data.SqlClient
                                     {
                                         // 2005 doesn't like 0 as MaxSize. Change it to 2 for unicode types (SQL9 - 682322)
                                         if (mt.IsNCharType)
+                                        {
                                             maxsize = 2;
+                                        }
                                         else
+                                        {
                                             maxsize = 1;
+                                        }
                                     }
 
                                     WriteParameterVarLen(mt, maxsize, false/*IsNull*/, stateObj);
@@ -12354,7 +12368,9 @@ namespace Microsoft.Data.SqlClient
             {
                 case TdsEnums.SQLFLTN:
                     if (type.FixedLength == 4)
+                    {
                         WriteFloat(((SqlSingle)value).Value, stateObj);
+                    }
                     else
                     {
                         Debug.Assert(type.FixedLength == 8, "Invalid length for SqlDouble type!");
@@ -13036,7 +13052,9 @@ namespace Microsoft.Data.SqlClient
             {
                 case TdsEnums.SQLFLTN:
                     if (type.FixedLength == 4)
+                    {
                         WriteFloat((Single)value, stateObj);
+                    }
                     else
                     {
                         Debug.Assert(type.FixedLength == 8, "Invalid length for SqlDouble type!");
@@ -13116,8 +13134,7 @@ namespace Microsoft.Data.SqlClient
                         if (isDataFeed)
                         {
                             Debug.Assert(type.IsPlp, "Stream assigned to non-PLP was not converted!");
-                            TextDataFeed tdf = value as TextDataFeed;
-                            if (tdf == null)
+                            if (value is not TextDataFeed tdf)
                             {
                                 return NullIfCompletedWriteTask(WriteXmlFeed((XmlDataFeed)value, stateObj, needBom: true, encoding: _defaultEncoding, size: paramSize));
                             }
@@ -13153,8 +13170,7 @@ namespace Microsoft.Data.SqlClient
                         if (isDataFeed)
                         {
                             Debug.Assert(type.IsPlp, "Stream assigned to non-PLP was not converted!");
-                            TextDataFeed tdf = value as TextDataFeed;
-                            if (tdf == null)
+                            if (value is not TextDataFeed tdf)
                             {
                                 return NullIfCompletedWriteTask(WriteXmlFeed((XmlDataFeed)value, stateObj, IsBOMNeeded(type, value), Encoding.Unicode, paramSize));
                             }
@@ -13314,7 +13330,9 @@ namespace Microsoft.Data.SqlClient
             {
                 case TdsEnums.SQLFLTN:
                     if (type.FixedLength == 4)
+                    {
                         return SerializeFloat((Single)value);
+                    }
                     else
                     {
                         Debug.Assert(type.FixedLength == 8, "Invalid length for SqlDouble type!");
@@ -13509,7 +13527,9 @@ namespace Microsoft.Data.SqlClient
             {
                 case TdsEnums.SQLFLTN:
                     if (type.FixedLength == 4)
+                    {
                         return SerializeFloat(((SqlSingle)value).Value);
+                    }
                     else
                     {
                         Debug.Assert(type.FixedLength == 8, "Invalid length for SqlDouble type!");

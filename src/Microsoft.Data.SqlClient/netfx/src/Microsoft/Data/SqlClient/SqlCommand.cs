@@ -2837,10 +2837,8 @@ namespace Microsoft.Data.SqlClient
                             bool shouldRetry = e is EnclaveDelegate.RetryableEnclaveQueryExecutionException;
 
                             // Check if we have an error indicating that we can retry.
-                            if (e is SqlException)
+                            if (e is SqlException sqlEx)
                             {
-                                SqlException sqlEx = e as SqlException;
-
                                 for (int i = 0; i < sqlEx.Errors.Count; i++)
                                 {
                                     if ((usedCache && sqlEx.Errors[i].Number == TdsEnums.TCE_CONVERSION_ERROR_CLIENT_RETRY) ||
@@ -5672,8 +5670,7 @@ namespace Microsoft.Data.SqlClient
                 processFinallyBlock = ADP.IsCatchableExceptionType(e);
                 if (decrementAsyncCountOnFailure)
                 {
-                    SqlInternalConnectionTds innerConnectionTds = _activeConnection.InnerConnection as SqlInternalConnectionTds;
-                    if (innerConnectionTds != null)
+                    if (_activeConnection.InnerConnection is SqlInternalConnectionTds innerConnectionTds)
                     { // it may be closed
                         innerConnectionTds.DecrementAsyncCount();
                     }
@@ -6447,8 +6444,7 @@ namespace Microsoft.Data.SqlClient
                     }
                     else if (rec.type == SqlDbType.Xml)
                     {
-                        SqlCachedBuffer cachedBuffer = thisParam.Value as SqlCachedBuffer;
-                        if (cachedBuffer != null)
+                        if (thisParam.Value is SqlCachedBuffer cachedBuffer)
                         {
                             thisParam.Value = cachedBuffer.ToString();
                         }
@@ -7171,7 +7167,9 @@ namespace Microsoft.Data.SqlClient
                             int actualBytes = parser.GetEncodingCharLength(s, sqlParam.GetActualSize(), sqlParam.Offset, null);
                             // if actual number of bytes is greater than the user given number of chars, use actual bytes
                             if (actualBytes > size)
+                            {
                                 size = actualBytes;
+                            }
                         }
                     }
 

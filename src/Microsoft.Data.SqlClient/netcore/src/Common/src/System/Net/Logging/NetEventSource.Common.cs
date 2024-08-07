@@ -450,22 +450,19 @@ namespace System.Net
             }
 
             // Format arrays with their element type name and length
-            Array arr = value as Array;
-            if (arr != null)
+            if (value is Array arr)
             {
                 return $"{arr.GetType().GetElementType()}[{((Array)value).Length}]";
             }
 
             // Format ICollections as the name and count
-            ICollection c = value as ICollection;
-            if (c != null)
+            if (value is ICollection c)
             {
                 return $"{c.GetType().Name}({c.Count})";
             }
 
             // Format SafeHandles as their type, hash code, and pointer value
-            SafeHandle handle = value as SafeHandle;
-            if (handle != null)
+            if (value is SafeHandle handle)
             {
                 return $"{handle.GetType().Name}:{handle.GetHashCode()}(0x{handle.DangerousGetHandle():X})";
             }

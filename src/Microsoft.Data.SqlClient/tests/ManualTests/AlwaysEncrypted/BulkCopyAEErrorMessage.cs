@@ -71,17 +71,17 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests.AlwaysEncrypted
                     connection.Open();
                     bulkCopy.ColumnMappings.Add(new SqlBulkCopyColumnMapping(0, 0));
 
-                    if (dataSet as DataTable != null)
+                    if (dataSet is DataTable dataTable)
                     {
-                        bulkCopy.WriteToServer((DataTable)dataSet);
+                        bulkCopy.WriteToServer(dataTable);
                     }
-                    if (dataSet as DataRow[] != null)
+                    if (dataSet is DataRow[] dataRowArray)
                     {
-                        bulkCopy.WriteToServer((DataRow[])dataSet);
+                        bulkCopy.WriteToServer(dataRowArray);
                     }
-                    if (dataSet as IDataReader != null)
+                    if (dataSet is IDataReader dataReader)
                     {
-                        bulkCopy.WriteToServer((IDataReader)dataSet);
+                        bulkCopy.WriteToServer(dataReader);
                     }
                 }
             }

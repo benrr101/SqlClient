@@ -36,13 +36,15 @@ namespace Microsoft.Data
         {
             public int Compare(object x, object y)
             {
-                string xStr = x as string;
-                if (xStr != null)
+                if (x is string xStr)
+                {
                     x = xStr.Trim();
+                }
 
-                string yStr = y as string;
-                if (yStr != null)
+                if (y is string yStr)
+                {
                     y = yStr.Trim();
+                }
 
                 return StringComparer.OrdinalIgnoreCase.Compare(x, y);
             }

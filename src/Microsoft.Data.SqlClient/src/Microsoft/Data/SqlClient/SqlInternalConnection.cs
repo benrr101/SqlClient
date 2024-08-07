@@ -789,8 +789,7 @@ namespace Microsoft.Data.SqlClient
         {
             if (connection != null)
             {
-                SqlInternalConnectionTds innerConnection = connection.InnerConnection as SqlInternalConnectionTds;
-                if (innerConnection != null)
+                if (connection.InnerConnection is SqlInternalConnectionTds innerConnection)
                 {
                     return innerConnection.Parser;
                 }

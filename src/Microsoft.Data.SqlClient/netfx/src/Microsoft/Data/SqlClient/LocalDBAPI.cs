@@ -313,9 +313,10 @@ namespace Microsoft.Data
                         if (section != null) // if no section just skip creation
                         {
                             // validate section type
-                            LocalDBConfigurationSection configSection = section as LocalDBConfigurationSection;
-                            if (configSection == null)
+                            if (section is not LocalDBConfigurationSection configSection)
+                            {
                                 throw CreateLocalDBException(errorMessage: StringsHelper.GetString("LocalDB_BadConfigSectionType"));
+                            }
                             foreach (LocalDBInstanceElement confElement in configSection.LocalDbInstances)
                             {
                                 Debug.Assert(confElement.Name != null && confElement.Version != null, "Both name and version should not be null");

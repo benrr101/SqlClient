@@ -112,8 +112,8 @@ namespace Microsoft.Data.Common
             {
                 return true;
             }
-            INullable nullable = value as INullable;
-            return nullable is not null && nullable.IsNull;
+
+            return value is INullable nullable && nullable.IsNull;
         }
 
         internal static Exception ExceptionWithStackTrace(Exception e)

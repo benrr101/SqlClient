@@ -1787,11 +1787,11 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
                     AppendNewLineIndent(textBuilder, indent);
                     textBuilder.Append('}');
                 }
-                else if (value is Type)
+                else if (value is Type type)
                 {
                     textBuilder.Append(valuetype.Name);
                     textBuilder.Append('<');
-                    textBuilder.Append((value as Type).FullName);
+                    textBuilder.Append(type.FullName);
                     textBuilder.Append('>');
                 }
                 else if (valuetype.IsEnum)

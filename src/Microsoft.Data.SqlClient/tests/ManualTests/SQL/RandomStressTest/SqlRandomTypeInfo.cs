@@ -380,8 +380,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         /// <param name="value">value is not null or dbnull(validated before)</param>
         protected virtual string ValueAsString(SqlRandomTableColumn columnInfo, object value)
         {
-            Array a = value as Array;
-            if (a == null)
+            if (value is not Array a)
             {
                 return string.Format(CultureInfo.InvariantCulture, "{0}: {1}", value.GetType().Name, PrimitiveValueAsString(value));
             }

@@ -806,8 +806,7 @@ namespace Microsoft.Data.ProviderBase
 
         private bool IsBlockingPeriodEnabled()
         {
-            var poolGroupConnectionOptions = _connectionPoolGroup.ConnectionOptions as SqlConnectionString;
-            if (poolGroupConnectionOptions == null)
+            if (_connectionPoolGroup.ConnectionOptions is not SqlConnectionString poolGroupConnectionOptions)
             {
                 return true;
             }

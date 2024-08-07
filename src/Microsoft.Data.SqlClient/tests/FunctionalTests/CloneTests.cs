@@ -21,7 +21,7 @@ namespace Microsoft.Data.SqlClient.Tests
             SqlConnection connection = new SqlConnection(builder.ConnectionString);
             connection.AccessToken = Guid.NewGuid().ToString();
 
-            SqlConnection clonedConnection = (connection as ICloneable).Clone() as SqlConnection;
+            SqlConnection clonedConnection = ((ICloneable) connection).Clone() as SqlConnection;
             Assert.Equal(connection.ConnectionString, clonedConnection.ConnectionString);
             Assert.Equal(connection.ConnectionTimeout, clonedConnection.ConnectionTimeout);
             Assert.Equal(connection.AccessToken, clonedConnection.AccessToken);
@@ -30,7 +30,7 @@ namespace Microsoft.Data.SqlClient.Tests
             connection = new SqlConnection(builder.ConnectionString);
             connection.AccessTokenCallback = (ctx, token) =>
                         Task.FromResult(new SqlAuthenticationToken(Guid.NewGuid().ToString(), DateTimeOffset.MaxValue));
-            clonedConnection = (connection as ICloneable).Clone() as SqlConnection;
+            clonedConnection = ((ICloneable) connection).Clone() as SqlConnection;
             Assert.Equal(connection.AccessTokenCallback, clonedConnection.AccessTokenCallback);
             Assert.NotEqual(connection, clonedConnection);
         }
@@ -59,7 +59,7 @@ namespace Microsoft.Data.SqlClient.Tests
             SqlCommand clonedCommand = command.Clone();
             compareCommands(command, clonedCommand);
 
-            SqlCommand clonedByICloneable = (command as ICloneable).Clone() as SqlCommand;
+            SqlCommand clonedByICloneable = ((ICloneable) command).Clone() as SqlCommand;
             compareCommands(command, clonedByICloneable);
         }
 
@@ -73,7 +73,7 @@ namespace Microsoft.Data.SqlClient.Tests
             parameter.Precision = 3;
             parameter.Scale = 5;
 
-            SqlParameter clonedParameter = (parameter as ICloneable).Clone() as SqlParameter;
+            SqlParameter clonedParameter = ((ICloneable) parameter).Clone() as SqlParameter;
 
             Assert.Equal(parameter.Direction, clonedParameter.Direction);
             Assert.Equal(parameter.DbType, clonedParameter.DbType);

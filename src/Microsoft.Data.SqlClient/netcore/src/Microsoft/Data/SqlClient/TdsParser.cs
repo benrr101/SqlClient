@@ -2034,7 +2034,11 @@ namespace Microsoft.Data.SqlClient
                     {
                         SqlConnection connection = null;
                         if (_connHandler != null)
-                            connection = _connHandler.Connection; // SqlInternalConnection holds the user connection object as a weak ref
+                        {
+                            // SqlInternalConnection holds the user connection object as a weak ref
+                            connection = _connHandler.Connection;
+                        }
+
                         // We are omitting checks for error.Class in the code below (see processing of INFO) since we know (and assert) that error class
                         // error.Class < TdsEnums.MIN_ERROR_CLASS for info message.
                         // Also we know that TdsEnums.MIN_ERROR_CLASS<TdsEnums.MAX_USER_CORRECTABLE_ERROR_CLASS
@@ -2046,10 +2050,12 @@ namespace Microsoft.Data.SqlClient
                             }
                         }
                         else
+                        {
                             foreach (SqlError error in stateObj._pendingInfoEvents)
                             {
                                 stateObj.AddWarning(error);
                             }
+                        }
                     }
                     stateObj._pendingInfoEvents = null;
                 }
@@ -2111,7 +2117,10 @@ namespace Microsoft.Data.SqlClient
                                 // Otherwise we can go ahead and add it to errors/warnings collection.
                                 SqlConnection connection = null;
                                 if (_connHandler != null)
-                                    connection = _connHandler.Connection; // SqlInternalConnection holds the user connection object as a weak ref
+                                {
+                                    // SqlInternalConnection holds the user connection object as a weak ref
+                                    connection = _connHandler.Connection;
+                                }
 
                                 if (connection != null &&
                                     connection.FireInfoMessageEventOnUserErrors == true &&
@@ -5035,9 +5044,15 @@ namespace Microsoft.Data.SqlClient
             }
 
             if (tdsType == TdsEnums.SQLXMLTYPE)
-                col.length = TdsEnums.SQL_USHORTVARMAXLEN;  //Use the same length as other plp datatypes
+            {
+                //Use the same length as other plp datatypes
+                col.length = TdsEnums.SQL_USHORTVARMAXLEN;
+            }
             else if (IsVarTimeTds(tdsType))
-                col.length = 0;  // placeholder until we read the scale, just make sure it's not SQL_USHORTVARMAXLEN
+            {
+                // placeholder until we read the scale, just make sure it's not SQL_USHORTVARMAXLEN
+                col.length = 0;
+            }
             else if (tdsType == TdsEnums.SQLDATE)
             {
                 col.length = 3;
@@ -9713,10 +9728,7 @@ namespace Microsoft.Data.SqlClient
                     if (maxsize == 0)
                     {
                         // 2005 doesn't like 0 as MaxSize. Change it to 2 for unicode types
-                        if (mt.IsNCharType)
-                            maxsize = 2;
-                        else
-                            maxsize = 1;
+                        maxsize = mt.IsNCharType ? 2 : 1;
                     }
 
                     WriteParameterVarLen(mt, maxsize, false /*IsNull*/, stateObj);
@@ -12045,7 +12057,9 @@ namespace Microsoft.Data.SqlClient
             {
                 case TdsEnums.SQLFLTN:
                     if (type.FixedLength == 4)
+                    {
                         WriteFloat((float)value, stateObj);
+                    }
                     else
                     {
                         Debug.Assert(type.FixedLength == 8, "Invalid length for SqlDouble type!");
@@ -12123,8 +12137,7 @@ namespace Microsoft.Data.SqlClient
                         if (isDataFeed)
                         {
                             Debug.Assert(type.IsPlp, "Stream assigned to non-PLP was not converted!");
-                            TextDataFeed tdf = value as TextDataFeed;
-                            if (tdf == null)
+                            if (value is not TextDataFeed tdf)
                             {
                                 return NullIfCompletedWriteTask(WriteXmlFeed((XmlDataFeed)value, stateObj, needBom: true, encoding: _defaultEncoding, size: paramSize));
                             }
@@ -12160,8 +12173,7 @@ namespace Microsoft.Data.SqlClient
                         if (isDataFeed)
                         {
                             Debug.Assert(type.IsPlp, "Stream assigned to non-PLP was not converted!");
-                            TextDataFeed tdf = value as TextDataFeed;
-                            if (tdf == null)
+                            if (value is not TextDataFeed tdf)
                             {
                                 return NullIfCompletedWriteTask(WriteXmlFeed((XmlDataFeed)value, stateObj, IsBOMNeeded(type, value), Encoding.Unicode, paramSize));
                             }
@@ -12321,7 +12333,9 @@ namespace Microsoft.Data.SqlClient
             {
                 case TdsEnums.SQLFLTN:
                     if (type.FixedLength == 4)
+                    {
                         return SerializeFloat((Single)value);
+                    }
                     else
                     {
                         Debug.Assert(type.FixedLength == 8, "Invalid length for SqlDouble type!");
@@ -12515,7 +12529,9 @@ namespace Microsoft.Data.SqlClient
             {
                 case TdsEnums.SQLFLTN:
                     if (type.FixedLength == 4)
+                    {
                         return SerializeFloat(((SqlSingle)value).Value);
+                    }
                     else
                     {
                         Debug.Assert(type.FixedLength == 8, "Invalid length for SqlDouble type!");

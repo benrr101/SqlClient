@@ -221,13 +221,8 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         // override object.Equals
         public override bool Equals(object obj)
         {
-            bool areEquals = false;
-
-            InternalConnectionWrapper objAsWrapper = obj as InternalConnectionWrapper;
-            if (objAsWrapper != null && objAsWrapper._internalConnection == _internalConnection)
-                areEquals = true;
-
-            return areEquals;
+            return obj is InternalConnectionWrapper objAsWrapper &&
+                   objAsWrapper._internalConnection == _internalConnection;
         }
 
         // override object.GetHashCode

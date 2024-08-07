@@ -1012,11 +1012,14 @@ namespace Microsoft.Data.ProviderBase
         // OleDb and Odbc connections are not passing throw this code
         {
             if (_resError == null)
+            {
                 return null;
+            }
 
-            var sqlError = _resError as SqlClient.SqlException;
-            if (sqlError != null)
+            if (_resError is SqlException sqlError)
+            {
                 return sqlError.InternalClone();
+            }
 
             return _resError;
         }

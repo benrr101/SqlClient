@@ -671,8 +671,7 @@ namespace Microsoft.Data.SqlClient
                 bool flag = false;
                 if (context is not null)
                 {
-                    SqlConnectionStringBuilder constr = context.Instance as SqlConnectionStringBuilder;
-                    if (constr is not null)
+                    if (context.Instance is SqlConnectionStringBuilder constr)
                     {
                         if (constr.DataSource.Length > 0 && (constr.IntegratedSecurity || constr.UserID.Length > 0))
                         {
@@ -752,8 +751,7 @@ namespace Microsoft.Data.SqlClient
                 }
                 if (destinationType == typeof(InstanceDescriptor))
                 {
-                    SqlConnectionStringBuilder obj = value as SqlConnectionStringBuilder;
-                    if (obj is not null)
+                    if (value is SqlConnectionStringBuilder obj)
                     {
                         return ConvertToInstanceDescriptor(obj);
                     }
@@ -842,8 +840,7 @@ namespace Microsoft.Data.SqlClient
 
             public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
             {
-                string svalue = value as string;
-                if (svalue is not null)
+                if (value is string svalue)
                 {
                     svalue = svalue.Trim();
                     if (StringComparer.OrdinalIgnoreCase.Equals(svalue, NamedPipes))

@@ -99,23 +99,21 @@ namespace Microsoft.SqlServer.TDS.EndPoint
             Session = server.OpenSession();
 
             // Check if local end-point is recognized
-            if (Connection.Client.LocalEndPoint is IPEndPoint)
+            if (Connection.Client.LocalEndPoint is IPEndPoint localIpEndPoint)
             {
                 // Cast to IP end-point
-                IPEndPoint endPoint = Connection.Client.LocalEndPoint as IPEndPoint;
 
                 // Update TDS session
-                Session.ServerEndPointInfo = new TDSEndPointInfo(endPoint.Address, endPoint.Port, TDSEndPointTransportType.TCP);
+                Session.ServerEndPointInfo = new TDSEndPointInfo(localIpEndPoint.Address, localIpEndPoint.Port, TDSEndPointTransportType.TCP);
             }
 
             // Check if remote end-point is recognized
-            if (Connection.Client.RemoteEndPoint is IPEndPoint)
+            if (Connection.Client.RemoteEndPoint is IPEndPoint remoteIpEndPoint)
             {
                 // Cast to IP end-point
-                IPEndPoint endPoint = Connection.Client.RemoteEndPoint as IPEndPoint;
 
                 // Update server context
-                Session.ClientEndPointInfo = new TDSEndPointInfo(endPoint.Address, endPoint.Port, TDSEndPointTransportType.TCP);
+                Session.ClientEndPointInfo = new TDSEndPointInfo(remoteIpEndPoint.Address, remoteIpEndPoint.Port, TDSEndPointTransportType.TCP);
             }
         }
 
