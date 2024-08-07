@@ -71,25 +71,24 @@ namespace Microsoft.SqlServer.TDS.Servers
             TDSLogin7Token loginRequest = request[0] as TDSLogin7Token;
 
             // Check if arguments are of the transient fault TDS server
-            if (Arguments is TransientFaultTDSServerArguments)
+            if (Arguments is TransientFaultTDSServerArguments serverArguments)
             {
                 // Cast to transient fault TDS server arguments
-                TransientFaultTDSServerArguments ServerArguments = Arguments as TransientFaultTDSServerArguments;
 
                 // Check if we're still going to raise transient error
-                if (ServerArguments.IsEnabledTransientError && RequestCounter < 1) // Fail first time, then connect
+                if (serverArguments.IsEnabledTransientError && RequestCounter < 1) // Fail first time, then connect
                 {
-                    uint errorNumber = ServerArguments.Number;
-                    string errorMessage = ServerArguments.Message;
+                    uint errorNumber = serverArguments.Number;
+                    string errorMessage = serverArguments.Message;
 
                     // Log request to which we're about to send a failure
-                    TDSUtilities.Log(Arguments.Log, "Request", loginRequest);
+                    TDSUtilities.Log(serverArguments.Log, "Request", loginRequest);
 
                     // Prepare ERROR token with the denial details
                     TDSErrorToken errorToken = new TDSErrorToken(errorNumber, 1, 20, errorMessage);
 
                     // Log response
-                    TDSUtilities.Log(Arguments.Log, "Response", errorToken);
+                    TDSUtilities.Log(serverArguments.Log, "Response", errorToken);
 
                     // Serialize the error token into the response packet
                     TDSMessage responseMessage = new TDSMessage(TDSMessageType.Response, errorToken);
@@ -98,7 +97,7 @@ namespace Microsoft.SqlServer.TDS.Servers
                     TDSDoneToken doneToken = new TDSDoneToken(TDSDoneTokenStatusType.Final | TDSDoneTokenStatusType.Error);
 
                     // Log response
-                    TDSUtilities.Log(Arguments.Log, "Response", doneToken);
+                    TDSUtilities.Log(serverArguments.Log, "Response", doneToken);
 
                     // Serialize DONE token into the response packet
                     responseMessage.Add(doneToken);

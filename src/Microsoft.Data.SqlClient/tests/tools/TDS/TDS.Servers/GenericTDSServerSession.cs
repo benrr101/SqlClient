@@ -425,74 +425,53 @@ namespace Microsoft.SqlServer.TDS.Servers
             foreach (TDSSessionStateOption option in data.Options)
             {
                 // Check on the options
-                if (option is TDSSessionStateUserOptionsOption)
+                if (option is TDSSessionStateUserOptionsOption userOptionsOption)
                 {
-                    // Cast to specific option
-                    TDSSessionStateUserOptionsOption specificOption = option as TDSSessionStateUserOptionsOption;
-
                     // Transfer properties from the session state onto the session
-                    AnsiWarnings = specificOption.AnsiWarnings;
-                    AnsiNulls = specificOption.AnsiNulls;
-                    CursorCloseOnCommit = specificOption.CursorCloseOnCommit;
-                    QuotedIdentifier = specificOption.QuotedIdentifier;
-                    ConcatNullYieldsNull = specificOption.ConcatNullYieldsNull;
-                    AnsiNullDefaultOn = specificOption.AnsiNullDefaultOn;
-                    AnsiPadding = specificOption.AnsiPadding;
-                    ArithAbort = specificOption.ArithAbort;
-                    TransactionAbortOnError = specificOption.TransactionAbortOnError;
-                    NoCount = specificOption.NoCount;
-                    ArithIgnore = specificOption.ArithIgnore;
-                    ImplicitTransactions = specificOption.ImplicitTransactions;
-                    NumericRoundAbort = specificOption.NumericRoundAbort;
+                    AnsiWarnings = userOptionsOption.AnsiWarnings;
+                    AnsiNulls = userOptionsOption.AnsiNulls;
+                    CursorCloseOnCommit = userOptionsOption.CursorCloseOnCommit;
+                    QuotedIdentifier = userOptionsOption.QuotedIdentifier;
+                    ConcatNullYieldsNull = userOptionsOption.ConcatNullYieldsNull;
+                    AnsiNullDefaultOn = userOptionsOption.AnsiNullDefaultOn;
+                    AnsiPadding = userOptionsOption.AnsiPadding;
+                    ArithAbort = userOptionsOption.ArithAbort;
+                    TransactionAbortOnError = userOptionsOption.TransactionAbortOnError;
+                    NoCount = userOptionsOption.NoCount;
+                    ArithIgnore = userOptionsOption.ArithIgnore;
+                    ImplicitTransactions = userOptionsOption.ImplicitTransactions;
+                    NumericRoundAbort = userOptionsOption.NumericRoundAbort;
                 }
-                else if (option is TDSSessionStateDateFirstDateFormatOption)
+                else if (option is TDSSessionStateDateFirstDateFormatOption dateFirstDateFormatOption)
                 {
-                    // Cast to specific option
-                    TDSSessionStateDateFirstDateFormatOption specificOption = option as TDSSessionStateDateFirstDateFormatOption;
-
                     // Transfer properties from the session state onto the session
-                    DateFirst = specificOption.DateFirst;
-                    DateFormat = specificOption.DateFormat;
+                    DateFirst = dateFirstDateFormatOption.DateFirst;
+                    DateFormat = dateFirstDateFormatOption.DateFormat;
                 }
-                else if (option is TDSSessionStateDeadlockPriorityOption)
+                else if (option is TDSSessionStateDeadlockPriorityOption deadlockPriorityOption)
                 {
-                    // Cast to specific option
-                    TDSSessionStateDeadlockPriorityOption specificOption = option as TDSSessionStateDeadlockPriorityOption;
-
                     // Transfer properties from the session state onto the session
-                    DeadlockPriority = specificOption.Value;
+                    DeadlockPriority = deadlockPriorityOption.Value;
                 }
-                else if (option is TDSSessionStateLockTimeoutOption)
+                else if (option is TDSSessionStateLockTimeoutOption lockTimeoutOption)
                 {
-                    // Cast to specific option
-                    TDSSessionStateLockTimeoutOption specificOption = option as TDSSessionStateLockTimeoutOption;
-
                     // Transfer properties from the session state onto the session
-                    LockTimeout = specificOption.Value;
+                    LockTimeout = lockTimeoutOption.Value;
                 }
-                else if (option is TDSSessionStateISOFipsOption)
+                else if (option is TDSSessionStateISOFipsOption isoFipsOption)
                 {
-                    // Cast to specific option
-                    TDSSessionStateISOFipsOption specificOption = option as TDSSessionStateISOFipsOption;
-
                     // Transfer properties from the session state onto the session
-                    TransactionIsolationLevel = specificOption.TransactionIsolationLevel;
+                    TransactionIsolationLevel = isoFipsOption.TransactionIsolationLevel;
                 }
-                else if (option is TDSSessionStateTextSizeOption)
+                else if (option is TDSSessionStateTextSizeOption textSizeOption)
                 {
-                    // Cast to specific option
-                    TDSSessionStateTextSizeOption specificOption = option as TDSSessionStateTextSizeOption;
-
                     // Transfer properties from the session state onto the session
-                    TextSize = specificOption.Value;
+                    TextSize = textSizeOption.Value;
                 }
-                else if (option is TDSSessionStateContextInfoOption)
+                else if (option is TDSSessionStateContextInfoOption contextInfoOption)
                 {
-                    // Cast to specific option
-                    TDSSessionStateContextInfoOption specificOption = option as TDSSessionStateContextInfoOption;
-
                     // Transfer properties from the session state onto the session
-                    ContextInfo = specificOption.Value;
+                    ContextInfo = contextInfoOption.Value;
                 }
             }
         }

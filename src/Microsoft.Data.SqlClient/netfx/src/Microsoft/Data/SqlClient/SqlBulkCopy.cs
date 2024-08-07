@@ -1002,8 +1002,7 @@ namespace Microsoft.Data.SqlClient
                             isNull = value == null || value == DBNull.Value;
                             if (!isNull && metadata.type == SqlDbType.Udt)
                             {
-                                var columnAsINullable = value as INullable;
-                                isNull = columnAsINullable != null && columnAsINullable.IsNull;
+                                isNull = value is INullable columnAsINullable && columnAsINullable.IsNull;
                             }
 #if DEBUG
                             else if (!isNull)

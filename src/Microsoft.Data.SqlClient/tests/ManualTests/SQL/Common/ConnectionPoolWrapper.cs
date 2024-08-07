@@ -117,8 +117,7 @@ namespace Microsoft.Data.SqlClient.ManualTesting.Tests
         /// <returns>True if <paramref name="obj"/> is a ConnectionPoolWrapper that points to the same pool as this wrapper, otherwise false</returns>
         public override bool Equals(object obj)
         {
-            var objAsPool = obj as ConnectionPoolWrapper;
-            return objAsPool != null && objAsPool._connectionPool == _connectionPool;
+            return obj is ConnectionPoolWrapper objAsPool && objAsPool._connectionPool == _connectionPool;
         }
 
         public override int GetHashCode()

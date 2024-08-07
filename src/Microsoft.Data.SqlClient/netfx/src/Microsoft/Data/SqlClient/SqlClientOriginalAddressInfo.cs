@@ -35,9 +35,7 @@ namespace Microsoft.Data.SqlClient
 
         public override bool Equals(object other)
         {
-            SqlClientOriginalNetworkAddressInfo otherAddress = other as SqlClientOriginalNetworkAddressInfo;
-
-            if (otherAddress == null)
+            if (other is not SqlClientOriginalNetworkAddressInfo otherAddress)
             {
                 return false;
             }

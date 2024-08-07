@@ -1156,7 +1156,9 @@ namespace Microsoft.Data.SqlClient
                     // NOTE: We doom connection for TdsParserState.Closed since it indicates that it is in some abnormal and unstable state, probably as a result of
                     // closing from another thread. In general, TdsParserState.Closed does not necessitate dooming the connection.
                     if (_parser.Connection != null)
+                    {
                         _parser.Connection.DoomThisConnection();
+                    }
                     throw SQL.ConnectionDoomed();
                 }
                 bool ignored;
@@ -3021,8 +3023,7 @@ namespace Microsoft.Data.SqlClient
                     {
                         // Special case: User wants SqlString, but we have a SqlXml
                         // SqlXml can not be typecast into a SqlString, but we need to support SqlString on XML Types - so do a manual conversion
-                        SqlXml xmlValue = rawValue as SqlXml;
-                        if (xmlValue != null)
+                        if (rawValue is SqlXml xmlValue)
                         {
                             if (xmlValue.IsNull)
                             {

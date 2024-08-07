@@ -222,25 +222,23 @@ namespace Microsoft.Samples.SqlServer
         public int CompareTo(object obj)
         {
             if (obj == null)
+            {
                 return 1; //by definition
+            }
 
-            Utf8String s = obj as Utf8String;
-
-            if (s == null)
+            if (obj is not Utf8String s)
+            {
                 throw new ArgumentException("the argument to compare is not a Utf8String");
+            }
 
             if (this.IsNull)
             {
-                if (s.IsNull)
-                    return 0;
-
-                return -1;
+                return s.IsNull ? 0 : -1;
             }
 
-            if (s.IsNull)
-                return 1;
-
-            return string.Compare(this.ToString(), s.ToString(), StringComparison.Ordinal);
+            return s.IsNull
+                ? 1
+                : string.Compare(this.ToString(), s.ToString(), StringComparison.Ordinal);
         }
 
         #endregion

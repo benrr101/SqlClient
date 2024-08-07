@@ -418,8 +418,7 @@ namespace Microsoft.Data.SqlClient
         // This method will be called once connection string is set or changed.
         private void CacheConnectionStringProperties()
         {
-            SqlConnectionString connString = ConnectionOptions as SqlConnectionString;
-            if (connString != null)
+            if (ConnectionOptions is SqlConnectionString connString)
             {
                 _connectRetryCount = connString.ConnectRetryCount;
                 // For Azure Synapse ondemand connections, set _connectRetryCount to 5 instead of 1 to greatly improve recovery
@@ -746,10 +745,9 @@ namespace Microsoft.Data.SqlClient
             // just return what the connection string had.
             get
             {
-                SqlInternalConnection innerConnection = InnerConnection as SqlInternalConnection;
                 string result;
 
-                if (innerConnection != null)
+                if (InnerConnection is SqlInternalConnection innerConnection)
                 {
                     result = innerConnection.CurrentDatabase;
                 }
@@ -769,10 +767,9 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
                 string result;
 
-                if (innerConnection != null)
+                if (InnerConnection is SqlInternalConnectionTds innerConnection)
                 {
                     result = innerConnection.IsSQLDNSCachingSupported ? "true" : "false";
                 }
@@ -792,10 +789,9 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
                 string result;
 
-                if (innerConnection != null)
+                if (InnerConnection is SqlInternalConnectionTds innerConnection)
                 {
                     result = innerConnection.IsDNSCachingBeforeRedirectSupported ? "true" : "false";
                 }
@@ -817,10 +813,9 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                SqlInternalConnection innerConnection = InnerConnection as SqlInternalConnection;
                 string result;
 
-                if (innerConnection != null)
+                if (InnerConnection is SqlInternalConnection innerConnection)
                 {
                     result = innerConnection.CurrentDataSource;
                 }
@@ -844,10 +839,9 @@ namespace Microsoft.Data.SqlClient
             // can just return what the connection string had.
             get
             {
-                SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
                 int result;
 
-                if (innerConnection != null)
+                if (InnerConnection is SqlInternalConnectionTds innerConnection)
                 {
                     result = innerConnection.PacketSize;
                 }
@@ -868,9 +862,7 @@ namespace Microsoft.Data.SqlClient
         {
             get
             {
-                SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
-
-                if (innerConnection != null)
+                if (InnerConnection is SqlInternalConnectionTds innerConnection)
                 {
                     return innerConnection.ClientConnectionId;
                 }
@@ -878,8 +870,7 @@ namespace Microsoft.Data.SqlClient
                 {
                     Task reconnectTask = _currentReconnectionTask;
                     // Connection closed but previously open should return the correct ClientConnectionId
-                    DbConnectionClosedPreviouslyOpened innerConnectionClosed = InnerConnection as DbConnectionClosedPreviouslyOpened;
-                    if ((reconnectTask != null && !reconnectTask.IsCompleted) || innerConnectionClosed != null)
+                    if ((reconnectTask != null && !reconnectTask.IsCompleted) || InnerConnection is DbConnectionClosedPreviouslyOpened)
                     {
                         return _originalConnectionId;
                     }
@@ -1372,8 +1363,7 @@ namespace Microsoft.Data.SqlClient
                 // For non-pooled connections we need to make sure that if the SqlConnection was not closed,
                 // then we release the GCHandle on the stateObject to allow it to be GCed
                 // For pooled connections, we will rely on the pool reclaiming the connection
-                var innerConnection = InnerConnection as SqlInternalConnectionTds;
-                if (innerConnection != null && !innerConnection.ConnectionOptions.Pooling)
+                if (InnerConnection is SqlInternalConnectionTds innerConnection && !innerConnection.ConnectionOptions.Pooling)
                 {
                     var parser = innerConnection.Parser;
                     if (parser != null && parser._physicalStateObj != null)
@@ -1633,8 +1623,8 @@ namespace Microsoft.Data.SqlClient
             {
                 return;
             }
-            SqlInternalConnectionTds tdsConn = InnerConnection as SqlInternalConnectionTds;
-            if (tdsConn != null)
+
+            if (InnerConnection is SqlInternalConnectionTds tdsConn)
             {
                 tdsConn.ValidateConnectionForExecute(null);
                 tdsConn.GetSessionAndReconnectIfNeeded((SqlConnection)this);
@@ -2147,8 +2137,7 @@ namespace Microsoft.Data.SqlClient
 
         internal SqlInternalConnectionTds GetOpenTdsConnection()
         {
-            SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
-            if (innerConnection == null)
+            if (InnerConnection is not SqlInternalConnectionTds innerConnection)
             {
                 throw ADP.ClosedConnectionError();
             }
@@ -2157,8 +2146,7 @@ namespace Microsoft.Data.SqlClient
 
         internal SqlInternalConnectionTds GetOpenTdsConnection(string method)
         {
-            SqlInternalConnectionTds innerConnection = InnerConnection as SqlInternalConnectionTds;
-            if (innerConnection == null)
+            if (InnerConnection is not SqlInternalConnectionTds innerConnection)
             {
                 throw ADP.OpenConnectionRequired(method, InnerConnection.State);
             }

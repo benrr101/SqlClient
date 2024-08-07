@@ -109,8 +109,7 @@ namespace Microsoft.Data.SqlClient
             //                 throw an exception there that is a breaking change.
             //                 Of course, if the connection is already closed,
             //                 then we're free to zombify...
-            SqlInternalConnection internalConnection = _connection.InnerConnection as SqlInternalConnection;
-            if (internalConnection != null
+            if (_connection.InnerConnection is SqlInternalConnection internalConnection
 #if NETFRAMEWORK
                 && internalConnection.Is2005OrNewer
 #endif

@@ -145,17 +145,31 @@ namespace Microsoft.Data.Common
 
         internal bool ConvertValueToIntegratedSecurityInternal(string stringValue)
         {
-            if (CompareInsensitiveInvariant(stringValue, "sspi") || CompareInsensitiveInvariant(stringValue, "true") || CompareInsensitiveInvariant(stringValue, "yes"))
+            if (CompareInsensitiveInvariant(stringValue, "sspi") ||
+                CompareInsensitiveInvariant(stringValue, "true") ||
+                CompareInsensitiveInvariant(stringValue, "yes"))
+            {
                 return true;
-            else if (CompareInsensitiveInvariant(stringValue, "false") || CompareInsensitiveInvariant(stringValue, "no"))
+            }
+            else if (CompareInsensitiveInvariant(stringValue, "false") ||
+                     CompareInsensitiveInvariant(stringValue, "no"))
+            {
                 return false;
+            }
             else
             {
                 string tmp = stringValue.Trim();  // Remove leading & trailing whitespace.
-                if (CompareInsensitiveInvariant(tmp, "sspi") || CompareInsensitiveInvariant(tmp, "true") || CompareInsensitiveInvariant(tmp, "yes"))
+                if (CompareInsensitiveInvariant(tmp, "sspi") ||
+                    CompareInsensitiveInvariant(tmp, "true") ||
+                    CompareInsensitiveInvariant(tmp, "yes"))
+                {
                     return true;
-                else if (CompareInsensitiveInvariant(tmp, "false") || CompareInsensitiveInvariant(tmp, "no"))
+                }
+                else if (CompareInsensitiveInvariant(tmp, "false") ||
+                         CompareInsensitiveInvariant(tmp, "no"))
+                {
                     return false;
+                }
                 else
                 {
                     throw ADP.InvalidConnectionOptionValue(KEY.Integrated_Security);

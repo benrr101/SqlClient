@@ -5183,8 +5183,7 @@ namespace Microsoft.Data.SqlClient
                 processFinallyBlock = ADP.IsCatchableExceptionType(e);
                 if (decrementAsyncCountOnFailure)
                 {
-                    SqlInternalConnectionTds innerConnectionTds = _activeConnection.InnerConnection as SqlInternalConnectionTds;
-                    if (innerConnectionTds != null)
+                    if (_activeConnection.InnerConnection is SqlInternalConnectionTds innerConnectionTds)
                     { // it may be closed
                         innerConnectionTds.DecrementAsyncCount();
                     }
@@ -5816,8 +5815,7 @@ namespace Microsoft.Data.SqlClient
                     }
                     else if (rec.type == SqlDbType.Xml)
                     {
-                        SqlCachedBuffer cachedBuffer = thisParam.Value as SqlCachedBuffer;
-                        if (cachedBuffer != null)
+                        if (thisParam.Value is SqlCachedBuffer cachedBuffer)
                         {
                             thisParam.Value = cachedBuffer.ToString();
                         }
@@ -6467,7 +6465,9 @@ namespace Microsoft.Data.SqlClient
                             int actualBytes = parser.GetEncodingCharLength(s, sqlParam.GetActualSize(), sqlParam.Offset, null);
                             // if actual number of bytes is greater than the user given number of chars, use actual bytes
                             if (actualBytes > size)
+                            {
                                 size = actualBytes;
+                            }
                         }
                     }
 

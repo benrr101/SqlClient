@@ -43,10 +43,9 @@ namespace Microsoft.SqlServer.TDS.Servers
             TDSMessageCollection response = base.OnPreLoginRequest(session, request);
 
             // Check if arguments are of the routing server
-            if (Arguments is RoutingTDSServerArguments)
+            if (Arguments is RoutingTDSServerArguments serverArguments)
             {
                 // Cast to routing server arguments
-                RoutingTDSServerArguments serverArguments = Arguments as RoutingTDSServerArguments;
 
                 // Check if routing is configured during login
                 if (serverArguments.RouteOnPacket == TDSMessageType.TDS7Login)
@@ -78,31 +77,30 @@ namespace Microsoft.SqlServer.TDS.Servers
             TDSLogin7Token loginRequest = request[0] as TDSLogin7Token;
 
             // Check if arguments are of the routing server
-            if (Arguments is RoutingTDSServerArguments)
+            if (Arguments is RoutingTDSServerArguments serverArguments)
             {
                 // Cast to routing server arguments
-                RoutingTDSServerArguments ServerArguments = Arguments as RoutingTDSServerArguments;
 
                 // Check filter
-                if (ServerArguments.RequireReadOnly && loginRequest.TypeFlags.ReadOnlyIntent != TDSLogin7TypeFlagsReadOnlyIntent.ReadOnly)
+                if (serverArguments.RequireReadOnly && loginRequest.TypeFlags.ReadOnlyIntent != TDSLogin7TypeFlagsReadOnlyIntent.ReadOnly)
                 {
                     // Log request
-                    TDSUtilities.Log(Arguments.Log, "Request", loginRequest);
+                    TDSUtilities.Log(serverArguments.Log, "Request", loginRequest);
 
                     // Prepare ERROR token with the denial details
-                    TDSErrorToken errorToken = new TDSErrorToken(18456, 1, 14, "Received application intent: " + loginRequest.TypeFlags.ReadOnlyIntent.ToString(), Arguments.ServerName);
+                    TDSErrorToken errorToken = new TDSErrorToken(18456, 1, 14, "Received application intent: " + loginRequest.TypeFlags.ReadOnlyIntent.ToString(), serverArguments.ServerName);
 
                     // Log response
-                    TDSUtilities.Log(Arguments.Log, "Response", errorToken);
+                    TDSUtilities.Log(serverArguments.Log, "Response", errorToken);
 
                     // Serialize the error token into the response packet
                     TDSMessage responseMessage = new TDSMessage(TDSMessageType.Response, errorToken);
 
                     // Prepare ERROR token for the final decision
-                    errorToken = new TDSErrorToken(18456, 1, 14, "Read-Only application intent is required for routing", Arguments.ServerName);
+                    errorToken = new TDSErrorToken(18456, 1, 14, "Read-Only application intent is required for routing", serverArguments.ServerName);
 
                     // Log response
-                    TDSUtilities.Log(Arguments.Log, "Response", errorToken);
+                    TDSUtilities.Log(serverArguments.Log, "Response", errorToken);
 
                     // Serialize the error token into the response packet
                     responseMessage.Add(errorToken);
@@ -111,7 +109,7 @@ namespace Microsoft.SqlServer.TDS.Servers
                     TDSDoneToken doneToken = new TDSDoneToken(TDSDoneTokenStatusType.Final | TDSDoneTokenStatusType.Error);
 
                     // Log response
-                    TDSUtilities.Log(Arguments.Log, "Response", doneToken);
+                    TDSUtilities.Log(serverArguments.Log, "Response", doneToken);
 
                     // Serialize DONE token into the response packet
                     responseMessage.Add(doneToken);

@@ -68,13 +68,7 @@ namespace Microsoft.Data.ProviderBase
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            DbConnectionPoolAuthenticationContextKey otherKey = obj as DbConnectionPoolAuthenticationContextKey;
-            if (otherKey == null)
+            if (obj is not DbConnectionPoolAuthenticationContextKey otherKey)
             {
                 return false;
             }

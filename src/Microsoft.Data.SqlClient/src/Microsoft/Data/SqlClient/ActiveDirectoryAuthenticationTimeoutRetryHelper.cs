@@ -114,9 +114,11 @@ namespace Microsoft.Data.SqlClient
 
         private static bool IsConnectTimeoutError(SqlException sqlex)
         {
-            var innerException = sqlex.InnerException as Win32Exception;
-            if (innerException == null)
+            if (sqlex.InnerException is not Win32Exception innerException)
+            {
                 return false;
+            }
+
             return innerException.NativeErrorCode == 10054 // Server timeout
                    || innerException.NativeErrorCode == 258; // Client timeout
         }

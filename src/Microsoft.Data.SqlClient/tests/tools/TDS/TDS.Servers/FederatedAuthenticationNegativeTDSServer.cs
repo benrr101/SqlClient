@@ -39,16 +39,13 @@ namespace Microsoft.SqlServer.TDS.Servers
             TDSMessageCollection preLoginCollection = base.OnPreLoginRequest(session, request);
 
             // Check if arguments are of the Federated Authentication server
-            if (Arguments is FederatedAuthenticationNegativeTDSServerArguments)
+            if (Arguments is FederatedAuthenticationNegativeTDSServerArguments serverArguments)
             {
-                // Cast to federated authentication server arguments
-                FederatedAuthenticationNegativeTDSServerArguments ServerArguments = Arguments as FederatedAuthenticationNegativeTDSServerArguments;
-
                 // Find the is token carrying on TDSPreLoginToken
                 TDSPreLoginToken preLoginToken = preLoginCollection.Find(message => message.Exists(packetToken => packetToken is TDSPreLoginToken)).
                     Find(packetToken => packetToken is TDSPreLoginToken) as TDSPreLoginToken;
 
-                switch (ServerArguments.Scenario)
+                switch (serverArguments.Scenario)
                 {
                     case FederatedAuthenticationNegativeTDSScenarioType.NonceMissingInFedAuthPreLogin:
                         {
@@ -89,18 +86,15 @@ namespace Microsoft.SqlServer.TDS.Servers
             TDSMessageCollection login7Collection = base.OnLogin7Request(session, request);
 
             // Check if arguments are of the Federated Authentication server
-            if (Arguments is FederatedAuthenticationNegativeTDSServerArguments)
+            if (Arguments is FederatedAuthenticationNegativeTDSServerArguments serverArguments)
             {
-                // Cast to federated authentication server arguments
-                FederatedAuthenticationNegativeTDSServerArguments ServerArguments = Arguments as FederatedAuthenticationNegativeTDSServerArguments;
-
                 // Get the Federated Authentication ExtAck from Login 7
                 TDSFeatureExtAckFederatedAuthenticationOption fedAutExtAct = GetFeatureExtAckFederatedAuthenticationOptionFromLogin7(login7Collection);
 
                 // If not found, return the base collection intact
                 if (fedAutExtAct != null)
                 {
-                    switch (ServerArguments.Scenario)
+                    switch (serverArguments.Scenario)
                     {
                         case FederatedAuthenticationNegativeTDSScenarioType.NonceMissingInFedAuthFEATUREXTACK:
                             {
