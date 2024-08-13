@@ -2,33 +2,40 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Microsoft.Data.SqlClientX.IO
 {
     /// <summary>
-    /// An interface to model read stream operations for Tds specific capabilities.
+    /// An interface for a TDS stream that implements methods for reading.
     /// </summary>
     internal interface ITdsReadStream : ITdsStream
     {
         /// <summary>
-        /// The number of bytes left in the current packet.
+        /// Gets the number of bytes left in the current packet.
         /// </summary>
         int PacketDataLeft { get; }
 
         /// <summary>
-        /// The packet header type of the current read operation.
+        /// Gets the type of the packet currently buffered in the stream.
         /// </summary>
         byte ReadPacketHeaderType { get; }
 
         /// <summary>
-        /// The Packet status of current read operation.
+        /// Gets the status field of the packet currently buffered in the stream.
         /// </summary>
         byte ReadPacketStatus { get; }
 
         /// <summary>
-        /// Exposes the SPID of the connection on which this stream is operating.
+        /// Gets a reader associated with this read stream.
+        /// </summary>
+        ITdsReader Reader { get; }
+
+        /// <summary>
+        /// Gets the SPID of the connection on which this stream is operating.
         /// </summary>
         int Spid { get; }
 
@@ -46,9 +53,27 @@ namespace Microsoft.Data.SqlClientX.IO
         /// Reads a byte from the stream.
         /// </summary>
         /// <param name="isAsync">Indicates if the operation should be async.</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        ValueTask<byte> ReadByteAsync(bool isAsync, CancellationToken cancellationToken);
+        ValueTask<byte> ReadByteAsync(bool isAsync, CancellationToken ct);
+
+        /// <summary>
+        /// Reads bytes from the stream into a contiguous segment of memory.
+        /// </summary>
+        /// <remarks>
+        /// Since <see cref="TdsStream"/> should be inheriting from <see cref="Stream"/> with its
+        /// own implementations of Read/ReadAsync, this method is technically unnecessary. It is
+        /// provided as a convenience to allow callers to have a one-stop-shop for writing bytes to
+        /// the underlying stream without worrying about asynchronicity.
+        /// </remarks>
+        /// <param name="buffer">Contiguous segment of memory to read bytes from the stream into.</param>
+        /// <param name="isAsync">Whether the operation should be performed asynchronously.</param>
+        /// <param name="ct">Cancellation token.</param>
+        /// <returns>
+        /// Number of bytes read from the stream into the buffer. If <paramref name="isAsync"/> is
+        /// <c>false</c> the value will be returned synchronously.
+        /// </returns>
+        ValueTask<int> ReadBytesAsync(Memory<byte> buffer, bool isAsync, CancellationToken ct);
 
         /// <summary>
         /// A convenience method to skip the bytes in the stream,

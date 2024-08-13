@@ -14,107 +14,38 @@ namespace Microsoft.Data.SqlClientX.IO
     /// This class provides helper methods for writing bytes using <see cref="TdsStream"/>
     /// It extends <see cref="TdsBufferManager"/> that manages allocations of bytes buffer for better memory management.
     /// </summary>
-    internal sealed class TdsWriter : TdsBufferManager
+    internal sealed class TdsWriter : TdsBufferManager, ITdsWriter
     {
-        private readonly TdsStream _tdsStream;
+        private readonly ITdsWriteStream _tdsStream;
 
         /// <summary>
         /// Instantiate TdsWriter with <see cref="TdsStream" />
         /// </summary>
         /// <param name="stream">Tds Stream instance to work with.</param>
-        public TdsWriter(TdsStream stream)
+        public TdsWriter(ITdsWriteStream stream)
         {
             _tdsStream = stream;
         }
 
-        #region Public APIs
+        /// <inheritdoc />
+        public ValueTask WriteByteAsync(byte value, bool isAsync, CancellationToken ct) => 
+            _tdsStream.WriteByteAsync(value, isAsync, ct);
 
-        /// <summary>
-        /// Writes short value to out buffer, as little-endian.
-        /// </summary>
-        /// <param name="value">Value to write.</param>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        public ValueTask WriteShortAsync(short value, bool isAsync, CancellationToken ct)
+        /// <inheritdoc />
+        public ValueTask WriteBytesAsync(Memory<byte> data, bool isAsync, CancellationToken ct) =>
+            _tdsStream.WriteBytesAsync(data, isAsync, ct);
+
+        /// <inheritdoc />
+        public ValueTask WriteDoubleAsync(double value, bool isAsync, CancellationToken ct)
         {
-            var buffer = GetBuffer(sizeof(short));
-            BinaryPrimitives.WriteInt16LittleEndian(buffer.Span, value);
+            Debug.Assert(double.IsFinite(value), "Double value is out of range.");
+
+            var buffer = GetBuffer(sizeof(double));
+            BinaryPrimitives.WriteInt64LittleEndian(buffer.Span, BitConverter.DoubleToInt64Bits(value));
             return WriteBytesAsync(buffer, isAsync, ct);
         }
 
-        /// <summary>
-        /// Writes the least significant 2 bytes as short value to the stream, as little-endian.
-        /// </summary>
-        /// <param name="value">Value to write.</param>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        public ValueTask WriteShortAsync(int value, bool isAsync, CancellationToken ct)
-        {
-            const int len = sizeof(short);
-            short int16Value = (short)(value & 0xFFFF);
-            BinaryPrimitives.WriteInt16LittleEndian(GetBuffer(len).Span, int16Value);
-            return WriteBytesAsync(GetBuffer(len).ToArray(), isAsync, ct);
-        }
-
-        /// <summary>
-        /// Writes int value to out buffer, as little-endian.
-        /// </summary>
-        /// <param name="value">Value to write.</param>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        public ValueTask WriteIntAsync(int value, bool isAsync, CancellationToken ct)
-        {
-            var buffer = GetBuffer(sizeof(int));
-            BinaryPrimitives.WriteInt32LittleEndian(buffer.Span, value);
-            return WriteBytesAsync(buffer, isAsync, ct);
-        }
-
-        /// <summary>
-        /// Writes unsigned short value to out buffer, as little-endian.
-        /// </summary>
-        /// <param name="value">Value to write.</param>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        public ValueTask WriteUnsignedShortAsync(ushort value, bool isAsync, CancellationToken ct)
-            => WriteShortAsync((short)value, isAsync, ct);
-
-        /// <summary>
-        /// Writes unsigned int value to out buffer, as little-endian.
-        /// </summary>
-        /// <param name="value">Value to write.</param>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        public ValueTask WriteUnsignedIntAsync(uint value, bool isAsync, CancellationToken ct)
-            => WriteIntAsync((int)value, isAsync, ct);
-
-        /// <summary>
-        /// Writes long value to out buffer, as little-endian.
-        /// </summary>
-        /// <param name="value">Value to write.</param>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        public ValueTask WriteLongAsync(long value, bool isAsync, CancellationToken ct)
-        {
-            var buffer = GetBuffer(sizeof(long));
-            BinaryPrimitives.WriteInt64LittleEndian(buffer.Span, value);
-            return WriteBytesAsync(buffer, isAsync, ct);
-        }
-
-        /// <summary>
-        /// Writes unsigned long value to out buffer, as little-endian.
-        /// </summary>
-        /// <param name="value">Value to write.</param>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        public ValueTask WriteUnsignedLongAsync(ulong value, bool isAsync, CancellationToken ct)
-            => WriteLongAsync((long)value, isAsync, ct);
-
-        /// <summary>
-        /// Writes float value to out buffer, as little-endian.
-        /// </summary>
-        /// <param name="value">Value to write.</param>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
+        /// <inheritdoc />
         public ValueTask WriteFloatAsync(float value, bool isAsync, CancellationToken ct)
         {
             Debug.Assert(float.IsFinite(value), "Float value is out of range.");
@@ -124,20 +55,48 @@ namespace Microsoft.Data.SqlClientX.IO
             return WriteBytesAsync(buffer, isAsync, ct);
         }
 
-        /// <summary>
-        /// Writes double value to out buffer, as little-endian.
-        /// </summary>
-        /// <param name="value">Value to write.</param>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        public ValueTask WriteDoubleAsync(double value, bool isAsync, CancellationToken ct)
+        /// <inheritdoc />
+        public ValueTask WriteIntAsync(int value, bool isAsync, CancellationToken ct)
         {
-            Debug.Assert(double.IsFinite(value), "Double value is out of range.");
-
-            var buffer = GetBuffer(sizeof(double));
-            BinaryPrimitives.WriteInt64LittleEndian(buffer.Span, BitConverter.DoubleToInt64Bits(value));
+            var buffer = GetBuffer(sizeof(int));
+            BinaryPrimitives.WriteInt32LittleEndian(buffer.Span, value);
             return WriteBytesAsync(buffer, isAsync, ct);
         }
+        
+        /// <inheritdoc />
+        public ValueTask WriteLongAsync(long value, bool isAsync, CancellationToken ct)
+        {
+            var buffer = GetBuffer(sizeof(long));
+            BinaryPrimitives.WriteInt64LittleEndian(buffer.Span, value);
+            return WriteBytesAsync(buffer, isAsync, ct);
+        }
+        
+        /// <inheritdoc />
+        public ValueTask WriteShortAsync(int value, bool isAsync, CancellationToken ct)
+        {
+            const int len = sizeof(short);
+            short int16Value = (short)(value & 0xFFFF);
+            BinaryPrimitives.WriteInt16LittleEndian(GetBuffer(len).Span, int16Value);
+            return WriteBytesAsync(GetBuffer(len).ToArray(), isAsync, ct);
+        }
+
+        /// <inheritdoc />
+        public ValueTask WriteShortAsync(short value, bool isAsync, CancellationToken ct)
+        {
+            var buffer = GetBuffer(sizeof(short));
+            BinaryPrimitives.WriteInt16LittleEndian(buffer.Span, value);
+            return WriteBytesAsync(buffer, isAsync, ct);
+        }
+
+        /// <inheritdoc />
+        public ValueTask WriteULongAsync(ulong value, bool isAsync, CancellationToken ct)
+            => WriteLongAsync((long)value, isAsync, ct);
+        
+        public ValueTask WriteUIntAsync(uint value, bool isAsync, CancellationToken ct)
+            => WriteIntAsync((int)value, isAsync, ct);
+        
+        public ValueTask WriteUShortAsync(ushort value, bool isAsync, CancellationToken ct)
+            => WriteShortAsync((short)value, isAsync, ct);
 
         /// <summary>
         /// Writes partial long value to out buffer, as little-endian. This should be ideally used for writing date, 
@@ -161,37 +120,6 @@ namespace Microsoft.Data.SqlClientX.IO
         }
 
         /// <summary>
-        /// Writes a byte to the stream.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="isAsync"></param>
-        /// <param name="ct"></param>
-        /// <returns></returns>
-        public ValueTask WriteByteAsync(byte value, bool isAsync, CancellationToken ct) => _tdsStream.WriteByteAsync(value, isAsync, ct);
-
-        /// <summary>
-        /// Writes bytes directly to TdsSteam associated with writer.
-        /// </summary>
-        /// <param name="data">Data in byte array.</param>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns></returns>
-        public async ValueTask WriteBytesAsync(Memory<byte> data, bool isAsync, CancellationToken ct)
-        {
-            // Throw operation canceled exception before write.
-            ct.ThrowIfCancellationRequested();
-
-            if (isAsync)
-            {
-                await _tdsStream.WriteAsync(data, ct).ConfigureAwait(false);
-            }
-            else
-            {
-                _tdsStream.Write(data.Span);
-            }
-        }
-
-        /// <summary>
         /// Serializes .NET Decimal to `SqlDecimal` represented by byte arrays for TDS writing.
         /// </summary>
         /// <param name="value">Decimal value,</param>
@@ -205,12 +133,12 @@ namespace Microsoft.Data.SqlClientX.IO
             }
 
             Span<int> decimalBits =
-#if !NET5_0_OR_GREATER
+                #if !NET5_0_OR_GREATER
                 stackalloc int[4];
                 decimal.TryGetBits(value, decimalBits, out int valuesWritten);
-#else
+                #else
                 decimal.GetBits(value);
-#endif
+                #endif
 
             /*
                 Returns a binary representation of a Decimal. The return value is an integer
@@ -238,6 +166,5 @@ namespace Microsoft.Data.SqlClientX.IO
 
             return buffer;
         }
-        #endregion
     }
 }

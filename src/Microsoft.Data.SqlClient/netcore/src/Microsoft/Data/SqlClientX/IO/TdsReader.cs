@@ -15,16 +15,16 @@ namespace Microsoft.Data.SqlClientX.IO
     /// This class provides helper methods for reading bytes using <see cref="TdsStream"/>
     /// It extends <see cref="TdsBufferManager"/> that manages allocations of bytes buffer for better memory management.
     /// </summary>
-    internal sealed class TdsReader : TdsBufferManager
+    internal sealed class TdsReader : TdsBufferManager, ITdsReader
     {
-        private readonly TdsStream _tdsStream;
+        private readonly TdsReadStream _tdsStream;
         private readonly BinaryReader _reader;
 
         /// <summary>
         /// Instantiate TdsReader with <see cref="TdsStream" />
         /// </summary>
         /// <param name="stream">Tds Stream instance to work with.</param>
-        public TdsReader(TdsStream stream)
+        public TdsReader(TdsReadStream stream)
         {
             _tdsStream = stream;
             _reader = new BinaryReader(stream, Encoding.Unicode);
@@ -32,60 +32,22 @@ namespace Microsoft.Data.SqlClientX.IO
 
         #region Public APIs
 
-        /// <summary>
-        /// Reads bytes asynchronously for the length of buffer.
-        /// Recommended to be used by Tds Parser: 
-        ///     Read entire buffer for the expected data, and then break down data from packets to avoid multiple async calls.
-        /// </summary>
-        /// <param name="buffer">Buffer to use for reading bytes.</param>
-        /// <param name="isAsync">Whether the call should be made asynchronously or synchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns></returns>
-        public ValueTask<int> ReadBytesAsync(Memory<byte> buffer, bool isAsync, CancellationToken ct)
-        {
-            // Throw operation canceled exception before write.
-            ct.ThrowIfCancellationRequested();
+        /// <inheritdoc />
+        public ValueTask<byte> ReadByteAsync(bool isAsync, CancellationToken ct) =>
+            _tdsStream.ReadByteAsync(isAsync, ct);
 
-            return isAsync
-                ? _tdsStream.ReadAsync(buffer, ct)
-                : new ValueTask<int>(_tdsStream.Read(buffer.Span));
-        }
+        /// <inheritdoc />
+        public ValueTask<int> ReadBytesAsync(Memory<byte> buffer, bool isAsync, CancellationToken ct) =>
+            _tdsStream.ReadBytesAsync(buffer, isAsync, ct);
 
-        /// <summary>
-        /// Reads byte from TDS stream asynchronously.
-        /// </summary>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns>Async <see cref="ValueTask"/> that returns a <see cref="byte"/> value.</returns>
-        public ValueTask<byte> ReadByteAsync(bool isAsync, CancellationToken ct)
-        {
-            // Throw operation canceled exception before write.
-            ct.ThrowIfCancellationRequested();
-
-            return isAsync
-                ? _tdsStream.ReadByteAsync(isAsync, ct)
-                : new ValueTask<byte>((byte)_tdsStream.ReadByte()); // UNSAFE - TODO Expose ReadByte from TdsStream that returns 'byte'.
-        }
-
-        /// <summary>
-        /// Reads next char from TDS stream asynchronously.
-        /// </summary>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns>Async <see cref="ValueTask"/> that returns a <see cref="char"/> value.</returns>
+        /// <inheritdoc />
         public ValueTask<char> ReadCharAsync(bool isAsync, CancellationToken ct)
             => isAsync
             ? ReadCharInternalAsync(ct)
             : new ValueTask<char>(_reader.ReadChar());
 
-        /// <summary>
-        /// Reads char array from Tds Stream of defined <paramref name="length"/> asynchronously.
-        /// </summary>
-        /// <param name="length">Length of array to read.</param>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns>Async <see cref="ValueTask"/> that returns a <see cref="char"/> array.</returns>
-        public async ValueTask<char[]> ReadCharArrayAsync(int length, bool isAsync, CancellationToken ct)
+        /// <inheritdoc />
+        public async ValueTask<char[]> ReadCharsAsync(int length, bool isAsync, CancellationToken ct)
         {
             if (!isAsync)
             {
@@ -107,101 +69,55 @@ namespace Microsoft.Data.SqlClientX.IO
             return chars;
         }
 
-        /// <summary>
-        /// Reads short value from Tds Stream asynchronously.
-        /// </summary>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns>Async <see cref="ValueTask"/> that returns a <see cref="short"/> value.</returns>
-        public ValueTask<short> ReadInt16Async(bool isAsync, CancellationToken ct)
-            => isAsync
-                ? ReadInt16InternalAsync(ct)
-                : new ValueTask<short>(_reader.ReadInt16());
-
-        /// <summary>
-        /// Reads int value from Tds Stream asynchronously.
-        /// </summary>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns>Async <see cref="ValueTask"/> that returns a <see cref="int"/> value.</returns>
-        public ValueTask<int> ReadInt32Async(bool isAsync, CancellationToken ct)
-            => isAsync
-                ? ReadInt32InternalAsync(ct)
-                : new ValueTask<int>(_reader.ReadInt32());
-
-        /// <summary>
-        /// Reads long value from Tds Stream asynchronously.
-        /// </summary>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns>Async <see cref="ValueTask"/> that returns a <see cref="long"/> value.</returns>
-        public ValueTask<long> ReadInt64Async(bool isAsync, CancellationToken ct)
-            => isAsync
-                ? ReadInt64InternalAsync(ct)
-                : new ValueTask<long>(_reader.ReadInt64());
-
-        /// <summary>
-        /// Reads unsigned short value from Tds Stream asynchronously.
-        /// </summary>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns>Async <see cref="ValueTask"/> that returns a <see cref="ushort"/> value.</returns>
-        public ValueTask<ushort> ReadUInt16Async(bool isAsync, CancellationToken ct)
-            => isAsync
-                ? ReadUInt16InternalAsync(ct)
-                : new ValueTask<ushort>(_reader.ReadUInt16());
-
-        /// <summary>
-        /// Reads unsigned int value from Tds Stream asynchronously.
-        /// </summary>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns>Async <see cref="ValueTask"/> that returns a <see cref="uint"/> value.</returns>
-        public ValueTask<uint> ReadUInt32Async(bool isAsync, CancellationToken ct)
-            => isAsync
-                ? ReadUInt32InternalAsync(ct)
-                : new ValueTask<uint>(_reader.ReadUInt32());
-
-        /// <summary>
-        /// Reads unsigned long value from Tds Stream asynchronously.
-        /// </summary>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns>Async <see cref="ValueTask"/> that returns a <see cref="ulong"/> value.</returns>
-        public ValueTask<ulong> ReadUInt64Async(bool isAsync, CancellationToken ct)
-            => isAsync
-                ? ReadUInt64InternalAsync(ct)
-                : new ValueTask<ulong>(_reader.ReadUInt64());
-
-        /// <summary>
-        /// Reads float value from Tds Stream asynchronously.
-        /// </summary>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns>Async <see cref="ValueTask"/> that returns a <see cref="float"/> value.</returns>
-        public ValueTask<float> ReadSingleAsync(bool isAsync, CancellationToken ct)
-            => isAsync
-                ? ReadSingleInternalAsync(ct)
-                : new ValueTask<float>(_reader.ReadSingle());
-
-        /// <summary>
-        /// Reads double value from Tds Stream asynchronously.
-        /// </summary>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns>Async <see cref="ValueTask"/> that returns a <see cref="double"/> value.</returns>
+        /// <inheritdoc />
         public ValueTask<double> ReadDoubleAsync(bool isAsync, CancellationToken ct)
             => isAsync
                 ? ReadDoubleInternalAsync(ct)
                 : new ValueTask<double>(_reader.ReadDouble());
 
-        /// <summary>
-        /// Reads string value from Tds Stream asynchronously.
-        /// </summary>
-        /// <param name="length">Length of string to read.</param>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns>Async <see cref="ValueTask"/> that returns a <see cref="string"/> value.</returns>
+        /// <inheritdoc />
+        public ValueTask<float> ReadFloatAsync(bool isAsync, CancellationToken ct)
+            => isAsync
+                ? ReadSingleInternalAsync(ct)
+                : new ValueTask<float>(_reader.ReadSingle());
+
+        /// <inheritdoc />
+        public ValueTask<int> ReadIntAsync(bool isAsync, CancellationToken ct)
+            => isAsync
+                ? ReadInt32InternalAsync(ct)
+                : new ValueTask<int>(_reader.ReadInt32());
+
+        /// <inheritdoc />
+        public ValueTask<long> ReadLongAsync(bool isAsync, CancellationToken ct)
+            => isAsync
+                ? ReadInt64InternalAsync(ct)
+                : new ValueTask<long>(_reader.ReadInt64());
+
+        /// <inheritdoc />
+        public ValueTask<short> ReadShortAsync(bool isAsync, CancellationToken ct)
+            => isAsync
+                ? ReadInt16InternalAsync(ct)
+                : new ValueTask<short>(_reader.ReadInt16());
+
+        /// <inheritdoc />
+        public ValueTask<uint> ReadUIntAsync(bool isAsync, CancellationToken ct)
+            => isAsync
+                ? ReadUInt32InternalAsync(ct)
+                : new ValueTask<uint>(_reader.ReadUInt32());
+
+        /// <inheritdoc />
+        public ValueTask<ulong> ReadULongAsync(bool isAsync, CancellationToken ct)
+            => isAsync
+                ? ReadUInt64InternalAsync(ct)
+                : new ValueTask<ulong>(_reader.ReadUInt64());
+
+        /// <inheritdoc />
+        public ValueTask<ushort> ReadUShortAsync(bool isAsync, CancellationToken ct)
+            => isAsync
+                ? ReadUInt16InternalAsync(ct)
+                : new ValueTask<ushort>(_reader.ReadUInt16());
+
+        /// <inheritdoc />
         public async ValueTask<string> ReadStringAsync(int length, bool isAsync, CancellationToken ct)
         {
             int byteLength = length * 2; // 2 bytes per char
@@ -214,16 +130,8 @@ namespace Microsoft.Data.SqlClientX.IO
             return Encoding.Unicode.GetString(buffer, 0, bytesRead);
         }
 
-        /// <summary>
-        /// Reads string value from Tds Stream with defined <paramref name="encoding"/> asynchronously.
-        /// </summary>
-        /// <param name="length">Length of string to read.</param>
-        /// <param name="encoding">String character encoding.</param>
-        /// <param name="isPlp">Whether this is PLP data.</param>
-        /// <param name="isAsync">Whether caller method is executing asynchronously.</param>
-        /// <param name="ct">Cancellation token.</param>
-        /// <returns>Async <see cref="ValueTask"/> that returns a <see cref="string"/> value.</returns>
-        public ValueTask<string> ReadStringWithEncodingAsync(int length, System.Text.Encoding encoding, bool isPlp, bool isAsync, CancellationToken ct)
+        /// <inheritdoc />
+        public ValueTask<string> ReadStringAsync(int length, Encoding encoding, bool isPlp, bool isAsync, CancellationToken ct)
             // TODO Implement PLP reading support
             => throw new NotImplementedException();
 

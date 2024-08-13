@@ -25,7 +25,7 @@ namespace Microsoft.Data.SqlClientX.IO
         // than copying the data from the buffer to the incoming byte array? Need to benchmark.
 
         #region Private Fields
-
+        
         private Stream _underlyingStream;
 
         // The buffer to hold the TDS read data.
@@ -37,8 +37,6 @@ namespace Microsoft.Data.SqlClientX.IO
         // The end of the data index in the buffer.
         private int _readBufferDataEnd = 0;
 
-
-
         #endregion
 
         #region Constructors
@@ -49,13 +47,16 @@ namespace Microsoft.Data.SqlClientX.IO
         /// <param name="underlyingStream">The underlying stream to read from</param>
         public TdsReadStream(Stream underlyingStream)
         {
-            _readBuffer = new byte[TdsEnums.DEFAULT_LOGIN_PACKET_SIZE];
             _underlyingStream = underlyingStream;
+
+            Reader = new TdsReader(this);
+            _readBuffer = new byte[TdsEnums.DEFAULT_LOGIN_PACKET_SIZE];
         }
 
         #endregion
 
         #region Public Properties
+        
         /// <inheritdoc />
         public override bool CanRead => _underlyingStream != null;
 
@@ -72,12 +73,6 @@ namespace Microsoft.Data.SqlClientX.IO
         public virtual int PacketDataLeft { get; private set; }
 
         /// <inheritdoc />
-        public virtual byte ReadPacketHeaderType { get; private set; }
-
-        /// <inheritdoc />
-        public virtual byte ReadPacketStatus { get; private set; }
-
-        /// <inheritdoc />
         public override long Position
         {
             get => throw new NotSupportedException();
@@ -85,29 +80,21 @@ namespace Microsoft.Data.SqlClientX.IO
         }
 
         /// <inheritdoc />
+        public ITdsReader Reader { get; private set; }
+        
+        /// <inheritdoc />
+        public virtual byte ReadPacketHeaderType { get; private set; }
+
+        /// <inheritdoc />
+        public virtual byte ReadPacketStatus { get; private set; }
+
+        /// <inheritdoc />
         public virtual int Spid { get; private set; }
 
         #endregion
 
-        #region Protected Methods
-
-        /// <inheritdoc />
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _underlyingStream.Dispose();
-                _underlyingStream = null;
-                _readBuffer = null;
-            }
-            base.Dispose(disposing);
-        }
-
-        #endregion
-
         #region Public Methods
-
-
+        
         /// <inheritdoc />
         public override async ValueTask DisposeAsync()
         {
@@ -151,19 +138,17 @@ namespace Microsoft.Data.SqlClientX.IO
         }
 
         /// <inheritdoc />
-        public override int Read(byte[] buffer, int offset, int count)
-        {
-            return Read(buffer.AsSpan(offset, count));
-        }
+        public override int Read(byte[] buffer, int offset, int count) =>
+            Read(buffer.AsSpan(offset, count));
 
         /// <inheritdoc />
-        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken)
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken ct)
         {
             int lengthToFill = buffer.Length;
             int totalRead = 0;
             while (lengthToFill > 0)
             {
-                await PrepareBufferAsync(isAsync: true, cancellationToken).ConfigureAwait(false);
+                await PrepareBufferAsync(isAsync: true, ct).ConfigureAwait(false);
                 int lengthToCopy = MinDataAvailableBeforeRead(lengthToFill);
                 ReadOnlyMemory<byte> copyFrom = new ReadOnlyMemory<byte>(_readBuffer, _readIndex, lengthToCopy);
                 copyFrom.CopyTo(buffer.Slice(totalRead, lengthToFill));
@@ -175,25 +160,36 @@ namespace Microsoft.Data.SqlClientX.IO
         }
 
         /// <inheritdoc />
-        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
-            return await ReadAsync(buffer.AsMemory(offset, count), cancellationToken).ConfigureAwait(false);
+            return await ReadAsync(buffer.AsMemory(offset, count), ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public void ReplaceUnderlyingStream(Stream stream) => _underlyingStream = stream;
-
-        /// <inheritdoc />
-        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
-
-        /// <inheritdoc />
-        public override void SetLength(long value) => throw new NotSupportedException();
-
-        /// <inheritdoc />
-        public void SetPacketSize(int bufferSize)
+        public ValueTask<int> ReadBytesAsync(Memory<byte> buffer, bool isAsync, CancellationToken ct)
         {
+            ct.ThrowIfCancellationRequested();
+
+            return isAsync
+                ? ReadAsync(buffer, ct)
+                : new ValueTask<int>(Read(buffer.Span));
+        }
+        
+        /// <inheritdoc />
+        public void ReplaceUnderlyingStream(Stream stream) => 
+            _underlyingStream = stream;
+
+        /// <inheritdoc />
+        public override long Seek(long offset, SeekOrigin origin) => 
+            throw new NotSupportedException();
+
+        /// <inheritdoc />
+        public override void SetLength(long value) => 
+            throw new NotSupportedException();
+
+        /// <inheritdoc />
+        public void SetPacketSize(int bufferSize) =>
             _readBuffer = new byte[bufferSize];
-        }
 
         /// <inheritdoc />
         public async ValueTask SkipReadBytesAsync(int skipCount, bool isAsync, CancellationToken ct)
@@ -209,10 +205,8 @@ namespace Microsoft.Data.SqlClientX.IO
         }
 
         /// <inheritdoc />
-        public override void Write(byte[] buffer, int offset, int count)
-        {
+        public override void Write(byte[] buffer, int offset, int count) =>
             throw new NotSupportedException();
-        }
 
         /// <inheritdoc />
         public async ValueTask<byte> ReadByteAsync(bool isAsync, CancellationToken ct)
@@ -221,6 +215,23 @@ namespace Microsoft.Data.SqlClientX.IO
             byte result = _readBuffer[_readIndex];
             AdvanceBufferOnRead(1);
             return result;
+        }
+
+        #endregion
+        
+        #region Protected Methods
+
+        /// <inheritdoc />
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _underlyingStream.Dispose();
+                _underlyingStream = null;
+                _readBuffer = null;
+                Reader = null;
+            }
+            base.Dispose(disposing);
         }
 
         #endregion

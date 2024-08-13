@@ -42,8 +42,9 @@ namespace Microsoft.Data.SqlClientX.IO
         public TdsWriteStream(Stream underLyingStream) : base()
         {
             _underlyingStream = underLyingStream;
-            _writeBuffer = new byte[TdsEnums.DEFAULT_LOGIN_PACKET_SIZE];
-            InitializeHeaderBytesToZero();
+
+            Writer = new TdsWriter(this);
+            SetPacketSize(TdsEnums.DEFAULT_LOGIN_PACKET_SIZE);
         }
 
         #endregion
@@ -75,6 +76,8 @@ namespace Microsoft.Data.SqlClientX.IO
             set => throw new NotSupportedException();
         }
 
+        public ITdsWriter Writer { get; private set; }
+        
         #endregion
 
         #region Public Methods
@@ -96,13 +99,6 @@ namespace Microsoft.Data.SqlClientX.IO
             => await FlushPacketAsync(true, true, ct).ConfigureAwait(false);
 
         /// <inheritdoc />
-        public void SetPacketSize(int bufferSize)
-        {
-            _writeBuffer = new byte[bufferSize];
-            InitializeHeaderBytesToZero();
-        }
-
-        /// <inheritdoc />
         public void ReplaceUnderlyingStream(Stream stream) => _underlyingStream = stream;
 
         /// <inheritdoc />
@@ -115,9 +111,15 @@ namespace Microsoft.Data.SqlClientX.IO
         public override void SetLength(long value) => throw new NotSupportedException();
 
         /// <inheritdoc />
+        public void SetPacketSize(int bufferSize)
+        {
+            _writeBuffer = new byte[bufferSize];
+            InitializeHeaderBytesToZero();
+        }
+        
+        /// <inheritdoc />
         public override void Write(byte[] buffer, int offset, int count)
             => Write(buffer.AsSpan(offset, count));
-
 
         /// <inheritdoc/>
         public override void Write(ReadOnlySpan<byte> buffer)
@@ -147,6 +149,42 @@ namespace Microsoft.Data.SqlClientX.IO
             }
         }
 
+        /// <inheritdoc/>
+        public override async ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken ct)
+        {
+            int len = buffer.Length;
+            int start = 0;
+            // The buffer may not have enough space. Write what we can and then flush the buffer with a soft flush, then 
+            // save the rest of the data.
+            while (len > 0)
+            {
+                if (len > _writeBuffer.Length - _writeBufferOffset)
+                {
+                    // Only a part of the length fits in the buffer.
+                    // TODO: It might be possible to optimize this by writing directly to the underlying stream.
+                    // In that case, we need to first write the header and then write the data packet to the underlying stream,
+                    // directly. This needs to be tested.
+                    int bytesToWrite = _writeBuffer.Length - _writeBufferOffset;
+                    buffer.Slice(start, bytesToWrite).CopyTo(_writeBuffer.AsMemory(_writeBufferOffset));
+                    _writeBufferOffset += bytesToWrite;
+                    len -= bytesToWrite;
+                    start += bytesToWrite;
+                    await FlushPacketAsync(false, false, ct).ConfigureAwait(false); // Send to network.
+                }
+                else
+                {
+                    // The whole length can be added to the buffer.
+                    buffer.Slice(start).CopyTo(_writeBuffer.AsMemory(_writeBufferOffset));
+                    _writeBufferOffset += len;
+                    len = 0;
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken ct)
+            => WriteAsync(buffer.AsMemory(offset, count), ct).AsTask();
+        
         /// <summary>
         /// An overload for writing a byte to the stream.
         /// Use this in case the caller is always going to write asynchronously. 
@@ -180,41 +218,20 @@ namespace Microsoft.Data.SqlClientX.IO
             _writeBuffer[_writeBufferOffset++] = value;
         }
 
-        /// <inheritdoc/>
-        public override async ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken)
+        /// <inheritdoc />
+        public virtual async ValueTask WriteBytesAsync(Memory<byte> buffer, bool isAsync, CancellationToken ct)
         {
-            int len = buffer.Length;
-            int start = 0;
-            // The buffer may not have enough space. Write what we can and then flush the buffer with a soft flush, then 
-            // save the rest of the data.
-            while (len > 0)
+            ct.ThrowIfCancellationRequested();
+            
+            if (isAsync)
             {
-                if (len > _writeBuffer.Length - _writeBufferOffset)
-                {
-                    // Only a part of the length fits in the buffer.
-                    // TODO: It might be possible to optimize this by writing directly to the underlying stream.
-                    // In that case, we need to first write the header and then write the data packet to the underlying stream,
-                    // directly. This needs to be tested.
-                    int bytesToWrite = _writeBuffer.Length - _writeBufferOffset;
-                    buffer.Slice(start, bytesToWrite).CopyTo(_writeBuffer.AsMemory(_writeBufferOffset));
-                    _writeBufferOffset += bytesToWrite;
-                    len -= bytesToWrite;
-                    start += bytesToWrite;
-                    await FlushPacketAsync(false, false, cancellationToken).ConfigureAwait(false); // Send to network.
-                }
-                else
-                {
-                    // The whole length can be added to the buffer.
-                    buffer.Slice(start).CopyTo(_writeBuffer.AsMemory(_writeBufferOffset));
-                    _writeBufferOffset += len;
-                    len = 0;
-                }
+                await WriteAsync(buffer, ct);
+            }
+            else
+            {
+                Write(buffer.Span);
             }
         }
-
-        /// <inheritdoc />
-        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-            => WriteAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
 
         /// <inheritdoc />
         public async ValueTask WriteStringAsync(string value, bool isAsync, CancellationToken ct)
@@ -256,6 +273,7 @@ namespace Microsoft.Data.SqlClientX.IO
             _underlyingStream?.Dispose();
             _underlyingStream = null;
             _writeBuffer = null;
+            Writer = null;
         }
 
         #endregion
