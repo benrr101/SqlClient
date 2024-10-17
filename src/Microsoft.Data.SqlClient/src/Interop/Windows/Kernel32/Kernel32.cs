@@ -20,15 +20,16 @@ namespace Interop_TEMP.Windows.Kernel32
 
         private const string DllName = "kernel32.dll";
 
+        [DllImport(DllName, SetLastError = true)]
+        internal static extern int GetFileType(SafeHandle hFile);
+
         [DllImport(DllName, SetLastError = true, CharSet = CharSet.Unicode)]
         [ResourceExposure(ResourceScope.Machine)]
-        internal static extern int GetFullPathName
-        (
+        internal static extern int GetFullPathName(
             string path,
             int numBufferChars,
             StringBuilder buffer,
-            IntPtr lpFilePartOrNull
-        );
+            IntPtr lpFilePartOrNull);
 
         #if !NETFRAMEWORK
         [DllImport(DllName, CharSet = CharSet.Ansi, BestFitMapping = false)]
