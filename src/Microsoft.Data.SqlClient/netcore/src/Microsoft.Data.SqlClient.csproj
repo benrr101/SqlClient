@@ -682,9 +682,6 @@
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\Crypt32\Crypt32.netcore.cs">
       <Link>Common\Interop\Windows\Crypt32\Crypt32.netcore.cs</Link>
     </Compile>
-    <Compile Include="$(CommonSourceRoot)\Interop\Windows\Crypt32\Interop.certificates_types.netcore.cs">
-      <Link>Common\Interop\Windows\Crypt32\Interop.certificates_types.netcore.cs</Link>
-    </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SystemErrors.cs">
       <Link>Common\Interop\Windows\SystemErrors.cs</Link>
     </Compile>
