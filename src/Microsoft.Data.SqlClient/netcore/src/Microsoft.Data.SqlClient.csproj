@@ -739,6 +739,9 @@
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\NtDll\Interop.SecurityQualityOfService.cs">
       <Link>Common\Interop\Windows\NtDll\Interop.SecurityQualityOfService.cs</Link>
     </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SafeLibraryHandle.netcore.cs">
+      <Link>Common\Interop\Windows\SafeLibraryHandle.netcore.cs</Link>
+    </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\Interop.SecPkgContext_ApplicationProtocol.netcore.cs">
       <Link>Common\Interop\Windows\SChannel\Interop.SecPkgContext_ApplicationProtocol.netcore.cs</Link>
     </Compile>
@@ -827,7 +830,6 @@
       <Link>Microsoft\Data\SqlTypes\SqlFileStream.Windows.cs</Link>
     </Compile>
 
-    <Compile Include="Common\Microsoft\Win32\SafeHandles\SafeLibraryHandle.cs" />
     <Compile Include="Common\System\Collections\Generic\BidirectionalDictionary.cs" />
     <Compile Include="Common\System\Net\ContextFlagsAdapterPal.Windows.cs" />
     <Compile Include="Common\System\Net\DebugCriticalHandleZeroOrMinusOneIsInvalid.cs" />
