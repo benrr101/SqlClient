@@ -778,7 +778,7 @@ namespace Microsoft.Data.SqlTypes
                 if (access == System.IO.FileAccess.ReadWrite)
                 {
                     uint ioControlCode = Interop.Kernel32.CTL_CODE(Interop.Kernel32.FILE_DEVICE_FILE_SYSTEM,
-                        IoControlCodeFunctionCode, (byte)Interop.Kernel32.IoControlTransferType.METHOD_BUFFERED,
+                        IoControlCodeFunctionCode, (byte)IoControlTransferType.METHOD_BUFFERED,
                         (byte)Interop.Kernel32.IoControlCodeAccess.FILE_ANY_ACCESS);
 
                     if (!Interop.Kernel32.DeviceIoControl(hFile, ioControlCode, IntPtr.Zero, 0, IntPtr.Zero, 0, out uint cbBytesReturned, IntPtr.Zero))
