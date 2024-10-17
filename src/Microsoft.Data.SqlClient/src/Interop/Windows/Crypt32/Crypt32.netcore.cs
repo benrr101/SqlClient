@@ -9,21 +9,23 @@ using System.Runtime.InteropServices;
 
 using Microsoft.Win32.SafeHandles;
 
-internal static partial class Interop
+namespace Interop_TEMP.Windows.Crypt32
 {
-    internal static partial class Crypt32
+    internal static class Crypt32
     {
-        [DllImport(Interop.Libraries.Crypt32, CharSet = CharSet.Unicode, SetLastError = true)]
+        private const string DllName = "crypt32.dll";
+
+        [DllImport(DllName, CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool CertFreeCertificateContext(IntPtr pCertContext);
 
-        [DllImport(Interop.Libraries.Crypt32, CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport(DllName, CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool CertVerifyCertificateChainPolicy(
             IntPtr pszPolicyOID,
             SafeX509ChainHandle pChainContext,
-            [In] ref CERT_CHAIN_POLICY_PARA pPolicyPara,
-            [In, Out] ref CERT_CHAIN_POLICY_STATUS pPolicyStatus);
+            [In] ref Interop.Crypt32.CERT_CHAIN_POLICY_PARA pPolicyPara,
+            [In, Out] ref Interop.Crypt32.CERT_CHAIN_POLICY_STATUS pPolicyStatus);
     }
 }
 
