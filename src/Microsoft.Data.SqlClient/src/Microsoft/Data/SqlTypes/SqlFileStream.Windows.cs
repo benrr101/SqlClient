@@ -807,7 +807,7 @@ namespace Microsoft.Data.SqlTypes
 
         #if NETFRAMEWORK
         /// <summary>
-        /// Safe wrapper for <see cref="Interop.Kernel32.GetFullPathName" />
+        /// Safe wrapper for <see cref="Kernel32.GetFullPathName" />
         /// </summary>
         [ResourceExposure(ResourceScope.Machine)]
         [ResourceConsumption(ResourceScope.Machine)]
@@ -822,14 +822,14 @@ namespace Microsoft.Data.SqlTypes
             // as the provided one. we still need to allocate +1 for null termination
             StringBuilder buffer = new StringBuilder(path.Length + 1);
 
-            int cchRequiredSize = Interop.Kernel32.GetFullPathName(path, buffer.Capacity, buffer, IntPtr.Zero);
+            int cchRequiredSize = Kernel32.GetFullPathName(path, buffer.Capacity, buffer, IntPtr.Zero);
 
             // if our buffer was smaller than required, GetFullPathName will succeed and return us the required buffer size with null
             if (cchRequiredSize > buffer.Capacity)
             {
                 // we have to reallocate and retry
                 buffer.Capacity = cchRequiredSize;
-                cchRequiredSize = Interop.Kernel32.GetFullPathName(path, buffer.Capacity, buffer, IntPtr.Zero);
+                cchRequiredSize = Kernel32.GetFullPathName(path, buffer.Capacity, buffer, IntPtr.Zero);
             }
 
             if (cchRequiredSize == 0)
