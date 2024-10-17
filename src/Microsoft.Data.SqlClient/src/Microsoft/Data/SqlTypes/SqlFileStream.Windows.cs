@@ -777,11 +777,11 @@ namespace Microsoft.Data.SqlTypes
                 // the existing file contents.
                 if (access == System.IO.FileAccess.ReadWrite)
                 {
-                    uint ioControlCode = Interop.Kernel32.CTL_CODE(Interop.Kernel32.FILE_DEVICE_FILE_SYSTEM,
+                    uint ioControlCode = Interop.Kernel32.CTL_CODE(Kernel32.FILE_DEVICE_FILE_SYSTEM,
                         IoControlCodeFunctionCode, (byte)IoControlTransferType.METHOD_BUFFERED,
                         (byte)IoControlCodeAccess.FILE_ANY_ACCESS);
 
-                    if (!Interop.Kernel32.DeviceIoControl(hFile, ioControlCode, IntPtr.Zero, 0, IntPtr.Zero, 0, out uint cbBytesReturned, IntPtr.Zero))
+                    if (!Kernel32.DeviceIoControl(hFile, ioControlCode, IntPtr.Zero, 0, IntPtr.Zero, 0, out uint cbBytesReturned, IntPtr.Zero))
                     {
                         System.ComponentModel.Win32Exception e = new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
                         ADP.TraceExceptionAsReturnValue(e);
