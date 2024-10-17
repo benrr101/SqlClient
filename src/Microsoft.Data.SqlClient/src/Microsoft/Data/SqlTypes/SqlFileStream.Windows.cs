@@ -13,6 +13,7 @@ using System.Runtime.Versioning;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading;
+using Interop_TEMP.Windows;
 using Microsoft.Data.Common;
 using Microsoft.Data.SqlClient;
 using Microsoft.Win32.SafeHandles;
@@ -730,13 +731,13 @@ namespace Microsoft.Data.SqlTypes
                     case 0:
                         break;
 
-                    case Interop.Errors.ERROR_SHARING_VIOLATION:
+                    case SystemErrors.ERROR_SHARING_VIOLATION:
                         throw ADP.InvalidOperation(StringsHelper.GetString(Strings.SqlFileStream_FileAlreadyInTransaction));
 
-                    case Interop.Errors.ERROR_INVALID_PARAMETER:
+                    case SystemErrors.ERROR_INVALID_PARAMETER:
                         throw ADP.Argument(StringsHelper.GetString(Strings.SqlFileStream_InvalidParameter));
 
-                    case Interop.Errors.ERROR_FILE_NOT_FOUND:
+                    case SystemErrors.ERROR_FILE_NOT_FOUND:
                         {
                             System.IO.DirectoryNotFoundException e = new System.IO.DirectoryNotFoundException();
                             ADP.TraceExceptionAsReturnValue(e);
@@ -759,7 +760,7 @@ namespace Microsoft.Data.SqlTypes
 
                 if (hFile.IsInvalid)
                 {
-                    System.ComponentModel.Win32Exception e = new System.ComponentModel.Win32Exception(Interop.Errors.ERROR_INVALID_HANDLE);
+                    System.ComponentModel.Win32Exception e = new System.ComponentModel.Win32Exception(SystemErrors.ERROR_INVALID_HANDLE);
                     ADP.TraceExceptionAsReturnValue(e);
                     throw e;
                 }
