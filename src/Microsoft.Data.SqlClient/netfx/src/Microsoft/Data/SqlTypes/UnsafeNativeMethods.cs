@@ -173,14 +173,6 @@ namespace Microsoft.Data.SqlTypes
             internal SafeHandle securityQualityOfService;
         }
 
-        [StructLayoutAttribute(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        internal struct UNICODE_STRING
-        {
-            internal UInt16 length;
-            internal UInt16 maximumLength;
-            internal string buffer;
-        }
-
         // VSTFDevDiv # 547461 [Backport SqlFileStream fix on Win7 to QFE branch]
         // Win7 enforces correct values for the _SECURITY_QUALITY_OF_SERVICE.qos member.
         // taken from _SECURITY_IMPERSONATION_LEVEL enum definition in winnt.h
