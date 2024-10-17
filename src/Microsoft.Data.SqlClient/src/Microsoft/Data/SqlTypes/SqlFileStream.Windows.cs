@@ -766,7 +766,7 @@ namespace Microsoft.Data.SqlTypes
                     throw e;
                 }
 
-                if (Interop.Kernel32.GetFileType(hFile) != Interop.Kernel32.FileTypes.FILE_TYPE_DISK)
+                if (Kernel32.GetFileType(hFile) != Interop.Kernel32.FileTypes.FILE_TYPE_DISK)
                 {
                     hFile.Dispose();
                     throw ADP.Argument(StringsHelper.GetString(Strings.SqlFileStream_PathNotValidDiskResource));
