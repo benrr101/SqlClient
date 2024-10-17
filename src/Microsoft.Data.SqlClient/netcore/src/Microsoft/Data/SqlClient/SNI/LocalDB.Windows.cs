@@ -5,8 +5,8 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using Interop_TEMP.Windows;
 using Microsoft.Win32;
-using Microsoft.Win32.SafeHandles;
 
 namespace Microsoft.Data.SqlClient.SNI
 {
