@@ -619,7 +619,6 @@
     <Compile Include="Common\System\NotImplemented.cs" />
     <Compile Include="Common\System\Net\ContextFlagsPal.cs" />
     <Compile Include="Common\System\Net\DebugCriticalHandleMinusOneIsInvalid.cs" />
-    <Compile Include="Common\System\Net\DebugSafeHandle.cs" />
     <Compile Include="Common\System\Net\InternalException.cs" />
     <Compile Include="Common\System\Net\Logging\DebugThreadTracking.cs" />
     <Compile Include="Common\System\Net\Logging\NetEventSource.Common.cs" />
@@ -684,6 +683,9 @@
     </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\DebugCriticalHandleZeroOrMinusOneIsInvalid.netcore.cs">
       <Link>Common\Interop\Windows\DebugCriticalHandleZeroOrMinusOneIsInvalid.netcore.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\DebugSafeHandle.netcore.cs">
+      <Link>Common\Interop\Windows\DebugSafeHandle.netcore.cs</Link>
     </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SystemErrors.cs">
       <Link>Common\Interop\Windows\SystemErrors.cs</Link>

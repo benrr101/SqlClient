@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security.Authentication.ExtendedProtection;
+using Interop_TEMP.Windows;
 using Interop_TEMP.Windows.Crypt32;
 using Interop_TEMP.Windows.SChannel;
 using Interop_TEMP.Windows.SspiCli;

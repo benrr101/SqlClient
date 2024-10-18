@@ -5,6 +5,7 @@
 #if !NETFRAMEWORK && !NET8_0_OR_GREATER
 
 using System.Runtime.InteropServices;
+using Interop_TEMP.Windows;
 using Interop_TEMP.Windows.SspiCli;
 
 namespace System.Net.Security
