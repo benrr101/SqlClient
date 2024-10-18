@@ -38,14 +38,14 @@ namespace System.Net.Security
             SafeSspiAuthDataHandle authData = null;
             try
             {
-                SecurityStatus result = Interop.SspiCli.SspiEncodeStringsAsAuthIdentity(
+                SecurityStatus result = SspiCli.SspiEncodeStringsAsAuthIdentity(
                     credential.UserName, credential.Domain,
                     credential.Password, out authData);
 
                 if (result != SecurityStatus.OK)
                 {
                     if (NetEventSource.IsEnabled)
-                        NetEventSource.Error(null, StringsHelper.Format(Strings.net_log_operation_failed_with_error, nameof(Interop.SspiCli.SspiEncodeStringsAsAuthIdentity), $"0x{(int)result:X}"));
+                        NetEventSource.Error(null, StringsHelper.Format(Strings.net_log_operation_failed_with_error, nameof(SspiCli.SspiEncodeStringsAsAuthIdentity), $"0x{(int)result:X}"));
                     throw new Win32Exception((int)result);
                 }
 

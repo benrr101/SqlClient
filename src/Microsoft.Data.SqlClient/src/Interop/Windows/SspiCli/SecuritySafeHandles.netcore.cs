@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Security.Authentication.ExtendedProtection;
 using Interop_TEMP.Windows.Crypt32;
 using Interop_TEMP.Windows.SChannel;
+using Interop_TEMP.Windows.SspiCli;
 
 namespace System.Net.Security
 {
@@ -29,7 +30,7 @@ namespace System.Net.Security
 
         protected override bool ReleaseHandle()
         {
-            return Interop.SspiCli.SspiFreeAuthIdentity(handle) == SecurityStatus.OK;
+            return SspiCli.SspiFreeAuthIdentity(handle) == SecurityStatus.OK;
         }
     }
 
@@ -55,7 +56,7 @@ namespace System.Net.Security
         {
             int res = -1;
             SafeFreeContextBuffer_SECURITY pkgArray_SECURITY = null;
-            res = Interop.SspiCli.EnumerateSecurityPackagesW(out pkgnum, out pkgArray_SECURITY);
+            res = SspiCli.EnumerateSecurityPackagesW(out pkgnum, out pkgArray_SECURITY);
             pkgArray = pkgArray_SECURITY;
 
             if (res != 0 && pkgArray != null)
@@ -86,7 +87,7 @@ namespace System.Net.Security
             {
                 bool ignore = false;
                 phContext.DangerousAddRef(ref ignore);
-                status = Interop.SspiCli.QueryContextAttributesW(ref phContext._handle, contextAttribute, buffer);
+                status = SspiCli.QueryContextAttributesW(ref phContext._handle, contextAttribute, buffer);
             }
             finally
             {
@@ -121,7 +122,7 @@ namespace System.Net.Security
             {
                 bool ignore = false;
                 phContext.DangerousAddRef(ref ignore);
-                return Interop.SspiCli.SetContextAttributesW(ref phContext._handle, contextAttribute, buffer, buffer.Length);
+                return SspiCli.SetContextAttributesW(ref phContext._handle, contextAttribute, buffer, buffer.Length);
             }
             finally
             {
@@ -136,7 +137,7 @@ namespace System.Net.Security
 
         protected override bool ReleaseHandle()
         {
-            return Interop.SspiCli.FreeContextBuffer(handle) == 0;
+            return SspiCli.FreeContextBuffer(handle) == 0;
         }
     }
 
@@ -218,7 +219,7 @@ namespace System.Net.Security
 
             outCredential = new SafeFreeCredential_SECURITY();
 
-            errorCode = Interop.SspiCli.AcquireCredentialsHandleW(
+            errorCode = SspiCli.AcquireCredentialsHandleW(
                             null,
                             package,
                             (int)intent,
@@ -250,7 +251,7 @@ namespace System.Net.Security
             int errorCode = -1;
 
             outCredential = new SafeFreeCredential_SECURITY();
-            errorCode = Interop.SspiCli.AcquireCredentialsHandleW(
+            errorCode = SspiCli.AcquireCredentialsHandleW(
                             null,
                             package,
                             (int)intent,
@@ -294,7 +295,7 @@ namespace System.Net.Security
 
                 outCredential = new SafeFreeCredential_SECURITY();
 
-                errorCode = Interop.SspiCli.AcquireCredentialsHandleW(
+                errorCode = SspiCli.AcquireCredentialsHandleW(
                                 null,
                                 package,
                                 (int)intent,
@@ -378,7 +379,7 @@ namespace System.Net.Security
 
         protected override bool ReleaseHandle()
         {
-            return Interop.SspiCli.FreeCredentialsHandle(ref _handle) == 0;
+            return SspiCli.FreeCredentialsHandle(ref _handle) == 0;
         }
     }
 
@@ -630,7 +631,7 @@ namespace System.Net.Security
 
                 Interop.SspiCli.CredHandle credentialHandle = inCredentials._handle;
 
-                errorCode = Interop.SspiCli.InitializeSecurityContextW(
+                errorCode = SspiCli.InitializeSecurityContextW(
                                 ref credentialHandle,
                                 inContextPtr,
                                 targetName,
@@ -916,7 +917,7 @@ namespace System.Net.Security
 
                 Interop.SspiCli.CredHandle credentialHandle = inCredentials._handle;
 
-                errorCode = Interop.SspiCli.AcceptSecurityContext(
+                errorCode = SspiCli.AcceptSecurityContext(
                                 ref credentialHandle,
                                 inContextPtr,
                                 inputBuffer,
@@ -1045,7 +1046,7 @@ namespace System.Net.Security
                     {
                         bool ignore = false;
                         refContext.DangerousAddRef(ref ignore);
-                        errorCode = Interop.SspiCli.CompleteAuthToken(contextHandle.IsZero ? null : &contextHandle, ref inSecurityBufferDescriptor);
+                        errorCode = SspiCli.CompleteAuthToken(contextHandle.IsZero ? null : &contextHandle, ref inSecurityBufferDescriptor);
                     }
                     finally
                     {
@@ -1149,7 +1150,7 @@ namespace System.Net.Security
                     {
                         bool ignore = false;
                         refContext.DangerousAddRef(ref ignore);
-                        errorCode = Interop.SspiCli.ApplyControlToken(contextHandle.IsZero ? null : &contextHandle, ref inSecurityBufferDescriptor);
+                        errorCode = SspiCli.ApplyControlToken(contextHandle.IsZero ? null : &contextHandle, ref inSecurityBufferDescriptor);
                     }
                     finally
                     {
@@ -1188,7 +1189,7 @@ namespace System.Net.Security
                 this._EffectiveCredential.DangerousRelease();
             }
 
-            return Interop.SspiCli.DeleteSecurityContext(ref _handle) == 0;
+            return SspiCli.DeleteSecurityContext(ref _handle) == 0;
         }
     }
 
@@ -1233,7 +1234,7 @@ namespace System.Net.Security
             {
                 bool ignore = false;
                 phContext.DangerousAddRef(ref ignore);
-                status = Interop.SspiCli.QueryContextAttributesW(ref phContext._handle, contextAttribute, buffer);
+                status = SspiCli.QueryContextAttributesW(ref phContext._handle, contextAttribute, buffer);
             }
             finally
             {
@@ -1271,7 +1272,7 @@ namespace System.Net.Security
     {
         protected override bool ReleaseHandle()
         {
-            return Interop.SspiCli.FreeContextBuffer(handle) == 0;
+            return SspiCli.FreeContextBuffer(handle) == 0;
         }
     }
 }

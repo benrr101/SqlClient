@@ -6,6 +6,8 @@
 
 using System.Net.Security;
 using System.Runtime.InteropServices;
+using Interop_TEMP.Windows;
+using Interop_TEMP.Windows.SspiCli;
 using Microsoft.Data;
 
 namespace System.Net
@@ -75,7 +77,7 @@ namespace System.Net
             {
                 bool ignore = false;
                 context.DangerousAddRef(ref ignore);
-                return Interop.SspiCli.EncryptMessage(ref context._handle, 0, ref inputOutput, sequenceNumber);
+                return SspiCli.EncryptMessage(ref context._handle, 0, ref inputOutput, sequenceNumber);
             }
             finally
             {
@@ -90,7 +92,7 @@ namespace System.Net
             {
                 bool ignore = false;
                 context.DangerousAddRef(ref ignore);
-                return Interop.SspiCli.DecryptMessage(ref context._handle, ref inputOutput, sequenceNumber, null);
+                return SspiCli.DecryptMessage(ref context._handle, ref inputOutput, sequenceNumber, null);
             }
             finally
             {

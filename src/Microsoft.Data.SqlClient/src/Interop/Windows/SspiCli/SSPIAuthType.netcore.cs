@@ -6,7 +6,9 @@
 
 using System.Net.Security;
 using System.Runtime.InteropServices;
+using Interop_TEMP.Windows;
 using Interop_TEMP.Windows.SChannel;
+using Interop_TEMP.Windows.SspiCli;
 using Microsoft.Data;
 
 namespace System.Net
@@ -73,7 +75,7 @@ namespace System.Net
                 bool ignore = false;
 
                 context.DangerousAddRef(ref ignore);
-                return Interop.SspiCli.EncryptMessage(ref context._handle, 0, ref inputOutput, sequenceNumber);
+                return SspiCli.EncryptMessage(ref context._handle, 0, ref inputOutput, sequenceNumber);
             }
             finally
             {
@@ -90,7 +92,7 @@ namespace System.Net
             {
                 bool ignore = false;
                 context.DangerousAddRef(ref ignore);
-                status = Interop.SspiCli.DecryptMessage(ref context._handle, ref inputOutput, sequenceNumber, &qop);
+                status = SspiCli.DecryptMessage(ref context._handle, ref inputOutput, sequenceNumber, &qop);
             }
             finally
             {
@@ -114,7 +116,7 @@ namespace System.Net
 
                 context.DangerousAddRef(ref ignore);
 
-                return Interop.SspiCli.EncryptMessage(ref context._handle, Interop.SspiCli.SECQOP_WRAP_NO_ENCRYPT, ref inputOutput, sequenceNumber);
+                return SspiCli.EncryptMessage(ref context._handle, Interop.SspiCli.SECQOP_WRAP_NO_ENCRYPT, ref inputOutput, sequenceNumber);
             }
             finally
             {
@@ -130,7 +132,7 @@ namespace System.Net
                 uint qop = 0;
 
                 context.DangerousAddRef(ref ignore);
-                return Interop.SspiCli.DecryptMessage(ref context._handle, ref inputOutput, sequenceNumber, &qop);
+                return SspiCli.DecryptMessage(ref context._handle, ref inputOutput, sequenceNumber, &qop);
             }
             finally
             {
@@ -188,7 +190,7 @@ namespace System.Net
             {
                 bool ignore = false;
                 phContext.DangerousAddRef(ref ignore);
-                return Interop.SspiCli.QuerySecurityContextToken(ref phContext._handle, out safeHandle);
+                return SspiCli.QuerySecurityContextToken(ref phContext._handle, out safeHandle);
             }
             finally
             {

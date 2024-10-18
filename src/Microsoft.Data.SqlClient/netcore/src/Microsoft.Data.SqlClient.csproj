@@ -787,6 +787,9 @@
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\SecuritySafeHandles.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\SecuritySafeHandles.netcore.cs</Link>
     </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\SspiCli.netcore.cs">
+      <Link>Common\Interop\Windows\SspiCli\SspiCli.netcore.cs</Link>
+    </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\SSPIAuthType.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\SSPIAuthType.netcore.cs</Link>
     </Compile>
