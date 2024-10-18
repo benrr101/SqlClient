@@ -404,12 +404,12 @@ namespace System.Net.Security
             ref SafeFreeCredentials inCredentials,
             ref SafeDeleteContext refContext,
             string targetName,
-            Interop.SspiCli.ContextFlags inFlags,
+            ContextFlags inFlags,
             Interop.SspiCli.Endianness endianness,
             SecurityBuffer inSecBuffer,
             SecurityBuffer[] inSecBuffers,
             SecurityBuffer outSecBuffer,
-            ref Interop.SspiCli.ContextFlags outFlags)
+            ref ContextFlags outFlags)
         {
 #if TRACE_VERBOSE
             if (NetEventSource.IsEnabled)
@@ -456,7 +456,7 @@ namespace System.Net.Security
             Interop.SspiCli.SecBufferDesc outSecurityBufferDescriptor = new Interop.SspiCli.SecBufferDesc(1);
 
             // Actually, this is returned in outFlags.
-            bool isSspiAllocated = (inFlags & Interop.SspiCli.ContextFlags.AllocateMemory) != 0 ? true : false;
+            bool isSspiAllocated = (inFlags & ContextFlags.AllocateMemory) != 0 ? true : false;
 
             int errorCode = -1;
 
@@ -613,12 +613,12 @@ namespace System.Net.Security
             ref SafeFreeCredentials inCredentials,
             void* inContextPtr,
             byte* targetName,
-            Interop.SspiCli.ContextFlags inFlags,
+            ContextFlags inFlags,
             Interop.SspiCli.Endianness endianness,
             Interop.SspiCli.SecBufferDesc* inputBuffer,
             SafeDeleteContext outContext,
             ref Interop.SspiCli.SecBufferDesc outputBuffer,
-            ref Interop.SspiCli.ContextFlags attributes,
+            ref ContextFlags attributes,
             SafeFreeContextBuffer handleTemplate)
         {
             int errorCode = (int)SecurityStatus.InvalidHandle;
@@ -694,12 +694,12 @@ namespace System.Net.Security
         internal static unsafe int AcceptSecurityContext(
             ref SafeFreeCredentials inCredentials,
             ref SafeDeleteContext refContext,
-            Interop.SspiCli.ContextFlags inFlags,
+            ContextFlags inFlags,
             Interop.SspiCli.Endianness endianness,
             SecurityBuffer inSecBuffer,
             SecurityBuffer[] inSecBuffers,
             SecurityBuffer outSecBuffer,
-            ref Interop.SspiCli.ContextFlags outFlags)
+            ref ContextFlags outFlags)
         {
 #if TRACE_VERBOSE
             if (NetEventSource.IsEnabled)
@@ -746,7 +746,7 @@ namespace System.Net.Security
             Interop.SspiCli.SecBufferDesc outSecurityBufferDescriptor = new Interop.SspiCli.SecBufferDesc(1);
 
             // Actually, this is returned in outFlags.
-            bool isSspiAllocated = (inFlags & Interop.SspiCli.ContextFlags.AllocateMemory) != 0 ? true : false;
+            bool isSspiAllocated = (inFlags & ContextFlags.AllocateMemory) != 0 ? true : false;
 
             int errorCode = -1;
 
@@ -898,11 +898,11 @@ namespace System.Net.Security
             ref SafeFreeCredentials inCredentials,
             void* inContextPtr,
             Interop.SspiCli.SecBufferDesc* inputBuffer,
-            Interop.SspiCli.ContextFlags inFlags,
+            ContextFlags inFlags,
             Interop.SspiCli.Endianness endianness,
             SafeDeleteContext outContext,
             ref Interop.SspiCli.SecBufferDesc outputBuffer,
-            ref Interop.SspiCli.ContextFlags outFlags,
+            ref ContextFlags outFlags,
             SafeFreeContextBuffer handleTemplate)
         {
             int errorCode = (int)SecurityStatus.InvalidHandle;

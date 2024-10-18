@@ -48,11 +48,11 @@ namespace Interop_TEMP.Windows.SspiCli
             ref CredHandle credentialHandle,
             [In] void* inContextPtr,
             [In] Interop.SspiCli.SecBufferDesc* inputBuffer,
-            [In] Interop.SspiCli.ContextFlags inFlags,
+            [In] ContextFlags inFlags,
             [In] Interop.SspiCli.Endianness endianness,
             ref CredHandle outContextPtr,
             [In, Out] ref Interop.SspiCli.SecBufferDesc outputBuffer,
-            [In, Out] ref Interop.SspiCli.ContextFlags attributes,
+            [In, Out] ref ContextFlags attributes,
             out long timeStamp);
 
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]
@@ -114,14 +114,14 @@ namespace Interop_TEMP.Windows.SspiCli
             ref CredHandle credentialHandle,
             [In] void* inContextPtr,
             [In] byte* targetName,
-            [In] Interop.SspiCli.ContextFlags inFlags,
+            [In] ContextFlags inFlags,
             [In] int reservedI,
             [In] Interop.SspiCli.Endianness endianness,
             [In] Interop.SspiCli.SecBufferDesc* inputBuffer,
             [In] int reservedII,
             ref CredHandle outContextPtr,
             [In, Out] ref Interop.SspiCli.SecBufferDesc outputBuffer,
-            [In, Out] ref Interop.SspiCli.ContextFlags attributes,
+            [In, Out] ref ContextFlags attributes,
             out long timeStamp);
 
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]

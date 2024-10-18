@@ -4,16 +4,18 @@
 
 #if !NET8_0_OR_GREATER
 
+using Interop_TEMP.Windows.SspiCli;
+
 namespace System.Net
 {
     internal static class ContextFlagsAdapterPal
     {
         private readonly struct ContextFlagMapping
         {
-            public readonly Interop.SspiCli.ContextFlags Win32Flag;
+            public readonly ContextFlags Win32Flag;
             public readonly ContextFlagsPal ContextFlag;
 
-            public ContextFlagMapping(Interop.SspiCli.ContextFlags win32Flag, ContextFlagsPal contextFlag)
+            public ContextFlagMapping(ContextFlags win32Flag, ContextFlagsPal contextFlag)
             {
                 Win32Flag = win32Flag;
                 ContextFlag = contextFlag;
@@ -22,31 +24,31 @@ namespace System.Net
 
         private static readonly ContextFlagMapping[] s_contextFlagMapping = new[]
         {
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.AcceptExtendedError, ContextFlagsPal.AcceptExtendedError),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.AcceptIdentify, ContextFlagsPal.AcceptIdentify),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.AcceptIntegrity, ContextFlagsPal.AcceptIntegrity),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.AcceptStream, ContextFlagsPal.AcceptStream),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.AllocateMemory, ContextFlagsPal.AllocateMemory),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.AllowMissingBindings, ContextFlagsPal.AllowMissingBindings),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.Confidentiality, ContextFlagsPal.Confidentiality),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.Connection, ContextFlagsPal.Connection),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.Delegate, ContextFlagsPal.Delegate),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.InitExtendedError, ContextFlagsPal.InitExtendedError),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.InitIdentify, ContextFlagsPal.InitIdentify),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.InitManualCredValidation, ContextFlagsPal.InitManualCredValidation),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.InitIntegrity, ContextFlagsPal.InitIntegrity),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.InitStream, ContextFlagsPal.InitStream),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.InitUseSuppliedCreds, ContextFlagsPal.InitUseSuppliedCreds),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.MutualAuth, ContextFlagsPal.MutualAuth),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.ProxyBindings, ContextFlagsPal.ProxyBindings),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.ReplayDetect, ContextFlagsPal.ReplayDetect),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.SequenceDetect, ContextFlagsPal.SequenceDetect),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.UnverifiedTargetName, ContextFlagsPal.UnverifiedTargetName),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.UseSessionKey, ContextFlagsPal.UseSessionKey),
-            new ContextFlagMapping(Interop.SspiCli.ContextFlags.Zero, ContextFlagsPal.None),
+            new ContextFlagMapping(ContextFlags.AcceptExtendedError, ContextFlagsPal.AcceptExtendedError),
+            new ContextFlagMapping(ContextFlags.AcceptIdentify, ContextFlagsPal.AcceptIdentify),
+            new ContextFlagMapping(ContextFlags.AcceptIntegrity, ContextFlagsPal.AcceptIntegrity),
+            new ContextFlagMapping(ContextFlags.AcceptStream, ContextFlagsPal.AcceptStream),
+            new ContextFlagMapping(ContextFlags.AllocateMemory, ContextFlagsPal.AllocateMemory),
+            new ContextFlagMapping(ContextFlags.AllowMissingBindings, ContextFlagsPal.AllowMissingBindings),
+            new ContextFlagMapping(ContextFlags.Confidentiality, ContextFlagsPal.Confidentiality),
+            new ContextFlagMapping(ContextFlags.Connection, ContextFlagsPal.Connection),
+            new ContextFlagMapping(ContextFlags.Delegate, ContextFlagsPal.Delegate),
+            new ContextFlagMapping(ContextFlags.InitExtendedError, ContextFlagsPal.InitExtendedError),
+            new ContextFlagMapping(ContextFlags.InitIdentify, ContextFlagsPal.InitIdentify),
+            new ContextFlagMapping(ContextFlags.InitManualCredValidation, ContextFlagsPal.InitManualCredValidation),
+            new ContextFlagMapping(ContextFlags.InitIntegrity, ContextFlagsPal.InitIntegrity),
+            new ContextFlagMapping(ContextFlags.InitStream, ContextFlagsPal.InitStream),
+            new ContextFlagMapping(ContextFlags.InitUseSuppliedCreds, ContextFlagsPal.InitUseSuppliedCreds),
+            new ContextFlagMapping(ContextFlags.MutualAuth, ContextFlagsPal.MutualAuth),
+            new ContextFlagMapping(ContextFlags.ProxyBindings, ContextFlagsPal.ProxyBindings),
+            new ContextFlagMapping(ContextFlags.ReplayDetect, ContextFlagsPal.ReplayDetect),
+            new ContextFlagMapping(ContextFlags.SequenceDetect, ContextFlagsPal.SequenceDetect),
+            new ContextFlagMapping(ContextFlags.UnverifiedTargetName, ContextFlagsPal.UnverifiedTargetName),
+            new ContextFlagMapping(ContextFlags.UseSessionKey, ContextFlagsPal.UseSessionKey),
+            new ContextFlagMapping(ContextFlags.Zero, ContextFlagsPal.None),
         };
 
-        internal static ContextFlagsPal GetContextFlagsPalFromInterop(Interop.SspiCli.ContextFlags win32Flags)
+        internal static ContextFlagsPal GetContextFlagsPalFromInterop(ContextFlags win32Flags)
         {
             ContextFlagsPal flags = ContextFlagsPal.None;
             foreach (ContextFlagMapping mapping in s_contextFlagMapping)
@@ -60,9 +62,9 @@ namespace System.Net
             return flags;
         }
 
-        internal static Interop.SspiCli.ContextFlags GetInteropFromContextFlagsPal(ContextFlagsPal flags)
+        internal static ContextFlags GetInteropFromContextFlagsPal(ContextFlagsPal flags)
         {
-            Interop.SspiCli.ContextFlags win32Flags = Interop.SspiCli.ContextFlags.Zero;
+            ContextFlags win32Flags = ContextFlags.Zero;
             foreach (ContextFlagMapping mapping in s_contextFlagMapping)
             {
                 if ((flags & mapping.ContextFlag) == mapping.ContextFlag)

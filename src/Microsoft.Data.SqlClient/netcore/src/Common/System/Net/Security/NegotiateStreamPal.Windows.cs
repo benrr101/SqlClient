@@ -81,7 +81,7 @@ namespace System.Net.Security
             SecurityBuffer outSecurityBuffer,
             ref ContextFlagsPal contextFlags)
         {
-            Interop.SspiCli.ContextFlags outContextFlags = Interop.SspiCli.ContextFlags.Zero;
+            ContextFlags outContextFlags = ContextFlags.Zero;
             SecurityStatus winStatus = (SecurityStatus)SSPIWrapper.InitializeSecurityContext(
                 GlobalSspi.SSPIAuth,
                 credentialsHandle,
@@ -116,7 +116,7 @@ namespace System.Net.Security
             SecurityBuffer outSecurityBuffer,
             ref ContextFlagsPal contextFlags)
         {
-            Interop.SspiCli.ContextFlags outContextFlags = Interop.SspiCli.ContextFlags.Zero;
+            ContextFlags outContextFlags = ContextFlags.Zero;
             SecurityStatus winStatus = (SecurityStatus)SSPIWrapper.AcceptSecurityContext(
                 GlobalSspi.SSPIAuth,
                 credentialsHandle,

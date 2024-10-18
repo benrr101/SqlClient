@@ -757,6 +757,9 @@
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\ContextAttribute.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\ContextAttribute.netcore.cs</Link>
     </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\ContextFlags.netcore.cs">
+      <Link>Common\Interop\Windows\SspiCli\ContextFlags.netcore.cs</Link>
+    </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\CredHandle.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\CredHandle.netcore.cs</Link>
     </Compile>

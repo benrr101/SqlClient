@@ -7,6 +7,7 @@
 using System.Diagnostics.Tracing;
 using System.Net.Security;
 using Interop_TEMP.Windows.SChannel;
+using Interop_TEMP.Windows.SspiCli;
 
 namespace System.Net
 {
@@ -40,7 +41,7 @@ namespace System.Net
         }
 
         [NonEvent]
-        public void InitializeSecurityContext(SafeFreeCredentials credential, SafeDeleteContext context, string targetName, Interop.SspiCli.ContextFlags inFlags)
+        public void InitializeSecurityContext(SafeFreeCredentials credential, SafeDeleteContext context, string targetName, ContextFlags inFlags)
         {
             if (IsEnabled())
             {
@@ -48,11 +49,11 @@ namespace System.Net
             }
         }
         [Event(InitializeSecurityContextId, Keywords = Keywords.Default, Level = EventLevel.Informational)]
-        private void InitializeSecurityContext(string credential, string context, string targetName, Interop.SspiCli.ContextFlags inFlags) =>
+        private void InitializeSecurityContext(string credential, string context, string targetName, ContextFlags inFlags) =>
             WriteEvent(InitializeSecurityContextId, credential, context, targetName, (int)inFlags);
 
         [NonEvent]
-        public void AcceptSecurityContext(SafeFreeCredentials credential, SafeDeleteContext context, Interop.SspiCli.ContextFlags inFlags)
+        public void AcceptSecurityContext(SafeFreeCredentials credential, SafeDeleteContext context, ContextFlags inFlags)
         {
             if (IsEnabled())
             {
@@ -60,7 +61,7 @@ namespace System.Net
             }
         }
         [Event(AcceptSecurityContextId, Keywords = Keywords.Default, Level = EventLevel.Informational)]
-        private void AcceptSecurityContext(string credential, string context, Interop.SspiCli.ContextFlags inFlags) =>
+        private void AcceptSecurityContext(string credential, string context, ContextFlags inFlags) =>
             WriteEvent(AcceptSecurityContextId, credential, context, (int)inFlags);
 
         [Event(OperationReturnedSomethingId, Keywords = Keywords.Default, Level = EventLevel.Informational)]
