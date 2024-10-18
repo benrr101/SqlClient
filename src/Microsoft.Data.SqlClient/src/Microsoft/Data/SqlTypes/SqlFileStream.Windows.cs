@@ -747,8 +747,8 @@ namespace Microsoft.Data.SqlTypes
                         }
                     default:
                         {
-                            uint error = Interop.NtDll.RtlNtStatusToDosError(retval);
-                            if (error == Interop.NtDll.ERROR_MR_MID_NOT_FOUND)
+                            uint error = NtDll.RtlNtStatusToDosError(retval);
+                            if (error == SystemErrors.ERROR_MR_MID_NOT_FOUND)
                             {
                                 // status code could not be mapped to a Win32 error code
                                 error = (uint)retval;
