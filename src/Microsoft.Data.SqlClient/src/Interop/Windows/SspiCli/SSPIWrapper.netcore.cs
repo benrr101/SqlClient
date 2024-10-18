@@ -93,7 +93,7 @@ namespace System.Net
             return null;
         }
 
-        public static SafeFreeCredentials AcquireDefaultCredential(SSPIInterface secModule, string package, Interop.SspiCli.CredentialUse intent)
+        public static SafeFreeCredentials AcquireDefaultCredential(SSPIInterface secModule, string package, CredentialUse intent)
         {
             if (NetEventSource.IsEnabled)
             {
@@ -113,7 +113,7 @@ namespace System.Net
             return outCredential;
         }
 
-        public static SafeFreeCredentials AcquireCredentialsHandle(SSPIInterface secModule, string package, Interop.SspiCli.CredentialUse intent, ref SafeSspiAuthDataHandle authdata)
+        public static SafeFreeCredentials AcquireCredentialsHandle(SSPIInterface secModule, string package, CredentialUse intent, ref SafeSspiAuthDataHandle authdata)
         {
             if (NetEventSource.IsEnabled)
                 NetEventSource.Log.AcquireCredentialsHandle(package, intent, authdata);
@@ -131,7 +131,7 @@ namespace System.Net
             return credentialsHandle;
         }
 
-        public static SafeFreeCredentials AcquireCredentialsHandle(SSPIInterface secModule, string package, Interop.SspiCli.CredentialUse intent, Interop.SspiCli.SCHANNEL_CRED scc)
+        public static SafeFreeCredentials AcquireCredentialsHandle(SSPIInterface secModule, string package, CredentialUse intent, Interop.SspiCli.SCHANNEL_CRED scc)
         {
             if (NetEventSource.IsEnabled)
             {
@@ -158,7 +158,7 @@ namespace System.Net
             return outCredential;
         }
 
-        internal static int InitializeSecurityContext(SSPIInterface secModule, ref SafeFreeCredentials credential, ref SafeDeleteContext context, string targetName, ContextFlags inFlags, Interop.SspiCli.Endianness datarep, SecurityBuffer inputBuffer, SecurityBuffer outputBuffer, ref ContextFlags outFlags)
+        internal static int InitializeSecurityContext(SSPIInterface secModule, ref SafeFreeCredentials credential, ref SafeDeleteContext context, string targetName, ContextFlags inFlags, Endianness datarep, SecurityBuffer inputBuffer, SecurityBuffer outputBuffer, ref ContextFlags outFlags)
         {
             if (NetEventSource.IsEnabled)
                 NetEventSource.Log.InitializeSecurityContext(credential, context, targetName, inFlags);
@@ -171,7 +171,7 @@ namespace System.Net
             return errorCode;
         }
 
-        internal static int InitializeSecurityContext(SSPIInterface secModule, SafeFreeCredentials credential, ref SafeDeleteContext context, string targetName, ContextFlags inFlags, Interop.SspiCli.Endianness datarep, SecurityBuffer[] inputBuffers, SecurityBuffer outputBuffer, ref ContextFlags outFlags)
+        internal static int InitializeSecurityContext(SSPIInterface secModule, SafeFreeCredentials credential, ref SafeDeleteContext context, string targetName, ContextFlags inFlags, Endianness datarep, SecurityBuffer[] inputBuffers, SecurityBuffer outputBuffer, ref ContextFlags outFlags)
         {
             if (NetEventSource.IsEnabled)
                 NetEventSource.Log.InitializeSecurityContext(credential, context, targetName, inFlags);
@@ -184,7 +184,7 @@ namespace System.Net
             return errorCode;
         }
 
-        internal static int AcceptSecurityContext(SSPIInterface secModule, SafeFreeCredentials credential, ref SafeDeleteContext context, ContextFlags inFlags, Interop.SspiCli.Endianness datarep, SecurityBuffer[] inputBuffers, SecurityBuffer outputBuffer, ref ContextFlags outFlags)
+        internal static int AcceptSecurityContext(SSPIInterface secModule, SafeFreeCredentials credential, ref SafeDeleteContext context, ContextFlags inFlags, Endianness datarep, SecurityBuffer[] inputBuffers, SecurityBuffer outputBuffer, ref ContextFlags outFlags)
         {
             if (NetEventSource.IsEnabled)
                 NetEventSource.Log.AcceptSecurityContext(credential, context, inFlags);

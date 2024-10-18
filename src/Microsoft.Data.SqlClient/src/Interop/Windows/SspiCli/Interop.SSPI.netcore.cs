@@ -19,21 +19,6 @@ internal static partial class Interop
         internal const int SECPKG_NEGOTIATION_COMPLETE = 0;
         internal const int SECPKG_NEGOTIATION_OPTIMISTIC = 1;
 
-        
-
-        internal enum Endianness
-        {
-            SECURITY_NETWORK_DREP = 0x00,
-            SECURITY_NATIVE_DREP = 0x10,
-        }
-
-        internal enum CredentialUse
-        {
-            SECPKG_CRED_INBOUND = 0x1,
-            SECPKG_CRED_OUTBOUND = 0x2,
-            SECPKG_CRED_BOTH = 0x3,
-        }
-
         // wincrypt.h
         [StructLayout(LayoutKind.Sequential)]
         internal struct CERT_CHAIN_ELEMENT

@@ -14,7 +14,7 @@ namespace System.Net
     internal sealed partial class NetEventSource
     {
         [Event(AcquireDefaultCredentialId, Keywords = Keywords.Default, Level = EventLevel.Informational)]
-        public void AcquireDefaultCredential(string packageName, Interop.SspiCli.CredentialUse intent)
+        public void AcquireDefaultCredential(string packageName, CredentialUse intent)
         {
             if (IsEnabled())
             {
@@ -23,7 +23,7 @@ namespace System.Net
         }
 
         [NonEvent]
-        public void AcquireCredentialsHandle(string packageName, Interop.SspiCli.CredentialUse intent, object authdata)
+        public void AcquireCredentialsHandle(string packageName, CredentialUse intent, object authdata)
         {
             if (IsEnabled())
             {
@@ -32,7 +32,7 @@ namespace System.Net
         }
 
         [Event(AcquireCredentialsHandleId, Keywords = Keywords.Default, Level = EventLevel.Informational)]
-        public void AcquireCredentialsHandle(string packageName, Interop.SspiCli.CredentialUse intent, string authdata)
+        public void AcquireCredentialsHandle(string packageName, CredentialUse intent, string authdata)
         {
             if (IsEnabled())
             {

@@ -760,8 +760,14 @@
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\ContextFlags.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\ContextFlags.netcore.cs</Link>
     </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\CredentialUse.netcore.cs">
+      <Link>Common\Interop\Windows\SspiCli\CredentialUse.netcore.cs</Link>
+    </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\CredHandle.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\CredHandle.netcore.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\Endianness.netcore.cs">
+      <Link>Common\Interop\Windows\SspiCli\Endianness.netcore.cs</Link>
     </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\GlobalSspi.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\GlobalSspi.netcore.cs</Link>

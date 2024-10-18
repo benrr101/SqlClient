@@ -30,7 +30,7 @@ namespace System.Net.Security
             return SSPIWrapper.AcquireDefaultCredential(
                 GlobalSspi.SSPIAuth,
                 package,
-                (isServer ? Interop.SspiCli.CredentialUse.SECPKG_CRED_INBOUND : Interop.SspiCli.CredentialUse.SECPKG_CRED_OUTBOUND));
+                (isServer ? CredentialUse.SECPKG_CRED_INBOUND : CredentialUse.SECPKG_CRED_OUTBOUND));
         }
 
         internal static unsafe SafeFreeCredentials AcquireCredentialsHandle(string package, bool isServer, NetworkCredential credential)
@@ -50,7 +50,7 @@ namespace System.Net.Security
                 }
 
                 return SSPIWrapper.AcquireCredentialsHandle(GlobalSspi.SSPIAuth,
-                    package, (isServer ? Interop.SspiCli.CredentialUse.SECPKG_CRED_INBOUND : Interop.SspiCli.CredentialUse.SECPKG_CRED_OUTBOUND), ref authData);
+                    package, (isServer ? CredentialUse.SECPKG_CRED_INBOUND : CredentialUse.SECPKG_CRED_OUTBOUND), ref authData);
             }
             finally
             {
@@ -88,7 +88,7 @@ namespace System.Net.Security
                 ref securityContext,
                 spn[0],
                 ContextFlagsAdapterPal.GetInteropFromContextFlagsPal(requestedContextFlags),
-                Interop.SspiCli.Endianness.SECURITY_NETWORK_DREP,
+                Endianness.SECURITY_NETWORK_DREP,
                 inSecurityBufferArray,
                 outSecurityBuffer,
                 ref outContextFlags);
@@ -122,7 +122,7 @@ namespace System.Net.Security
                 credentialsHandle,
                 ref securityContext,
                 ContextFlagsAdapterPal.GetInteropFromContextFlagsPal(requestedContextFlags),
-                Interop.SspiCli.Endianness.SECURITY_NETWORK_DREP,
+                Endianness.SECURITY_NETWORK_DREP,
                 inSecurityBufferArray,
                 outSecurityBuffer,
                 ref outContextFlags);

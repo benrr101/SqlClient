@@ -209,7 +209,7 @@ namespace System.Net.Security
 
         public static unsafe int AcquireDefaultCredential(
             string package,
-            Interop.SspiCli.CredentialUse intent,
+            CredentialUse intent,
             out SafeFreeCredentials outCredential)
         {
             if (NetEventSource.IsEnabled)
@@ -244,7 +244,7 @@ namespace System.Net.Security
 
         public static unsafe int AcquireCredentialsHandle(
             string package,
-            Interop.SspiCli.CredentialUse intent,
+            CredentialUse intent,
             ref SafeSspiAuthDataHandle authdata,
             out SafeFreeCredentials outCredential)
         {
@@ -272,7 +272,7 @@ namespace System.Net.Security
 
         public static unsafe int AcquireCredentialsHandle(
             string package,
-            Interop.SspiCli.CredentialUse intent,
+            CredentialUse intent,
             ref Interop.SspiCli.SCHANNEL_CRED authdata,
             out SafeFreeCredentials outCredential)
         {
@@ -405,7 +405,7 @@ namespace System.Net.Security
             ref SafeDeleteContext refContext,
             string targetName,
             ContextFlags inFlags,
-            Interop.SspiCli.Endianness endianness,
+            Endianness endianness,
             SecurityBuffer inSecBuffer,
             SecurityBuffer[] inSecBuffers,
             SecurityBuffer outSecBuffer,
@@ -614,7 +614,7 @@ namespace System.Net.Security
             void* inContextPtr,
             byte* targetName,
             ContextFlags inFlags,
-            Interop.SspiCli.Endianness endianness,
+            Endianness endianness,
             Interop.SspiCli.SecBufferDesc* inputBuffer,
             SafeDeleteContext outContext,
             ref Interop.SspiCli.SecBufferDesc outputBuffer,
@@ -695,7 +695,7 @@ namespace System.Net.Security
             ref SafeFreeCredentials inCredentials,
             ref SafeDeleteContext refContext,
             ContextFlags inFlags,
-            Interop.SspiCli.Endianness endianness,
+            Endianness endianness,
             SecurityBuffer inSecBuffer,
             SecurityBuffer[] inSecBuffers,
             SecurityBuffer outSecBuffer,
@@ -899,7 +899,7 @@ namespace System.Net.Security
             void* inContextPtr,
             Interop.SspiCli.SecBufferDesc* inputBuffer,
             ContextFlags inFlags,
-            Interop.SspiCli.Endianness endianness,
+            Endianness endianness,
             SafeDeleteContext outContext,
             ref Interop.SspiCli.SecBufferDesc outputBuffer,
             ref ContextFlags outFlags,
