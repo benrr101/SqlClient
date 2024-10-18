@@ -733,6 +733,9 @@
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SafeLibraryHandle.netcore.cs">
       <Link>Common\Interop\Windows\SafeLibraryHandle.netcore.cs</Link>
     </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\ApplicationProtocolNegotiationExt.netcore.cs">
+      <Link>Common\Interop\Windows\SChannel\ApplicationProtocolNegotiationExt.netcore.cs</Link>
+    </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\ApplicationProtocolNegotiationStatus.netcore.cs">
       <Link>Common\Interop\Windows\SChannel\ApplicationProtocolNegotiationStatus.netcore.cs</Link>
     </Compile>
