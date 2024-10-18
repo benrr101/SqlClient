@@ -110,7 +110,7 @@ namespace System.Net
             throw NotImplemented.ByDesignWithMessage(Strings.net_MethodNotImplementedException);
         }
 
-        public unsafe int QueryContextChannelBinding(SafeDeleteContext phContext, Interop.SspiCli.ContextAttribute attribute, out SafeFreeContextBufferChannelBinding refHandle)
+        public unsafe int QueryContextChannelBinding(SafeDeleteContext phContext, ContextAttribute attribute, out SafeFreeContextBufferChannelBinding refHandle)
         {
             refHandle = SafeFreeContextBufferChannelBinding.CreateEmptyHandle();
 
@@ -119,7 +119,7 @@ namespace System.Net
             return SafeFreeContextBufferChannelBinding.QueryContextChannelBinding(phContext, attribute, &bindings, refHandle);
         }
 
-        public unsafe int QueryContextAttributes(SafeDeleteContext phContext, Interop.SspiCli.ContextAttribute attribute, byte[] buffer, Type handleType, out SafeHandle refHandle)
+        public unsafe int QueryContextAttributes(SafeDeleteContext phContext, ContextAttribute attribute, byte[] buffer, Type handleType, out SafeHandle refHandle)
         {
             refHandle = null;
             if (handleType != null)

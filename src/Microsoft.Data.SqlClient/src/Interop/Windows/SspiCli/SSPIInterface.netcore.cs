@@ -7,6 +7,7 @@
 using System.Net.Security;
 using System.Runtime.InteropServices;
 using Interop_TEMP.Windows;
+using Interop_TEMP.Windows.SspiCli;
 
 namespace System.Net
 {
@@ -26,8 +27,8 @@ namespace System.Net
         int MakeSignature(SafeDeleteContext context, ref Interop.SspiCli.SecBufferDesc inputOutput, uint sequenceNumber);
         int VerifySignature(SafeDeleteContext context, ref Interop.SspiCli.SecBufferDesc inputOutput, uint sequenceNumber);
 
-        int QueryContextChannelBinding(SafeDeleteContext phContext, Interop.SspiCli.ContextAttribute attribute, out SafeFreeContextBufferChannelBinding refHandle);
-        int QueryContextAttributes(SafeDeleteContext phContext, Interop.SspiCli.ContextAttribute attribute, byte[] buffer, Type handleType, out SafeHandle refHandle);
+        int QueryContextChannelBinding(SafeDeleteContext phContext, ContextAttribute attribute, out SafeFreeContextBufferChannelBinding refHandle);
+        int QueryContextAttributes(SafeDeleteContext phContext, ContextAttribute attribute, byte[] buffer, Type handleType, out SafeHandle refHandle);
         int QuerySecurityContextToken(SafeDeleteContext phContext, out SecurityContextTokenHandle phToken);
         int CompleteAuthToken(ref SafeDeleteContext refContext, SecurityBuffer[] inputBuffers);
         int ApplyControlToken(ref SafeDeleteContext refContext, SecurityBuffer[] inputBuffers);

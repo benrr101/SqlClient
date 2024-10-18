@@ -79,7 +79,7 @@ namespace System.Net.Security
         // This method switches between three non-interruptible helper methods.  (This method can't be both non-interruptible and
         // reference imports from all three DLLs - doing so would cause all three DLLs to try to be bound to.)
         //
-        public static unsafe int QueryContextAttributes(SafeDeleteContext phContext, Interop.SspiCli.ContextAttribute contextAttribute, byte* buffer, SafeHandle refHandle)
+        public static unsafe int QueryContextAttributes(SafeDeleteContext phContext, ContextAttribute contextAttribute, byte* buffer, SafeHandle refHandle)
         {
             int status = (int)SecurityStatus.InvalidHandle;
 
@@ -116,7 +116,7 @@ namespace System.Net.Security
 
         public static int SetContextAttributes(
             SafeDeleteContext phContext,
-            Interop.SspiCli.ContextAttribute contextAttribute, byte[] buffer)
+            ContextAttribute contextAttribute, byte[] buffer)
         {
             try
             {
@@ -1218,14 +1218,14 @@ namespace System.Net.Security
             return new SafeFreeContextBufferChannelBinding_SECURITY();
         }
 
-        public static unsafe int QueryContextChannelBinding(SafeDeleteContext phContext, Interop.SspiCli.ContextAttribute contextAttribute, SecPkgContext_Bindings* buffer, SafeFreeContextBufferChannelBinding refHandle)
+        public static unsafe int QueryContextChannelBinding(SafeDeleteContext phContext, ContextAttribute contextAttribute, SecPkgContext_Bindings* buffer, SafeFreeContextBufferChannelBinding refHandle)
         {
             int status = (int)SecurityStatus.InvalidHandle;
 
             // SCHANNEL only supports SECPKG_ATTR_ENDPOINT_BINDINGS and SECPKG_ATTR_UNIQUE_BINDINGS which
             // map to our enum ChannelBindingKind.Endpoint and ChannelBindingKind.Unique.
-            if (contextAttribute != Interop.SspiCli.ContextAttribute.SECPKG_ATTR_ENDPOINT_BINDINGS &&
-                contextAttribute != Interop.SspiCli.ContextAttribute.SECPKG_ATTR_UNIQUE_BINDINGS)
+            if (contextAttribute != ContextAttribute.SECPKG_ATTR_ENDPOINT_BINDINGS &&
+                contextAttribute != ContextAttribute.SECPKG_ATTR_UNIQUE_BINDINGS)
             {
                 return status;
             }

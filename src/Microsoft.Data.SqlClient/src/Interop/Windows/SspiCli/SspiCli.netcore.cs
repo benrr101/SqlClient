@@ -58,13 +58,13 @@ namespace Interop_TEMP.Windows.SspiCli
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]
         internal static extern unsafe int QueryContextAttributesW(
             ref CredHandle contextHandle,
-            [In] Interop.SspiCli.ContextAttribute attribute,
+            [In] ContextAttribute attribute,
             [In] void* buffer);
 
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]
         internal static extern int SetContextAttributesW(
             ref CredHandle contextHandle,
-            [In] Interop.SspiCli.ContextAttribute attribute,
+            [In] ContextAttribute attribute,
             [In] byte[] buffer,
             [In] int bufferSize);
 

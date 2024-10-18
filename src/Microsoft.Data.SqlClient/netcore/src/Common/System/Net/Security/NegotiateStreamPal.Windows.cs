@@ -63,12 +63,12 @@ namespace System.Net.Security
 
         internal static string QueryContextClientSpecifiedSpn(SafeDeleteContext securityContext)
         {
-            return SSPIWrapper.QueryContextAttributes(GlobalSspi.SSPIAuth, securityContext, Interop.SspiCli.ContextAttribute.SECPKG_ATTR_CLIENT_SPECIFIED_TARGET) as string;
+            return SSPIWrapper.QueryContextAttributes(GlobalSspi.SSPIAuth, securityContext, ContextAttribute.SECPKG_ATTR_CLIENT_SPECIFIED_TARGET) as string;
         }
 
         internal static string QueryContextAuthenticationPackage(SafeDeleteContext securityContext)
         {
-            var negotiationInfoClass = SSPIWrapper.QueryContextAttributes(GlobalSspi.SSPIAuth, securityContext, Interop.SspiCli.ContextAttribute.SECPKG_ATTR_NEGOTIATION_INFO) as NegotiationInfoClass;
+            var negotiationInfoClass = SSPIWrapper.QueryContextAttributes(GlobalSspi.SSPIAuth, securityContext, ContextAttribute.SECPKG_ATTR_NEGOTIATION_INFO) as NegotiationInfoClass;
             return negotiationInfoClass?.AuthenticationPackage;
         }
 
@@ -186,7 +186,7 @@ namespace System.Net.Security
             SecPkgContext_Sizes sizes = SSPIWrapper.QueryContextAttributes(
                 GlobalSspi.SSPIAuth,
                 securityContext,
-                Interop.SspiCli.ContextAttribute.SECPKG_ATTR_SIZES
+                ContextAttribute.SECPKG_ATTR_SIZES
                 ) as SecPkgContext_Sizes;
 
             // alloc new output buffer if not supplied or too small

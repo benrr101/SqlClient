@@ -10,6 +10,7 @@ using System.Net.Security;
 using System.Runtime.InteropServices;
 using Interop_TEMP.Windows;
 using Interop_TEMP.Windows.SChannel;
+using Interop_TEMP.Windows.SspiCli;
 using Microsoft.Data;
 
 namespace System.Net
@@ -387,7 +388,7 @@ namespace System.Net
             }
         }
 
-        public static SafeFreeContextBufferChannelBinding QueryContextChannelBinding(SSPIInterface secModule, SafeDeleteContext securityContext, Interop.SspiCli.ContextAttribute contextAttribute)
+        public static SafeFreeContextBufferChannelBinding QueryContextChannelBinding(SSPIInterface secModule, SafeDeleteContext securityContext, ContextAttribute contextAttribute)
         {
             if (NetEventSource.IsEnabled)
                 NetEventSource.Enter(null, contextAttribute);
@@ -406,12 +407,12 @@ namespace System.Net
             return result;
         }
 
-        public static object QueryContextAttributes(SSPIInterface secModule, SafeDeleteContext securityContext, Interop.SspiCli.ContextAttribute contextAttribute)
+        public static object QueryContextAttributes(SSPIInterface secModule, SafeDeleteContext securityContext, ContextAttribute contextAttribute)
         {
             return QueryContextAttributes(secModule, securityContext, contextAttribute, out _);
         }
 
-        public static object QueryContextAttributes(SSPIInterface secModule, SafeDeleteContext securityContext, Interop.SspiCli.ContextAttribute contextAttribute, out int errorCode)
+        public static object QueryContextAttributes(SSPIInterface secModule, SafeDeleteContext securityContext, ContextAttribute contextAttribute, out int errorCode)
         {
             if (NetEventSource.IsEnabled)
                 NetEventSource.Enter(null, contextAttribute);
@@ -421,22 +422,22 @@ namespace System.Net
 
             switch (contextAttribute)
             {
-                case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_SIZES:
+                case ContextAttribute.SECPKG_ATTR_SIZES:
                     nativeBlockSize = SecPkgContext_Sizes.SizeOf;
                     break;
-                case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_STREAM_SIZES:
+                case ContextAttribute.SECPKG_ATTR_STREAM_SIZES:
                     nativeBlockSize = SecPkgContext_StreamSizes.SizeOf;
                     break;
 
-                case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_NAMES:
+                case ContextAttribute.SECPKG_ATTR_NAMES:
                     handleType = typeof(SafeFreeContextBuffer);
                     break;
 
-                case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_PACKAGE_INFO:
+                case ContextAttribute.SECPKG_ATTR_PACKAGE_INFO:
                     handleType = typeof(SafeFreeContextBuffer);
                     break;
 
-                case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_NEGOTIATION_INFO:
+                case ContextAttribute.SECPKG_ATTR_NEGOTIATION_INFO:
                     handleType = typeof(SafeFreeContextBuffer);
                     unsafe
                     {
@@ -444,28 +445,28 @@ namespace System.Net
                     }
                     break;
 
-                case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_CLIENT_SPECIFIED_TARGET:
+                case ContextAttribute.SECPKG_ATTR_CLIENT_SPECIFIED_TARGET:
                     handleType = typeof(SafeFreeContextBuffer);
                     break;
 
-                case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_REMOTE_CERT_CONTEXT:
+                case ContextAttribute.SECPKG_ATTR_REMOTE_CERT_CONTEXT:
                     handleType = typeof(SafeFreeCertContext);
                     break;
 
-                case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_LOCAL_CERT_CONTEXT:
+                case ContextAttribute.SECPKG_ATTR_LOCAL_CERT_CONTEXT:
                     handleType = typeof(SafeFreeCertContext);
                     break;
 
-                case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_ISSUER_LIST_EX:
+                case ContextAttribute.SECPKG_ATTR_ISSUER_LIST_EX:
                     nativeBlockSize = Marshal.SizeOf<Interop.SspiCli.SecPkgContext_IssuerListInfoEx>();
                     handleType = typeof(SafeFreeContextBuffer);
                     break;
 
-                case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_CONNECTION_INFO:
+                case ContextAttribute.SECPKG_ATTR_CONNECTION_INFO:
                     nativeBlockSize = Marshal.SizeOf<SecPkgContextConnectionInfo>();
                     break;
 
-                case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_APPLICATION_PROTOCOL:
+                case ContextAttribute.SECPKG_ATTR_APPLICATION_PROTOCOL:
                     nativeBlockSize = Marshal.SizeOf<SecPkgContextApplicationProtocol>();
                     break;
 
@@ -489,23 +490,23 @@ namespace System.Net
 
                 switch (contextAttribute)
                 {
-                    case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_SIZES:
+                    case ContextAttribute.SECPKG_ATTR_SIZES:
                         attribute = new SecPkgContext_Sizes(nativeBuffer);
                         break;
 
-                    case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_STREAM_SIZES:
+                    case ContextAttribute.SECPKG_ATTR_STREAM_SIZES:
                         attribute = new SecPkgContext_StreamSizes(nativeBuffer);
                         break;
 
-                    case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_NAMES:
+                    case ContextAttribute.SECPKG_ATTR_NAMES:
                         attribute = Marshal.PtrToStringUni(sspiHandle.DangerousGetHandle());
                         break;
 
-                    case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_PACKAGE_INFO:
+                    case ContextAttribute.SECPKG_ATTR_PACKAGE_INFO:
                         attribute = new SecurityPackageInfoClass(sspiHandle, 0);
                         break;
 
-                    case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_NEGOTIATION_INFO:
+                    case ContextAttribute.SECPKG_ATTR_NEGOTIATION_INFO:
                         unsafe
                         {
                             fixed (void* ptr = &nativeBuffer[0])
@@ -515,27 +516,27 @@ namespace System.Net
                         }
                         break;
 
-                    case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_CLIENT_SPECIFIED_TARGET:
+                    case ContextAttribute.SECPKG_ATTR_CLIENT_SPECIFIED_TARGET:
                         attribute = Marshal.PtrToStringUni(sspiHandle.DangerousGetHandle());
                         break;
 
-                    case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_LOCAL_CERT_CONTEXT:
+                    case ContextAttribute.SECPKG_ATTR_LOCAL_CERT_CONTEXT:
                     // Fall-through to RemoteCertificate is intentional.
-                    case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_REMOTE_CERT_CONTEXT:
+                    case ContextAttribute.SECPKG_ATTR_REMOTE_CERT_CONTEXT:
                         attribute = sspiHandle;
                         sspiHandle = null;
                         break;
 
-                    case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_ISSUER_LIST_EX:
+                    case ContextAttribute.SECPKG_ATTR_ISSUER_LIST_EX:
                         attribute = new Interop.SspiCli.SecPkgContext_IssuerListInfoEx(sspiHandle, nativeBuffer);
                         sspiHandle = null;
                         break;
 
-                    case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_CONNECTION_INFO:
+                    case ContextAttribute.SECPKG_ATTR_CONNECTION_INFO:
                         attribute = new SecPkgContextConnectionInfo(nativeBuffer);
                         break;
 
-                    case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_APPLICATION_PROTOCOL:
+                    case ContextAttribute.SECPKG_ATTR_APPLICATION_PROTOCOL:
                         unsafe
                         {
                             fixed (void* ptr = nativeBuffer)
