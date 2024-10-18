@@ -691,9 +691,6 @@
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\Kernel32\Interop.CloseHandle.netcore.cs">
       <Link>Common\Interop\Windows\Kernel32\Interop.CloseHandle.netcore.cs</Link>
     </Compile>
-    <Compile Include="$(CommonSourceRoot)\Interop\Windows\Kernel32\Interop.CTL_CODE.cs">
-      <Link>Common\Interop\Windows\Kernel32\Interop.CTL_CODE.cs</Link>
-    </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\Kernel32\FileTypes.cs">
       <Link>Common\Interop\Windows\Kernel32\FileTypes.cs</Link>
     </Compile>
