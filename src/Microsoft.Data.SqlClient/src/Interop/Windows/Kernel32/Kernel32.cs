@@ -27,6 +27,11 @@ namespace Interop_TEMP.Windows.Kernel32
 
         private const string DllName = "kernel32.dll";
 
+        #if !NETFRAMEWORK && !NET8_0_OR_GREATER
+        [DllImport(DllName, SetLastError = true)]
+        internal static extern bool CloseHandle(IntPtr handle);
+        #endif
+
         /// <summary><a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/defining-i-o-control-codes">CTL_CODE</a> method.</summary>
         /// <param name="deviceType">Identifies the device type. This value must match the value that is set in the DeviceType member of the driver's DEVICE_OBJECT structure.</param>
         /// <param name="function">Identifies the function to be performed by the driver. Values of less than 0x800 are reserved for Microsoft. Values of 0x800 and higher can be used by vendors.</param>

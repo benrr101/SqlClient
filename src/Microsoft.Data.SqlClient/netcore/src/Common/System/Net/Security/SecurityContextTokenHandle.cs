@@ -6,6 +6,7 @@
 
 using System.Threading;
 using Interop_TEMP.Windows.Handles;
+using Interop_TEMP.Windows.Kernel32;
 using Microsoft.Win32.SafeHandles;
 
 namespace System.Net.Security
@@ -34,7 +35,7 @@ namespace System.Net.Security
             {
                 if (Interlocked.Increment(ref _disposed) == 1)
                 {
-                    return Interop.Kernel32.CloseHandle(handle);
+                    return Kernel32.CloseHandle(handle);
                 }
             }
             return true;
