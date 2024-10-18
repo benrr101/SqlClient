@@ -628,7 +628,7 @@ namespace Microsoft.Data.SqlTypes
             Microsoft.Win32.SafeHandles.SafeFileHandle hFile = null;
             Interop.NtDll.DesiredAccess nDesiredAccess = Interop.NtDll.DesiredAccess.FILE_READ_ATTRIBUTES | Interop.NtDll.DesiredAccess.SYNCHRONIZE;
             Interop.NtDll.CreateOptions dwCreateOptions = 0;
-            Interop.NtDll.CreateDisposition dwCreateDisposition = 0;
+            CreateDisposition dwCreateDisposition = 0;
             System.IO.FileShare shareAccess = System.IO.FileShare.None;
 
             switch (access)
@@ -636,13 +636,13 @@ namespace Microsoft.Data.SqlTypes
                 case System.IO.FileAccess.Read:
                     nDesiredAccess |= Interop.NtDll.DesiredAccess.FILE_READ_DATA;
                     shareAccess = System.IO.FileShare.Delete | System.IO.FileShare.ReadWrite;
-                    dwCreateDisposition = Interop.NtDll.CreateDisposition.FILE_OPEN;
+                    dwCreateDisposition = CreateDisposition.FILE_OPEN;
                     break;
 
                 case System.IO.FileAccess.Write:
                     nDesiredAccess |= Interop.NtDll.DesiredAccess.FILE_WRITE_DATA;
                     shareAccess = System.IO.FileShare.Delete | System.IO.FileShare.Read;
-                    dwCreateDisposition = Interop.NtDll.CreateDisposition.FILE_OVERWRITE;
+                    dwCreateDisposition = CreateDisposition.FILE_OVERWRITE;
                     break;
 
                 case System.IO.FileAccess.ReadWrite:
@@ -652,7 +652,7 @@ namespace Microsoft.Data.SqlTypes
 
                     nDesiredAccess |= Interop.NtDll.DesiredAccess.FILE_READ_DATA | Interop.NtDll.DesiredAccess.FILE_WRITE_DATA;
                     shareAccess = System.IO.FileShare.Delete | System.IO.FileShare.Read;
-                    dwCreateDisposition = Interop.NtDll.CreateDisposition.FILE_OVERWRITE;
+                    dwCreateDisposition = CreateDisposition.FILE_OVERWRITE;
                     break;
             }
 
