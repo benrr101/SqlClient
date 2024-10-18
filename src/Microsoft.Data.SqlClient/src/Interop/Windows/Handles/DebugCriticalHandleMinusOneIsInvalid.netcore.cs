@@ -4,9 +4,10 @@
 
 #if DEBUG && !NETFRAMEWORK && !NET8_0_OR_GREATER
 
+using System.Net;
 using Microsoft.Win32.SafeHandles;
 
-namespace System.Net
+namespace Interop_TEMP.Windows.Handles
 {
     //
     // This is a helper class for debugging GC-ed handles that we define.
@@ -26,10 +27,10 @@ namespace System.Net
             _trace = "WARNING! GC-ed  >>" + this.GetType().FullName + "<< (should be explicitly closed) \r\n";
             if (NetEventSource.IsEnabled)
                 NetEventSource.Info(this, "Creating SafeHandle");
-#if TRACE_VERBOSE
+            #if TRACE_VERBOSE
             string stacktrace = Environment.StackTrace;
             _trace += stacktrace;
-#endif //TRACE_VERBOSE
+            #endif
         }
 
         ~DebugCriticalHandleMinusOneIsInvalid()

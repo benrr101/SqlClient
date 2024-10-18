@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security.Authentication.ExtendedProtection;
+using Interop_TEMP.Windows.Handles;
 using Microsoft.Win32.SafeHandles;
 
 namespace System.Net.Security

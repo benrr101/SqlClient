@@ -5,6 +5,7 @@
 #if !NETFRAMEWORK && !NET8_0_OR_GREATER
 
 using System.Runtime.InteropServices;
+using Interop_TEMP.Windows.Handles;
 
 namespace System.Net.Security
 {

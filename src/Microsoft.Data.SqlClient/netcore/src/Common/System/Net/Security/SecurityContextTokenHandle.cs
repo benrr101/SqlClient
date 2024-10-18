@@ -5,6 +5,7 @@
 #if !NET8_0_OR_GREATER
 
 using System.Threading;
+using Interop_TEMP.Windows.Handles;
 using Microsoft.Win32.SafeHandles;
 
 namespace System.Net.Security

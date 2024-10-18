@@ -4,14 +4,11 @@
 
 #if DEBUG && !NETFRAMEWORK && !NET8_0_OR_GREATER
 
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Threading;
+using System;
+using System.Net;
 using Microsoft.Win32.SafeHandles;
 
-namespace System.Net
+namespace Interop_TEMP.Windows.Handles
 {
     //
     // This is a helper class for debugging GC-ed handles that we define.
@@ -35,10 +32,10 @@ namespace System.Net
         private void Trace()
         {
             _trace = "WARNING! GC-ed  >>" + this.GetType().ToString() + "<< (should be explicitly closed) \r\n";
-#if TRACE_VERBOSE
+            #if TRACE_VERBOSE
             string stacktrace = Environment.StackTrace;
             _trace += stacktrace;
-#endif
+            #endif
         }
 
         ~DebugSafeHandle()
