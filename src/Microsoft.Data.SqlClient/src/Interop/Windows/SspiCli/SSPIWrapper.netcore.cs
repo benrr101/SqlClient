@@ -131,7 +131,7 @@ namespace System.Net
             return credentialsHandle;
         }
 
-        public static SafeFreeCredentials AcquireCredentialsHandle(SSPIInterface secModule, string package, CredentialUse intent, Interop.SspiCli.SCHANNEL_CRED scc)
+        public static SafeFreeCredentials AcquireCredentialsHandle(SSPIInterface secModule, string package, CredentialUse intent, SChannelCred scc)
         {
             if (NetEventSource.IsEnabled)
             {
@@ -252,10 +252,10 @@ namespace System.Net
 
         private static unsafe int EncryptDecryptHelper(OP op, SSPIInterface secModule, SafeDeleteContext context, SecurityBuffer[] input, uint sequenceNumber)
         {
-            Interop.SspiCli.SecBufferDesc sdcInOut = new Interop.SspiCli.SecBufferDesc(input.Length);
-            var unmanagedBuffer = new Interop.SspiCli.SecBuffer[input.Length];
+            SecBufferDesc sdcInOut = new SecBufferDesc(input.Length);
+            var unmanagedBuffer = new SecBuffer[input.Length];
 
-            fixed (Interop.SspiCli.SecBuffer* unmanagedBufferPtr = unmanagedBuffer)
+            fixed (SecBuffer* unmanagedBufferPtr = unmanagedBuffer)
             {
                 sdcInOut.pBuffers = unmanagedBufferPtr;
                 GCHandle[] pinnedBuffers = new GCHandle[input.Length];
@@ -458,7 +458,7 @@ namespace System.Net
                     break;
 
                 case ContextAttribute.SECPKG_ATTR_ISSUER_LIST_EX:
-                    nativeBlockSize = Marshal.SizeOf<Interop.SspiCli.SecPkgContext_IssuerListInfoEx>();
+                    nativeBlockSize = Marshal.SizeOf<SecPkgContextIssuerListInfoEx>();
                     handleType = typeof(SafeFreeContextBuffer);
                     break;
 
@@ -528,7 +528,7 @@ namespace System.Net
                         break;
 
                     case ContextAttribute.SECPKG_ATTR_ISSUER_LIST_EX:
-                        attribute = new Interop.SspiCli.SecPkgContext_IssuerListInfoEx(sspiHandle, nativeBuffer);
+                        attribute = new SecPkgContextIssuerListInfoEx(sspiHandle, nativeBuffer);
                         sspiHandle = null;
                         break;
 

@@ -273,7 +273,7 @@ namespace System.Net.Security
         public static unsafe int AcquireCredentialsHandle(
             string package,
             CredentialUse intent,
-            ref Interop.SspiCli.SCHANNEL_CRED authdata,
+            ref SChannelCred authdata,
             out SafeFreeCredentials outCredential)
         {
             if (NetEventSource.IsEnabled)
@@ -440,20 +440,20 @@ namespace System.Net.Security
                 throw new ArgumentNullException(nameof(inCredentials));
             }
 
-            Interop.SspiCli.SecBufferDesc inSecurityBufferDescriptor = default(Interop.SspiCli.SecBufferDesc);
+            SecBufferDesc inSecurityBufferDescriptor = default(SecBufferDesc);
             bool haveInSecurityBufferDescriptor = false;
             if (inSecBuffer != null)
             {
-                inSecurityBufferDescriptor = new Interop.SspiCli.SecBufferDesc(1);
+                inSecurityBufferDescriptor = new SecBufferDesc(1);
                 haveInSecurityBufferDescriptor = true;
             }
             else if (inSecBuffers != null)
             {
-                inSecurityBufferDescriptor = new Interop.SspiCli.SecBufferDesc(inSecBuffers.Length);
+                inSecurityBufferDescriptor = new SecBufferDesc(inSecBuffers.Length);
                 haveInSecurityBufferDescriptor = true;
             }
 
-            Interop.SspiCli.SecBufferDesc outSecurityBufferDescriptor = new Interop.SspiCli.SecBufferDesc(1);
+            SecBufferDesc outSecurityBufferDescriptor = new SecBufferDesc(1);
 
             // Actually, this is returned in outFlags.
             bool isSspiAllocated = (inFlags & ContextFlags.AllocateMemory) != 0 ? true : false;
@@ -475,7 +475,7 @@ namespace System.Net.Security
             try
             {
                 pinnedOutBytes = GCHandle.Alloc(outSecBuffer.token, GCHandleType.Pinned);
-                Interop.SspiCli.SecBuffer[] inUnmanagedBuffer = new Interop.SspiCli.SecBuffer[haveInSecurityBufferDescriptor ? inSecurityBufferDescriptor.cBuffers : 1];
+                SecBuffer[] inUnmanagedBuffer = new SecBuffer[haveInSecurityBufferDescriptor ? inSecurityBufferDescriptor.cBuffers : 1];
                 fixed (void* inUnmanagedBufferPtr = inUnmanagedBuffer)
                 {
                     if (haveInSecurityBufferDescriptor)
@@ -514,7 +514,7 @@ namespace System.Net.Security
                         }
                     }
 
-                    Interop.SspiCli.SecBuffer outUnmanagedBuffer = default;
+                    SecBuffer outUnmanagedBuffer = default;
 
                     // Fix Descriptor pointer that points to unmanaged SecurityBuffers.
                     outSecurityBufferDescriptor.pBuffers = &outUnmanagedBuffer;
@@ -615,9 +615,9 @@ namespace System.Net.Security
             byte* targetName,
             ContextFlags inFlags,
             Endianness endianness,
-            Interop.SspiCli.SecBufferDesc* inputBuffer,
+            SecBufferDesc* inputBuffer,
             SafeDeleteContext outContext,
-            ref Interop.SspiCli.SecBufferDesc outputBuffer,
+            ref SecBufferDesc outputBuffer,
             ref ContextFlags attributes,
             SafeFreeContextBuffer handleTemplate)
         {
@@ -674,7 +674,7 @@ namespace System.Net.Security
             if (handleTemplate != null)
             {
                 //ATTN: on 64 BIT that is still +8 cause of 2* c++ unsigned long == 8 bytes
-                handleTemplate.Set(((Interop.SspiCli.SecBuffer*)outputBuffer.pBuffers)->pvBuffer);
+                handleTemplate.Set(((SecBuffer*)outputBuffer.pBuffers)->pvBuffer);
                 if (handleTemplate.IsInvalid)
                 {
                     handleTemplate.SetHandleAsInvalid();
@@ -730,20 +730,20 @@ namespace System.Net.Security
                 throw new ArgumentNullException(nameof(inCredentials));
             }
 
-            Interop.SspiCli.SecBufferDesc inSecurityBufferDescriptor = default(Interop.SspiCli.SecBufferDesc);
+            SecBufferDesc inSecurityBufferDescriptor = default(SecBufferDesc);
             bool haveInSecurityBufferDescriptor = false;
             if (inSecBuffer != null)
             {
-                inSecurityBufferDescriptor = new Interop.SspiCli.SecBufferDesc(1);
+                inSecurityBufferDescriptor = new SecBufferDesc(1);
                 haveInSecurityBufferDescriptor = true;
             }
             else if (inSecBuffers != null)
             {
-                inSecurityBufferDescriptor = new Interop.SspiCli.SecBufferDesc(inSecBuffers.Length);
+                inSecurityBufferDescriptor = new SecBufferDesc(inSecBuffers.Length);
                 haveInSecurityBufferDescriptor = true;
             }
 
-            Interop.SspiCli.SecBufferDesc outSecurityBufferDescriptor = new Interop.SspiCli.SecBufferDesc(1);
+            SecBufferDesc outSecurityBufferDescriptor = new SecBufferDesc(1);
 
             // Actually, this is returned in outFlags.
             bool isSspiAllocated = (inFlags & ContextFlags.AllocateMemory) != 0 ? true : false;
@@ -765,7 +765,7 @@ namespace System.Net.Security
             try
             {
                 pinnedOutBytes = GCHandle.Alloc(outSecBuffer.token, GCHandleType.Pinned);
-                var inUnmanagedBuffer = new Interop.SspiCli.SecBuffer[haveInSecurityBufferDescriptor ? inSecurityBufferDescriptor.cBuffers : 1];
+                var inUnmanagedBuffer = new SecBuffer[haveInSecurityBufferDescriptor ? inSecurityBufferDescriptor.cBuffers : 1];
                 fixed (void* inUnmanagedBufferPtr = inUnmanagedBuffer)
                 {
                     if (haveInSecurityBufferDescriptor)
@@ -804,7 +804,7 @@ namespace System.Net.Security
                         }
                     }
 
-                    var outUnmanagedBuffer = new Interop.SspiCli.SecBuffer[1];
+                    var outUnmanagedBuffer = new SecBuffer[1];
                     fixed (void* outUnmanagedBufferPtr = &outUnmanagedBuffer[0])
                     {
                         // Fix Descriptor pointer that points to unmanaged SecurityBuffers.
@@ -897,11 +897,11 @@ namespace System.Net.Security
         private static unsafe int MustRunAcceptSecurityContext_SECURITY(
             ref SafeFreeCredentials inCredentials,
             void* inContextPtr,
-            Interop.SspiCli.SecBufferDesc* inputBuffer,
+            SecBufferDesc* inputBuffer,
             ContextFlags inFlags,
             Endianness endianness,
             SafeDeleteContext outContext,
-            ref Interop.SspiCli.SecBufferDesc outputBuffer,
+            ref SecBufferDesc outputBuffer,
             ref ContextFlags outFlags,
             SafeFreeContextBuffer handleTemplate)
         {
@@ -957,7 +957,7 @@ namespace System.Net.Security
             if (handleTemplate != null)
             {
                 //ATTN: on 64 BIT that is still +8 cause of 2* c++ unsigned long == 8 bytes.
-                handleTemplate.Set(((Interop.SspiCli.SecBuffer*)outputBuffer.pBuffers)->pvBuffer);
+                handleTemplate.Set(((SecBuffer*)outputBuffer.pBuffers)->pvBuffer);
                 if (handleTemplate.IsInvalid)
                 {
                     handleTemplate.SetHandleAsInvalid();
@@ -988,14 +988,14 @@ namespace System.Net.Security
                 NetEventSource.Fail(null, "inSecBuffers == null");
             }
 
-            var inSecurityBufferDescriptor = new Interop.SspiCli.SecBufferDesc(inSecBuffers.Length);
+            var inSecurityBufferDescriptor = new SecBufferDesc(inSecBuffers.Length);
 
             int errorCode = (int)SecurityStatus.InvalidHandle;
 
             // These are pinned user byte arrays passed along with SecurityBuffers.
             GCHandle[] pinnedInBytes = null;
 
-            var inUnmanagedBuffer = new Interop.SspiCli.SecBuffer[inSecurityBufferDescriptor.cBuffers];
+            var inUnmanagedBuffer = new SecBuffer[inSecurityBufferDescriptor.cBuffers];
             fixed (void* inUnmanagedBufferPtr = inUnmanagedBuffer)
             {
                 // Fix Descriptor pointer that points to unmanaged SecurityBuffers.
@@ -1089,14 +1089,14 @@ namespace System.Net.Security
                 NetEventSource.Fail(null, "inSecBuffers == null");
             }
 
-            var inSecurityBufferDescriptor = new Interop.SspiCli.SecBufferDesc(inSecBuffers.Length);
+            var inSecurityBufferDescriptor = new SecBufferDesc(inSecBuffers.Length);
 
             int errorCode = (int)SecurityStatus.InvalidHandle;
 
             // These are pinned user byte arrays passed along with SecurityBuffers.
             GCHandle[] pinnedInBytes = null;
 
-            var inUnmanagedBuffer = new Interop.SspiCli.SecBuffer[inSecurityBufferDescriptor.cBuffers];
+            var inUnmanagedBuffer = new SecBuffer[inSecurityBufferDescriptor.cBuffers];
             fixed (void* inUnmanagedBufferPtr = inUnmanagedBuffer)
             {
                 // Fix Descriptor pointer that points to unmanaged SecurityBuffers.

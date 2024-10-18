@@ -742,17 +742,26 @@
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\ApplicationProtocolNegotiationStatus.netcore.cs">
       <Link>Common\Interop\Windows\SChannel\ApplicationProtocolNegotiationStatus.netcore.cs</Link>
     </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\SChannelCred.netcore.cs">
+      <Link>Common\Interop\Windows\SChannel\SChannelCred.netcore.cs</Link>
+    </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\SecPkgContextApplicationProtocol.netcore.cs">
       <Link>Common\Interop\Windows\SChannel\SecPkgContextApplicationProtocol.netcore.cs</Link>
     </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\SecPkgContextConnectionInfo.netcore.cs">
       <Link>Common\Interop\Windows\SChannel\SecPkgContextConnectionInfo.netcore.cs</Link>
     </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\SecPkgContextIssuerListInfoEx.netcore.cs">
+      <Link>Common\Interop\Windows\SChannel\SecPkgContextIssuerListInfoEx.netcore.cs</Link>
+    </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\SecurityStatus.netcore.cs">
       <Link>Common\Interop\Windows\SChannel\SecurityStatus.netcore.cs</Link>
     </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SecurityContextTokenHandle.netcore.cs">
       <Link>Common\Interop\Windows\SecurityContextTokenHandle.netcore.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\CertChainElement.netcore.cs">
+      <Link>Common\Interop\Windows\SspiCli\CertChainElement.netcore.cs</Link>
     </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\ContextAttribute.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\ContextAttribute.netcore.cs</Link>
@@ -780,6 +789,12 @@
     </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\SafeDeleteContext.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\SafeDeleteContext.netcore.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\SecBuffer.netcore.cs">
+      <Link>Common\Interop\Windows\SspiCli\SecBuffer.netcore.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\SecBufferDesc.netcore.cs">
+      <Link>Common\Interop\Windows\SspiCli\SecBufferDesc.netcore.cs</Link>
     </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\SecPkgContext_Bindings.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\SecPkgContext_Bindings.netcore.cs</Link>

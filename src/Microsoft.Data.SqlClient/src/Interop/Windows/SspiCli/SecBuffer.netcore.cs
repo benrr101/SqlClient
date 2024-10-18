@@ -8,16 +8,16 @@ using System;
 using System.Net.Security;
 using System.Runtime.InteropServices;
 
-internal static partial class Interop
+namespace Interop_TEMP.Windows.SspiCli
 {
-    internal static partial class SspiCli
+    [StructLayout(LayoutKind.Sequential)]
+    internal unsafe struct SecBuffer
     {
-        internal const uint SECQOP_WRAP_NO_ENCRYPT = 0x80000001;
+        public int cbBuffer;
+        public SecurityBufferType BufferType;
+        public IntPtr pvBuffer;
 
-        internal const int SEC_I_RENEGOTIATE = 0x90321;
-
-        internal const int SECPKG_NEGOTIATION_COMPLETE = 0;
-        internal const int SECPKG_NEGOTIATION_OPTIMISTIC = 1;
+        public static readonly int Size = sizeof(SecBuffer);
     }
 }
 

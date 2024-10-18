@@ -7,6 +7,7 @@
 using System.Net.Security;
 using System.Runtime.InteropServices;
 using Interop_TEMP.Windows;
+using Interop_TEMP.Windows.SChannel;
 using Interop_TEMP.Windows.SspiCli;
 
 namespace System.Net
@@ -18,14 +19,14 @@ namespace System.Net
         int EnumerateSecurityPackages(out int pkgnum, out SafeFreeContextBuffer pkgArray);
         int AcquireCredentialsHandle(string moduleName, CredentialUse usage, ref SafeSspiAuthDataHandle authdata, out SafeFreeCredentials outCredential);
         int AcquireDefaultCredential(string moduleName, CredentialUse usage, out SafeFreeCredentials outCredential);
-        int AcquireCredentialsHandle(string moduleName, CredentialUse usage, ref Interop.SspiCli.SCHANNEL_CRED authdata, out SafeFreeCredentials outCredential);
+        int AcquireCredentialsHandle(string moduleName, CredentialUse usage, ref SChannelCred authdata, out SafeFreeCredentials outCredential);
         int AcceptSecurityContext(SafeFreeCredentials credential, ref SafeDeleteContext context, SecurityBuffer[] inputBuffers, ContextFlags inFlags, Endianness endianness, SecurityBuffer outputBuffer, ref ContextFlags outFlags);
         int InitializeSecurityContext(ref SafeFreeCredentials credential, ref SafeDeleteContext context, string targetName, ContextFlags inFlags, Endianness endianness, SecurityBuffer inputBuffer, SecurityBuffer outputBuffer, ref ContextFlags outFlags);
         int InitializeSecurityContext(SafeFreeCredentials credential, ref SafeDeleteContext context, string targetName, ContextFlags inFlags, Endianness endianness, SecurityBuffer[] inputBuffers, SecurityBuffer outputBuffer, ref ContextFlags outFlags);
-        int EncryptMessage(SafeDeleteContext context, ref Interop.SspiCli.SecBufferDesc inputOutput, uint sequenceNumber);
-        int DecryptMessage(SafeDeleteContext context, ref Interop.SspiCli.SecBufferDesc inputOutput, uint sequenceNumber);
-        int MakeSignature(SafeDeleteContext context, ref Interop.SspiCli.SecBufferDesc inputOutput, uint sequenceNumber);
-        int VerifySignature(SafeDeleteContext context, ref Interop.SspiCli.SecBufferDesc inputOutput, uint sequenceNumber);
+        int EncryptMessage(SafeDeleteContext context, ref SecBufferDesc inputOutput, uint sequenceNumber);
+        int DecryptMessage(SafeDeleteContext context, ref SecBufferDesc inputOutput, uint sequenceNumber);
+        int MakeSignature(SafeDeleteContext context, ref SecBufferDesc inputOutput, uint sequenceNumber);
+        int VerifySignature(SafeDeleteContext context, ref SecBufferDesc inputOutput, uint sequenceNumber);
 
         int QueryContextChannelBinding(SafeDeleteContext phContext, ContextAttribute attribute, out SafeFreeContextBufferChannelBinding refHandle);
         int QueryContextAttributes(SafeDeleteContext phContext, ContextAttribute attribute, byte[] buffer, Type handleType, out SafeHandle refHandle);
