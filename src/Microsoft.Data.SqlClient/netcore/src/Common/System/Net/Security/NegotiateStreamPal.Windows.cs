@@ -7,6 +7,7 @@
 using System.Globalization;
 using System.ComponentModel;
 using Interop_TEMP.Windows.SChannel;
+using Interop_TEMP.Windows.SspiCli;
 using Microsoft.Data;
 
 namespace System.Net.Security
@@ -21,13 +22,13 @@ namespace System.Net.Security
     {
         internal static int QueryMaxTokenSize(string package)
         {
-            return SSPIWrapper.GetVerifyPackageInfo(GlobalSSPI.SSPIAuth, package, true).MaxToken;
+            return SSPIWrapper.GetVerifyPackageInfo(GlobalSspi.SSPIAuth, package, true).MaxToken;
         }
 
         internal static SafeFreeCredentials AcquireDefaultCredential(string package, bool isServer)
         {
             return SSPIWrapper.AcquireDefaultCredential(
-                GlobalSSPI.SSPIAuth,
+                GlobalSspi.SSPIAuth,
                 package,
                 (isServer ? Interop.SspiCli.CredentialUse.SECPKG_CRED_INBOUND : Interop.SspiCli.CredentialUse.SECPKG_CRED_OUTBOUND));
         }
@@ -48,7 +49,7 @@ namespace System.Net.Security
                     throw new Win32Exception((int)result);
                 }
 
-                return SSPIWrapper.AcquireCredentialsHandle(GlobalSSPI.SSPIAuth,
+                return SSPIWrapper.AcquireCredentialsHandle(GlobalSspi.SSPIAuth,
                     package, (isServer ? Interop.SspiCli.CredentialUse.SECPKG_CRED_INBOUND : Interop.SspiCli.CredentialUse.SECPKG_CRED_OUTBOUND), ref authData);
             }
             finally
@@ -62,12 +63,12 @@ namespace System.Net.Security
 
         internal static string QueryContextClientSpecifiedSpn(SafeDeleteContext securityContext)
         {
-            return SSPIWrapper.QueryContextAttributes(GlobalSSPI.SSPIAuth, securityContext, Interop.SspiCli.ContextAttribute.SECPKG_ATTR_CLIENT_SPECIFIED_TARGET) as string;
+            return SSPIWrapper.QueryContextAttributes(GlobalSspi.SSPIAuth, securityContext, Interop.SspiCli.ContextAttribute.SECPKG_ATTR_CLIENT_SPECIFIED_TARGET) as string;
         }
 
         internal static string QueryContextAuthenticationPackage(SafeDeleteContext securityContext)
         {
-            var negotiationInfoClass = SSPIWrapper.QueryContextAttributes(GlobalSSPI.SSPIAuth, securityContext, Interop.SspiCli.ContextAttribute.SECPKG_ATTR_NEGOTIATION_INFO) as NegotiationInfoClass;
+            var negotiationInfoClass = SSPIWrapper.QueryContextAttributes(GlobalSspi.SSPIAuth, securityContext, Interop.SspiCli.ContextAttribute.SECPKG_ATTR_NEGOTIATION_INFO) as NegotiationInfoClass;
             return negotiationInfoClass?.AuthenticationPackage;
         }
 
@@ -82,7 +83,7 @@ namespace System.Net.Security
         {
             Interop.SspiCli.ContextFlags outContextFlags = Interop.SspiCli.ContextFlags.Zero;
             SecurityStatus winStatus = (SecurityStatus)SSPIWrapper.InitializeSecurityContext(
-                GlobalSSPI.SSPIAuth,
+                GlobalSspi.SSPIAuth,
                 credentialsHandle,
                 ref securityContext,
                 spn[0],
@@ -101,7 +102,7 @@ namespace System.Net.Security
             SecurityBuffer[] inSecurityBufferArray)
         {
             SecurityStatus winStatus = (SecurityStatus)SSPIWrapper.CompleteAuthToken(
-                GlobalSSPI.SSPIAuth,
+                GlobalSspi.SSPIAuth,
                 ref securityContext,
                 inSecurityBufferArray);
             return SecurityStatusAdapterPal.GetSecurityStatusPalFromInterop(winStatus);
@@ -117,7 +118,7 @@ namespace System.Net.Security
         {
             Interop.SspiCli.ContextFlags outContextFlags = Interop.SspiCli.ContextFlags.Zero;
             SecurityStatus winStatus = (SecurityStatus)SSPIWrapper.AcceptSecurityContext(
-                GlobalSSPI.SSPIAuth,
+                GlobalSspi.SSPIAuth,
                 credentialsHandle,
                 ref securityContext,
                 ContextFlagsAdapterPal.GetInteropFromContextFlagsPal(requestedContextFlags),
@@ -161,7 +162,7 @@ namespace System.Net.Security
 
             // call SSP function
             int errorCode = SSPIWrapper.VerifySignature(
-                                GlobalSSPI.SSPIAuth,
+                                GlobalSspi.SSPIAuth,
                                 securityContext,
                                 securityBuffer,
                                 0);
@@ -183,7 +184,7 @@ namespace System.Net.Security
         internal static int MakeSignature(SafeDeleteContext securityContext, byte[] buffer, int offset, int count, ref byte[] output)
         {
             SecPkgContext_Sizes sizes = SSPIWrapper.QueryContextAttributes(
-                GlobalSSPI.SSPIAuth,
+                GlobalSspi.SSPIAuth,
                 securityContext,
                 Interop.SspiCli.ContextAttribute.SECPKG_ATTR_SIZES
                 ) as SecPkgContext_Sizes;
@@ -204,7 +205,7 @@ namespace System.Net.Security
             securityBuffer[1] = new SecurityBuffer(output, sizes.cbMaxSignature, count, SecurityBufferType.SECBUFFER_DATA);
 
             // call SSP Function
-            int errorCode = SSPIWrapper.MakeSignature(GlobalSSPI.SSPIAuth, securityContext, securityBuffer, 0);
+            int errorCode = SSPIWrapper.MakeSignature(GlobalSspi.SSPIAuth, securityContext, securityBuffer, 0);
 
             // throw if error
             if (errorCode != 0)

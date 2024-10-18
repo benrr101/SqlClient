@@ -748,8 +748,8 @@
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\SecurityStatus.netcore.cs">
       <Link>Common\Interop\Windows\SChannel\SecurityStatus.netcore.cs</Link>
     </Compile>
-    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\GlobalSSPI.netcore.cs">
-      <Link>Common\Interop\Windows\SspiCli\GlobalSSPI.netcore.cs</Link>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\GlobalSspi.netcore.cs">
+      <Link>Common\Interop\Windows\SspiCli\GlobalSspi.netcore.cs</Link>
     </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\Interop.SSPI.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\Interop.SSPI.netcore.cs</Link>
