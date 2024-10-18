@@ -742,8 +742,8 @@
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\SecPkgContextApplicationProtocol.netcore.cs">
       <Link>Common\Interop\Windows\SChannel\SecPkgContextApplicationProtocol.netcore.cs</Link>
     </Compile>
-    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\SecPkgContext_ConnectionInfo.netcore.cs">
-      <Link>Common\Interop\Windows\SChannel\SecPkgContext_ConnectionInfo.netcore.cs</Link>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\SecPkgContextConnectionInfo.netcore.cs">
+      <Link>Common\Interop\Windows\SChannel\SecPkgContextConnectionInfo.netcore.cs</Link>
     </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\SecurityStatus.netcore.cs">
       <Link>Common\Interop\Windows\SChannel\SecurityStatus.netcore.cs</Link>

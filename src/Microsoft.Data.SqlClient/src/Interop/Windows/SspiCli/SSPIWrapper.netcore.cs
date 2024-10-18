@@ -461,7 +461,7 @@ namespace System.Net
                     break;
 
                 case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_CONNECTION_INFO:
-                    nativeBlockSize = Marshal.SizeOf<SecPkgContext_ConnectionInfo>();
+                    nativeBlockSize = Marshal.SizeOf<SecPkgContextConnectionInfo>();
                     break;
 
                 case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_APPLICATION_PROTOCOL:
@@ -531,7 +531,7 @@ namespace System.Net
                         break;
 
                     case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_CONNECTION_INFO:
-                        attribute = new SecPkgContext_ConnectionInfo(nativeBuffer);
+                        attribute = new SecPkgContextConnectionInfo(nativeBuffer);
                         break;
 
                     case Interop.SspiCli.ContextAttribute.SECPKG_ATTR_APPLICATION_PROTOCOL:

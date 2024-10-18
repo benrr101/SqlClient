@@ -4,14 +4,16 @@
 
 #if !NETFRAMEWORK && !NET8_0_OR_GREATER
 
+using System;
+using System.Net;
 using System.Runtime.InteropServices;
 
-namespace System.Net
+namespace Interop_TEMP.Windows.SChannel
 {
     // TODO (Issue #3114): Investigate if this can be safely converted to a struct.
     // From Schannel.h
     [StructLayout(LayoutKind.Sequential)]
-    internal class SecPkgContext_ConnectionInfo
+    internal class SecPkgContextConnectionInfo
     {
         public readonly int Protocol;
         public readonly int DataCipherAlg;
@@ -21,7 +23,7 @@ namespace System.Net
         public readonly int KeyExchangeAlg;
         public readonly int KeyExchKeySize;
 
-        internal unsafe SecPkgContext_ConnectionInfo(byte[] nativeBuffer)
+        internal unsafe SecPkgContextConnectionInfo(byte[] nativeBuffer)
         {
             fixed (void* voidPtr = nativeBuffer)
             {
