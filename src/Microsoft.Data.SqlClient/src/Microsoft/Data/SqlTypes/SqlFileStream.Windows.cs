@@ -627,7 +627,7 @@ namespace Microsoft.Data.SqlTypes
 
             Microsoft.Win32.SafeHandles.SafeFileHandle hFile = null;
             Interop.NtDll.DesiredAccess nDesiredAccess = Interop.NtDll.DesiredAccess.FILE_READ_ATTRIBUTES | Interop.NtDll.DesiredAccess.SYNCHRONIZE;
-            Interop.NtDll.CreateOptions dwCreateOptions = 0;
+            CreateOptions dwCreateOptions = 0;
             CreateDisposition dwCreateDisposition = 0;
             System.IO.FileShare shareAccess = System.IO.FileShare.None;
 
@@ -658,22 +658,22 @@ namespace Microsoft.Data.SqlTypes
 
             if ((options & System.IO.FileOptions.WriteThrough) != 0)
             {
-                dwCreateOptions |= Interop.NtDll.CreateOptions.FILE_WRITE_THROUGH;
+                dwCreateOptions |= CreateOptions.FILE_WRITE_THROUGH;
             }
 
             if ((options & System.IO.FileOptions.Asynchronous) == 0)
             {
-                dwCreateOptions |= Interop.NtDll.CreateOptions.FILE_SYNCHRONOUS_IO_NONALERT;
+                dwCreateOptions |= CreateOptions.FILE_SYNCHRONOUS_IO_NONALERT;
             }
 
             if ((options & System.IO.FileOptions.SequentialScan) != 0)
             {
-                dwCreateOptions |= Interop.NtDll.CreateOptions.FILE_SEQUENTIAL_ONLY;
+                dwCreateOptions |= CreateOptions.FILE_SEQUENTIAL_ONLY;
             }
 
             if ((options & System.IO.FileOptions.RandomAccess) != 0)
             {
-                dwCreateOptions |= Interop.NtDll.CreateOptions.FILE_RANDOM_ACCESS;
+                dwCreateOptions |= CreateOptions.FILE_RANDOM_ACCESS;
             }
 
             try
