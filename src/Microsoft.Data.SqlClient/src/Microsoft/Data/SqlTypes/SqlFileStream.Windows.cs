@@ -626,7 +626,7 @@ namespace Microsoft.Data.SqlTypes
             #endif
 
             Microsoft.Win32.SafeHandles.SafeFileHandle hFile = null;
-            Interop.NtDll.DesiredAccess nDesiredAccess = Interop.NtDll.DesiredAccess.FILE_READ_ATTRIBUTES | Interop.NtDll.DesiredAccess.SYNCHRONIZE;
+            DesiredAccess nDesiredAccess = DesiredAccess.FILE_READ_ATTRIBUTES | DesiredAccess.SYNCHRONIZE;
             CreateOptions dwCreateOptions = 0;
             CreateDisposition dwCreateDisposition = 0;
             System.IO.FileShare shareAccess = System.IO.FileShare.None;
@@ -634,13 +634,13 @@ namespace Microsoft.Data.SqlTypes
             switch (access)
             {
                 case System.IO.FileAccess.Read:
-                    nDesiredAccess |= Interop.NtDll.DesiredAccess.FILE_READ_DATA;
+                    nDesiredAccess |= DesiredAccess.FILE_READ_DATA;
                     shareAccess = System.IO.FileShare.Delete | System.IO.FileShare.ReadWrite;
                     dwCreateDisposition = CreateDisposition.FILE_OPEN;
                     break;
 
                 case System.IO.FileAccess.Write:
-                    nDesiredAccess |= Interop.NtDll.DesiredAccess.FILE_WRITE_DATA;
+                    nDesiredAccess |= DesiredAccess.FILE_WRITE_DATA;
                     shareAccess = System.IO.FileShare.Delete | System.IO.FileShare.Read;
                     dwCreateDisposition = CreateDisposition.FILE_OVERWRITE;
                     break;
@@ -650,7 +650,7 @@ namespace Microsoft.Data.SqlTypes
                     // we validate the value of 'access' parameter in the beginning of this method
                     Debug.Assert(access == System.IO.FileAccess.ReadWrite);
 
-                    nDesiredAccess |= Interop.NtDll.DesiredAccess.FILE_READ_DATA | Interop.NtDll.DesiredAccess.FILE_WRITE_DATA;
+                    nDesiredAccess |= DesiredAccess.FILE_READ_DATA | DesiredAccess.FILE_WRITE_DATA;
                     shareAccess = System.IO.FileShare.Delete | System.IO.FileShare.Read;
                     dwCreateDisposition = CreateDisposition.FILE_OVERWRITE;
                     break;
