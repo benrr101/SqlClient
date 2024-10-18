@@ -164,7 +164,7 @@ namespace System.Net
             int errorCode = secModule.InitializeSecurityContext(ref credential, ref context, targetName, inFlags, datarep, inputBuffer, outputBuffer, ref outFlags);
 
             if (NetEventSource.IsEnabled)
-                NetEventSource.Log.SecurityContextInputBuffer(nameof(InitializeSecurityContext), inputBuffer?.size ?? 0, outputBuffer.size, (Interop.SECURITY_STATUS)errorCode);
+                NetEventSource.Log.SecurityContextInputBuffer(nameof(InitializeSecurityContext), inputBuffer?.size ?? 0, outputBuffer.size, (SecurityStatus)errorCode);
 
             return errorCode;
         }
@@ -177,7 +177,7 @@ namespace System.Net
             int errorCode = secModule.InitializeSecurityContext(credential, ref context, targetName, inFlags, datarep, inputBuffers, outputBuffer, ref outFlags);
 
             if (NetEventSource.IsEnabled)
-                NetEventSource.Log.SecurityContextInputBuffers(nameof(InitializeSecurityContext), inputBuffers?.Length ?? 0, outputBuffer.size, (Interop.SECURITY_STATUS)errorCode);
+                NetEventSource.Log.SecurityContextInputBuffers(nameof(InitializeSecurityContext), inputBuffers?.Length ?? 0, outputBuffer.size, (SecurityStatus)errorCode);
 
             return errorCode;
         }
@@ -190,7 +190,7 @@ namespace System.Net
             int errorCode = secModule.AcceptSecurityContext(credential, ref context, inputBuffers, inFlags, datarep, outputBuffer, ref outFlags);
 
             if (NetEventSource.IsEnabled)
-                NetEventSource.Log.SecurityContextInputBuffers(nameof(AcceptSecurityContext), inputBuffers?.Length ?? 0, outputBuffer.size, (Interop.SECURITY_STATUS)errorCode);
+                NetEventSource.Log.SecurityContextInputBuffers(nameof(AcceptSecurityContext), inputBuffers?.Length ?? 0, outputBuffer.size, (SecurityStatus)errorCode);
 
             return errorCode;
         }
@@ -200,7 +200,7 @@ namespace System.Net
             int errorCode = secModule.CompleteAuthToken(ref context, inputBuffers);
 
             if (NetEventSource.IsEnabled)
-                NetEventSource.Log.OperationReturnedSomething(nameof(CompleteAuthToken), (Interop.SECURITY_STATUS)errorCode);
+                NetEventSource.Log.OperationReturnedSomething(nameof(CompleteAuthToken), (SecurityStatus)errorCode);
 
             return errorCode;
         }
@@ -210,7 +210,7 @@ namespace System.Net
             int errorCode = secModule.ApplyControlToken(ref context, inputBuffers);
 
             if (NetEventSource.IsEnabled)
-                NetEventSource.Log.OperationReturnedSomething(nameof(ApplyControlToken), (Interop.SECURITY_STATUS)errorCode);
+                NetEventSource.Log.OperationReturnedSomething(nameof(ApplyControlToken), (SecurityStatus)errorCode);
 
             return errorCode;
         }
@@ -569,27 +569,27 @@ namespace System.Net
                 return "An exception when invoking Win32 API";
             }
 
-            switch ((Interop.SECURITY_STATUS)errorCode)
+            switch ((SecurityStatus)errorCode)
             {
-                case Interop.SECURITY_STATUS.InvalidHandle:
+                case SecurityStatus.InvalidHandle:
                     return "Invalid handle";
-                case Interop.SECURITY_STATUS.InvalidToken:
+                case SecurityStatus.InvalidToken:
                     return "Invalid token";
-                case Interop.SECURITY_STATUS.ContinueNeeded:
+                case SecurityStatus.ContinueNeeded:
                     return "Continue needed";
-                case Interop.SECURITY_STATUS.IncompleteMessage:
+                case SecurityStatus.IncompleteMessage:
                     return "Message incomplete";
-                case Interop.SECURITY_STATUS.WrongPrincipal:
+                case SecurityStatus.WrongPrincipal:
                     return "Wrong principal";
-                case Interop.SECURITY_STATUS.TargetUnknown:
+                case SecurityStatus.TargetUnknown:
                     return "Target unknown";
-                case Interop.SECURITY_STATUS.PackageNotFound:
+                case SecurityStatus.PackageNotFound:
                     return "Package not found";
-                case Interop.SECURITY_STATUS.BufferNotEnough:
+                case SecurityStatus.BufferNotEnough:
                     return "Buffer not enough";
-                case Interop.SECURITY_STATUS.MessageAltered:
+                case SecurityStatus.MessageAltered:
                     return "Message altered";
-                case Interop.SECURITY_STATUS.UntrustedRoot:
+                case SecurityStatus.UntrustedRoot:
                     return "Untrusted root";
                 default:
                     return "0x" + errorCode.ToString("x", NumberFormatInfo.InvariantInfo);

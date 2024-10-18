@@ -6,6 +6,7 @@
 
 using System.Diagnostics.Tracing;
 using System.Net.Security;
+using Interop_TEMP.Windows.SChannel;
 
 namespace System.Net
 {
@@ -63,7 +64,7 @@ namespace System.Net
             WriteEvent(AcceptSecurityContextId, credential, context, (int)inFlags);
 
         [Event(OperationReturnedSomethingId, Keywords = Keywords.Default, Level = EventLevel.Informational)]
-        public void OperationReturnedSomething(string operation, Interop.SECURITY_STATUS errorCode)
+        public void OperationReturnedSomething(string operation, SecurityStatus errorCode)
         {
             if (IsEnabled())
             {
@@ -72,7 +73,7 @@ namespace System.Net
         }
 
         [Event(SecurityContextInputBufferId, Keywords = Keywords.Default, Level = EventLevel.Informational)]
-        public void SecurityContextInputBuffer(string context, int inputBufferSize, int outputBufferSize, Interop.SECURITY_STATUS errorCode)
+        public void SecurityContextInputBuffer(string context, int inputBufferSize, int outputBufferSize, SecurityStatus errorCode)
         {
             if (IsEnabled())
             {
@@ -81,7 +82,7 @@ namespace System.Net
         }
 
         [Event(SecurityContextInputBuffersId, Keywords = Keywords.Default, Level = EventLevel.Informational)]
-        public void SecurityContextInputBuffers(string context, int inputBuffersSize, int outputBufferSize, Interop.SECURITY_STATUS errorCode)
+        public void SecurityContextInputBuffers(string context, int inputBuffersSize, int outputBufferSize, SecurityStatus errorCode)
         {
             if (IsEnabled())
             {

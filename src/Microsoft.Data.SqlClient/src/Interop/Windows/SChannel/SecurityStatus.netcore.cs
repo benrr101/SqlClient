@@ -4,9 +4,9 @@
 
 #if !NETFRAMEWORK && !NET8_0_OR_GREATER
 
-internal static partial class Interop
+namespace Interop_TEMP.Windows.SChannel
 {
-    internal enum SECURITY_STATUS
+    internal enum SecurityStatus
     {
         // Success / Informational
         OK = 0x00000000,
@@ -54,7 +54,7 @@ internal static partial class Interop
         ApplicationProtocolMismatch = unchecked((int)0x80090367),
     }
 
-#if TRACE_VERBOSE
+        #if TRACE_VERBOSE
         internal static string MapSecurityStatus(uint statusCode)
         {
             switch (statusCode)
@@ -358,7 +358,7 @@ internal static partial class Interop
 
             return string.Format("0x{0:x} [{1}]", statusCode, statusCode);
         }
-#endif // TRACE_VERBOSE
+        #endif // TRACE_VERBOSE
 }
 
 #endif // !NET8_OR_GREATER

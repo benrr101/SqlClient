@@ -9,7 +9,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security.Authentication.ExtendedProtection;
 using Interop_TEMP.Windows.Crypt32;
-using Microsoft.Win32.SafeHandles;
+using Interop_TEMP.Windows.SChannel;
 
 namespace System.Net.Security
 {
@@ -29,7 +29,7 @@ namespace System.Net.Security
 
         protected override bool ReleaseHandle()
         {
-            return Interop.SspiCli.SspiFreeAuthIdentity(handle) == Interop.SECURITY_STATUS.OK;
+            return Interop.SspiCli.SspiFreeAuthIdentity(handle) == SecurityStatus.OK;
         }
     }
 
@@ -80,7 +80,7 @@ namespace System.Net.Security
         //
         public static unsafe int QueryContextAttributes(SafeDeleteContext phContext, Interop.SspiCli.ContextAttribute contextAttribute, byte* buffer, SafeHandle refHandle)
         {
-            int status = (int)Interop.SECURITY_STATUS.InvalidHandle;
+            int status = (int)SecurityStatus.InvalidHandle;
 
             try
             {
@@ -620,7 +620,7 @@ namespace System.Net.Security
             ref Interop.SspiCli.ContextFlags attributes,
             SafeFreeContextBuffer handleTemplate)
         {
-            int errorCode = (int)Interop.SECURITY_STATUS.InvalidHandle;
+            int errorCode = (int)SecurityStatus.InvalidHandle;
 
             try
             {
@@ -904,7 +904,7 @@ namespace System.Net.Security
             ref Interop.SspiCli.ContextFlags outFlags,
             SafeFreeContextBuffer handleTemplate)
         {
-            int errorCode = (int)Interop.SECURITY_STATUS.InvalidHandle;
+            int errorCode = (int)SecurityStatus.InvalidHandle;
 
             // Run the body of this method as a non-interruptible block.
             try
@@ -989,7 +989,7 @@ namespace System.Net.Security
 
             var inSecurityBufferDescriptor = new Interop.SspiCli.SecBufferDesc(inSecBuffers.Length);
 
-            int errorCode = (int)Interop.SECURITY_STATUS.InvalidHandle;
+            int errorCode = (int)SecurityStatus.InvalidHandle;
 
             // These are pinned user byte arrays passed along with SecurityBuffers.
             GCHandle[] pinnedInBytes = null;
@@ -1090,7 +1090,7 @@ namespace System.Net.Security
 
             var inSecurityBufferDescriptor = new Interop.SspiCli.SecBufferDesc(inSecBuffers.Length);
 
-            int errorCode = (int)Interop.SECURITY_STATUS.InvalidHandle;
+            int errorCode = (int)SecurityStatus.InvalidHandle;
 
             // These are pinned user byte arrays passed along with SecurityBuffers.
             GCHandle[] pinnedInBytes = null;
@@ -1219,7 +1219,7 @@ namespace System.Net.Security
 
         public static unsafe int QueryContextChannelBinding(SafeDeleteContext phContext, Interop.SspiCli.ContextAttribute contextAttribute, SecPkgContext_Bindings* buffer, SafeFreeContextBufferChannelBinding refHandle)
         {
-            int status = (int)Interop.SECURITY_STATUS.InvalidHandle;
+            int status = (int)SecurityStatus.InvalidHandle;
 
             // SCHANNEL only supports SECPKG_ATTR_ENDPOINT_BINDINGS and SECPKG_ATTR_UNIQUE_BINDINGS which
             // map to our enum ChannelBindingKind.Endpoint and ChannelBindingKind.Unique.

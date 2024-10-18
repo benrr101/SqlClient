@@ -7,6 +7,7 @@
 using System;
 using System.Net.Security;
 using System.Runtime.InteropServices;
+using Interop_TEMP.Windows.SChannel;
 
 internal static partial class Interop
 {
@@ -379,11 +380,11 @@ internal static partial class Interop
           );
 
         [DllImport(Libraries.SspiCli, ExactSpelling = true, SetLastError = true)]
-        internal static extern unsafe SECURITY_STATUS SspiFreeAuthIdentity(
+        internal static extern unsafe SecurityStatus SspiFreeAuthIdentity(
             [In] IntPtr authData);
 
         [DllImport(Libraries.SspiCli, ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
-        internal static extern unsafe SECURITY_STATUS SspiEncodeStringsAsAuthIdentity(
+        internal static extern unsafe SecurityStatus SspiEncodeStringsAsAuthIdentity(
             [In] string userName,
             [In] string domainName,
             [In] string password,

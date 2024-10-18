@@ -6,6 +6,7 @@
 
 using System.Net.Security;
 using System.Runtime.InteropServices;
+using Interop_TEMP.Windows.SChannel;
 using Microsoft.Data;
 
 namespace System.Net
@@ -82,7 +83,7 @@ namespace System.Net
 
         public unsafe int DecryptMessage(SafeDeleteContext context, ref Interop.SspiCli.SecBufferDesc inputOutput, uint sequenceNumber)
         {
-            int status = (int)Interop.SECURITY_STATUS.InvalidHandle;
+            int status = (int)SecurityStatus.InvalidHandle;
             uint qop = 0;
 
             try

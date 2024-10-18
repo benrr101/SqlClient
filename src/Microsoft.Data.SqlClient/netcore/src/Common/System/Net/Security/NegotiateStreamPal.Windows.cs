@@ -6,6 +6,7 @@
 
 using System.Globalization;
 using System.ComponentModel;
+using Interop_TEMP.Windows.SChannel;
 using Microsoft.Data;
 
 namespace System.Net.Security
@@ -36,11 +37,11 @@ namespace System.Net.Security
             SafeSspiAuthDataHandle authData = null;
             try
             {
-                Interop.SECURITY_STATUS result = Interop.SspiCli.SspiEncodeStringsAsAuthIdentity(
+                SecurityStatus result = Interop.SspiCli.SspiEncodeStringsAsAuthIdentity(
                     credential.UserName, credential.Domain,
                     credential.Password, out authData);
 
-                if (result != Interop.SECURITY_STATUS.OK)
+                if (result != SecurityStatus.OK)
                 {
                     if (NetEventSource.IsEnabled)
                         NetEventSource.Error(null, StringsHelper.Format(Strings.net_log_operation_failed_with_error, nameof(Interop.SspiCli.SspiEncodeStringsAsAuthIdentity), $"0x{(int)result:X}"));
@@ -80,7 +81,7 @@ namespace System.Net.Security
             ref ContextFlagsPal contextFlags)
         {
             Interop.SspiCli.ContextFlags outContextFlags = Interop.SspiCli.ContextFlags.Zero;
-            Interop.SECURITY_STATUS winStatus = (Interop.SECURITY_STATUS)SSPIWrapper.InitializeSecurityContext(
+            SecurityStatus winStatus = (SecurityStatus)SSPIWrapper.InitializeSecurityContext(
                 GlobalSSPI.SSPIAuth,
                 credentialsHandle,
                 ref securityContext,
@@ -99,7 +100,7 @@ namespace System.Net.Security
             ref SafeDeleteContext securityContext,
             SecurityBuffer[] inSecurityBufferArray)
         {
-            Interop.SECURITY_STATUS winStatus = (Interop.SECURITY_STATUS)SSPIWrapper.CompleteAuthToken(
+            SecurityStatus winStatus = (SecurityStatus)SSPIWrapper.CompleteAuthToken(
                 GlobalSSPI.SSPIAuth,
                 ref securityContext,
                 inSecurityBufferArray);
@@ -115,7 +116,7 @@ namespace System.Net.Security
             ref ContextFlagsPal contextFlags)
         {
             Interop.SspiCli.ContextFlags outContextFlags = Interop.SspiCli.ContextFlags.Zero;
-            Interop.SECURITY_STATUS winStatus = (Interop.SECURITY_STATUS)SSPIWrapper.AcceptSecurityContext(
+            SecurityStatus winStatus = (SecurityStatus)SSPIWrapper.AcceptSecurityContext(
                 GlobalSSPI.SSPIAuth,
                 credentialsHandle,
                 ref securityContext,
