@@ -19,28 +19,7 @@ internal static partial class Interop
         internal const int SECPKG_NEGOTIATION_COMPLETE = 0;
         internal const int SECPKG_NEGOTIATION_OPTIMISTIC = 1;
 
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        internal struct CredHandle
-        {
-            private IntPtr _dwLower;
-            private IntPtr _dwUpper;
-
-            public bool IsZero
-            {
-                get { return _dwLower == IntPtr.Zero && _dwUpper == IntPtr.Zero; }
-            }
-
-            internal void SetToInvalid()
-            {
-                _dwLower = IntPtr.Zero;
-                _dwUpper = IntPtr.Zero;
-            }
-
-            public override string ToString()
-            {
-                { return _dwLower.ToString("x") + ":" + _dwUpper.ToString("x"); }
-            }
-        }
+        
 
         internal enum ContextAttribute
         {

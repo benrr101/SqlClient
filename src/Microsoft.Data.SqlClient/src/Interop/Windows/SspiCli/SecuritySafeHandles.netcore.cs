@@ -180,11 +180,11 @@ namespace System.Net.Security
     {
 #endif
 
-        internal Interop.SspiCli.CredHandle _handle;    //should be always used as by ref in PInvokes parameters
+        internal CredHandle _handle;    //should be always used as by ref in PInvokes parameters
 
         protected SafeFreeCredentials() : base(IntPtr.Zero, true)
         {
-            _handle = new Interop.SspiCli.CredHandle();
+            _handle = new CredHandle();
         }
 
 #if TRACE_VERBOSE
@@ -460,7 +460,7 @@ namespace System.Net.Security
 
             int errorCode = -1;
 
-            Interop.SspiCli.CredHandle contextHandle = new Interop.SspiCli.CredHandle();
+            CredHandle contextHandle = new CredHandle();
             if (refContext != null)
             {
                 contextHandle = refContext._handle;
@@ -629,7 +629,7 @@ namespace System.Net.Security
                 inCredentials.DangerousAddRef(ref ignore);
                 outContext.DangerousAddRef(ref ignore);
 
-                Interop.SspiCli.CredHandle credentialHandle = inCredentials._handle;
+                CredHandle credentialHandle = inCredentials._handle;
 
                 errorCode = SspiCli.InitializeSecurityContextW(
                                 ref credentialHandle,
@@ -750,7 +750,7 @@ namespace System.Net.Security
 
             int errorCode = -1;
 
-            Interop.SspiCli.CredHandle contextHandle = new Interop.SspiCli.CredHandle();
+            CredHandle contextHandle = new CredHandle();
             if (refContext != null)
             {
                 contextHandle = refContext._handle;
@@ -915,7 +915,7 @@ namespace System.Net.Security
                 inCredentials.DangerousAddRef(ref ignore);
                 outContext.DangerousAddRef(ref ignore);
 
-                Interop.SspiCli.CredHandle credentialHandle = inCredentials._handle;
+                CredHandle credentialHandle = inCredentials._handle;
 
                 errorCode = SspiCli.AcceptSecurityContext(
                                 ref credentialHandle,
@@ -1030,7 +1030,7 @@ namespace System.Net.Security
                     }
                 }
 
-                Interop.SspiCli.CredHandle contextHandle = new Interop.SspiCli.CredHandle();
+                CredHandle contextHandle = new CredHandle();
                 if (refContext != null)
                 {
                     contextHandle = refContext._handle;
@@ -1133,7 +1133,7 @@ namespace System.Net.Security
 
                 // TODO: (#3114): Optimizations to remove the unnecessary allocation of a CredHandle, remove the AddRef
                 // if refContext was previously null, refactor the code to unify CompleteAuthToken and ApplyControlToken.
-                Interop.SspiCli.CredHandle contextHandle = new Interop.SspiCli.CredHandle();
+                CredHandle contextHandle = new CredHandle();
                 if (refContext != null)
                 {
                     contextHandle = refContext._handle;

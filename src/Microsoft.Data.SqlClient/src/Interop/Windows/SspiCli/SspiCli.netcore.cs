@@ -17,53 +17,53 @@ namespace Interop_TEMP.Windows.SspiCli
         
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]
         internal static extern int EncryptMessage(
-            ref Interop.SspiCli.CredHandle contextHandle,
+            ref CredHandle contextHandle,
             [In] uint qualityOfProtection,
             [In, Out] ref Interop.SspiCli.SecBufferDesc inputOutput,
             [In] uint sequenceNumber);
 
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]
         internal static extern unsafe int DecryptMessage(
-            [In] ref Interop.SspiCli.CredHandle contextHandle,
+            [In] ref CredHandle contextHandle,
             [In, Out] ref Interop.SspiCli.SecBufferDesc inputOutput,
             [In] uint sequenceNumber,
             uint* qualityOfProtection);
 
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]
         internal static extern int QuerySecurityContextToken(
-            ref Interop.SspiCli.CredHandle phContext,
+            ref CredHandle phContext,
             [Out] out SecurityContextTokenHandle handle);
 
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]
         internal static extern int FreeContextBuffer([In] IntPtr contextBuffer);
 
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]
-        internal static extern int FreeCredentialsHandle(ref Interop.SspiCli.CredHandle handlePtr);
+        internal static extern int FreeCredentialsHandle(ref CredHandle handlePtr);
 
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]
-        internal static extern int DeleteSecurityContext(ref Interop.SspiCli.CredHandle handlePtr);
+        internal static extern int DeleteSecurityContext(ref CredHandle handlePtr);
 
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]
         internal static extern unsafe int AcceptSecurityContext(
-            ref Interop.SspiCli.CredHandle credentialHandle,
+            ref CredHandle credentialHandle,
             [In] void* inContextPtr,
             [In] Interop.SspiCli.SecBufferDesc* inputBuffer,
             [In] Interop.SspiCli.ContextFlags inFlags,
             [In] Interop.SspiCli.Endianness endianness,
-            ref Interop.SspiCli.CredHandle outContextPtr,
+            ref CredHandle outContextPtr,
             [In, Out] ref Interop.SspiCli.SecBufferDesc outputBuffer,
             [In, Out] ref Interop.SspiCli.ContextFlags attributes,
             out long timeStamp);
 
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]
         internal static extern unsafe int QueryContextAttributesW(
-            ref Interop.SspiCli.CredHandle contextHandle,
+            ref CredHandle contextHandle,
             [In] Interop.SspiCli.ContextAttribute attribute,
             [In] void* buffer);
 
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]
         internal static extern int SetContextAttributesW(
-            ref Interop.SspiCli.CredHandle contextHandle,
+            ref CredHandle contextHandle,
             [In] Interop.SspiCli.ContextAttribute attribute,
             [In] byte[] buffer,
             [In] int bufferSize);
@@ -82,7 +82,7 @@ namespace Interop_TEMP.Windows.SspiCli
             [In] IntPtr zero,
             [In] void* keyCallback,
             [In] void* keyArgument,
-            ref Interop.SspiCli.CredHandle handlePtr,
+            ref CredHandle handlePtr,
             [Out] out long timeStamp);
 
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
@@ -94,7 +94,7 @@ namespace Interop_TEMP.Windows.SspiCli
             [In] SafeSspiAuthDataHandle authdata,
             [In] void* keyCallback,
             [In] void* keyArgument,
-            ref Interop.SspiCli.CredHandle handlePtr,
+            ref CredHandle handlePtr,
             [Out] out long timeStamp);
 
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
@@ -106,12 +106,12 @@ namespace Interop_TEMP.Windows.SspiCli
             [In] ref Interop.SspiCli.SCHANNEL_CRED authData,
             [In] void* keyCallback,
             [In] void* keyArgument,
-            ref Interop.SspiCli.CredHandle handlePtr,
+            ref CredHandle handlePtr,
             [Out] out long timeStamp);
 
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]
         internal static extern unsafe int InitializeSecurityContextW(
-            ref Interop.SspiCli.CredHandle credentialHandle,
+            ref CredHandle credentialHandle,
             [In] void* inContextPtr,
             [In] byte* targetName,
             [In] Interop.SspiCli.ContextFlags inFlags,
@@ -119,7 +119,7 @@ namespace Interop_TEMP.Windows.SspiCli
             [In] Interop.SspiCli.Endianness endianness,
             [In] Interop.SspiCli.SecBufferDesc* inputBuffer,
             [In] int reservedII,
-            ref Interop.SspiCli.CredHandle outContextPtr,
+            ref CredHandle outContextPtr,
             [In, Out] ref Interop.SspiCli.SecBufferDesc outputBuffer,
             [In, Out] ref Interop.SspiCli.ContextFlags attributes,
             out long timeStamp);

@@ -5,6 +5,7 @@
 #if !NETFRAMEWORK && !NET8_0_OR_GREATER
 
 using System.Runtime.InteropServices;
+using Interop_TEMP.Windows.SspiCli;
 
 namespace System.Net.Security
 {
@@ -22,11 +23,11 @@ namespace System.Net.Security
         // ATN: _handle is internal since it is used on PInvokes by other wrapper methods.
         //      However all such wrappers MUST manually and reliably adjust refCounter of SafeDeleteContext handle.
         //
-        internal Interop.SspiCli.CredHandle _handle;
+        internal CredHandle _handle;
 
         protected SafeDeleteContext() : base(IntPtr.Zero, true)
         {
-            _handle = new Interop.SspiCli.CredHandle();
+            _handle = new CredHandle();
         }
 
         public override bool IsInvalid
