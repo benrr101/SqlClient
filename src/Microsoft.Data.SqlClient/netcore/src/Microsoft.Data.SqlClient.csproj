@@ -781,9 +781,6 @@
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\GlobalSspi.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\GlobalSspi.netcore.cs</Link>
     </Compile>
-    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\Interop.SSPI.netcore.cs">
-      <Link>Common\Interop\Windows\SspiCli\Interop.SSPI.netcore.cs</Link>
-    </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\NegotiationInfoClass.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\NegotiationInfoClass.netcore.cs</Link>
     </Compile>

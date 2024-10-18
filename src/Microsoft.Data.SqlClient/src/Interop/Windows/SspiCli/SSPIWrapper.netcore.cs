@@ -363,7 +363,7 @@ namespace System.Net
 
                     if (NetEventSource.IsEnabled && errorCode != 0)
                     {
-                        if (errorCode == Interop.SspiCli.SEC_I_RENEGOTIATE)
+                        if (errorCode == SspiCli.SEC_I_RENEGOTIATE)
                         {
                             NetEventSource.Error(null, StringsHelper.Format(Strings.event_OperationReturnedSomething, op, "SEC_I_RENEGOTIATE"));
                         }

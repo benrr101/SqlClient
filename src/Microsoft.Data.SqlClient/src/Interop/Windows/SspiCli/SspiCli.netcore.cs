@@ -13,6 +13,11 @@ namespace Interop_TEMP.Windows.SspiCli
 {
     internal static class SspiCli
     {
+        internal const int SEC_I_RENEGOTIATE = 0x90321;
+        internal const int SECPKG_NEGOTIATION_COMPLETE = 0;
+        internal const int SECPKG_NEGOTIATION_OPTIMISTIC = 1;
+        internal const uint SECQOP_WRAP_NO_ENCRYPT = 0x80000001;
+        
         private const string DllName = "sspicli.dll";
         
         [DllImport(DllName, ExactSpelling = true, SetLastError = true)]

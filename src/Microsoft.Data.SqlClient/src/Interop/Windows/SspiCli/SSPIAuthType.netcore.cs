@@ -99,7 +99,7 @@ namespace System.Net
                 context.DangerousRelease();
             }
 
-            if (status == 0 && qop == Interop.SspiCli.SECQOP_WRAP_NO_ENCRYPT)
+            if (status == 0 && qop == SspiCli.SECQOP_WRAP_NO_ENCRYPT)
             {
                 NetEventSource.Fail(this, $"Expected qop = 0, returned value = {qop}");
                 throw new InvalidOperationException(Strings.net_auth_message_not_encrypted);
@@ -116,7 +116,7 @@ namespace System.Net
 
                 context.DangerousAddRef(ref ignore);
 
-                return SspiCli.EncryptMessage(ref context._handle, Interop.SspiCli.SECQOP_WRAP_NO_ENCRYPT, ref inputOutput, sequenceNumber);
+                return SspiCli.EncryptMessage(ref context._handle, SspiCli.SECQOP_WRAP_NO_ENCRYPT, ref inputOutput, sequenceNumber);
             }
             finally
             {

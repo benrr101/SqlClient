@@ -5,6 +5,7 @@
 #if !NETFRAMEWORK && !NET8_0_OR_GREATER
 
 using System.Runtime.InteropServices;
+using Interop_TEMP.Windows.SspiCli;
 
 namespace System.Net
 {
@@ -27,8 +28,8 @@ namespace System.Net
             if (NetEventSource.IsEnabled)
                 NetEventSource.Info(this, $"packageInfo:{packageInfo} negotiationState:{negotiationState:x}");
 
-            if (negotiationState == Interop.SspiCli.SECPKG_NEGOTIATION_COMPLETE
-                || negotiationState == Interop.SspiCli.SECPKG_NEGOTIATION_OPTIMISTIC)
+            if (negotiationState == SspiCli.SECPKG_NEGOTIATION_COMPLETE
+                || negotiationState == SspiCli.SECPKG_NEGOTIATION_OPTIMISTIC)
             {
                 string name = null;
 
