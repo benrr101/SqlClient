@@ -682,6 +682,9 @@
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\Crypt32\Crypt32.netcore.cs">
       <Link>Common\Interop\Windows\Crypt32\Crypt32.netcore.cs</Link>
     </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\DebugCriticalHandleZeroOrMinusOneIsInvalid.netcore.cs">
+      <Link>Common\Interop\Windows\DebugCriticalHandleZeroOrMinusOneIsInvalid.netcore.cs</Link>
+    </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SystemErrors.cs">
       <Link>Common\Interop\Windows\SystemErrors.cs</Link>
     </Compile>
@@ -747,6 +750,9 @@
     </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SChannel\SecurityStatus.netcore.cs">
       <Link>Common\Interop\Windows\SChannel\SecurityStatus.netcore.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\SecurityContextTokenHandle.netcore.cs">
+      <Link>Common\Interop\Windows\SecurityContextTokenHandle.netcore.cs</Link>
     </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\GlobalSspi.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\GlobalSspi.netcore.cs</Link>
@@ -829,11 +835,9 @@
 
     <Compile Include="Common\System\Collections\Generic\BidirectionalDictionary.cs" />
     <Compile Include="Common\System\Net\ContextFlagsAdapterPal.Windows.cs" />
-    <Compile Include="Common\System\Net\DebugCriticalHandleZeroOrMinusOneIsInvalid.cs" />
     <Compile Include="Common\System\Net\Security\NegotiateStreamPal.Windows.cs" />
     <Compile Include="Common\System\Net\Security\NetEventSource.Security.cs" />
     <Compile Include="Common\System\Net\Security\NetEventSource.Security.Windows.cs" />
-    <Compile Include="Common\System\Net\Security\SecurityContextTokenHandle.cs" />
     <Compile Include="Common\System\Net\SecurityStatusAdapterPal.Windows.cs" />
     <Compile Include="Interop\SNINativeMethodWrapper.Windows.cs" />
     <Compile Include="Microsoft\Data\SqlClient\LocalDBAPI.Common.cs" />

@@ -2,21 +2,21 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-#if !NET8_0_OR_GREATER
+#if !NETFRAMEWORK && !NET8_0_OR_GREATER
 
+using System;
 using System.Threading;
 using Interop_TEMP.Windows.Kernel32;
 using Microsoft.Win32.SafeHandles;
 
-namespace System.Net.Security
+namespace Interop_TEMP.Windows
 {
-#if DEBUG
+    #if DEBUG
     internal sealed class SecurityContextTokenHandle : DebugCriticalHandleZeroOrMinusOneIsInvalid
-    {
-#else
+    #else
     internal sealed class SecurityContextTokenHandle : CriticalHandleZeroOrMinusOneIsInvalid
+    #endif
     {
-#endif
         private int _disposed;
 
         private SecurityContextTokenHandle() : base()
@@ -34,7 +34,7 @@ namespace System.Net.Security
             {
                 if (Interlocked.Increment(ref _disposed) == 1)
                 {
-                    return Kernel32.CloseHandle(handle);
+                    return Kernel32.Kernel32.CloseHandle(handle);
                 }
             }
             return true;
