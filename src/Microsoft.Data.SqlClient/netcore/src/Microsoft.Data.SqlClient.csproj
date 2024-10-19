@@ -677,11 +677,8 @@
 
   <!-- Windows only -->
   <ItemGroup Condition="'$(TargetsWindows)' == 'true'">
-    <Compile Include="$(CommonSourceRoot)\Interop\Windows\Crypt32\Interop.certificates.netcore.cs">
-      <Link>Common\Interop\Windows\Crypt32\Interop.certificates.netcore.cs</Link>
-    </Compile>
-    <Compile Include="$(CommonSourceRoot)\Interop\Windows\Crypt32\Interop.certificates_types.netcore.cs">
-      <Link>Common\Interop\Windows\Crypt32\Interop.certificates_types.netcore.cs</Link>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\Crypt32\Crypt32.netcore.cs">
+      <Link>Common\Interop\Windows\Crypt32\Crypt32.netcore.cs</Link>
     </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\Handles\DebugCriticalHandleMinusOneIsInvalid.netcore.cs">
       <Link>Common\Interop\Windows\Handles\DebugCriticalHandleMinusOneIsInvalid.netcore.cs</Link>

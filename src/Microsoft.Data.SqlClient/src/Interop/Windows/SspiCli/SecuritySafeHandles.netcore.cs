@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security.Authentication.ExtendedProtection;
+using Interop_TEMP.Windows.Crypt32;
 using Interop_TEMP.Windows.Handles;
 using Microsoft.Win32.SafeHandles;
 
@@ -163,7 +164,7 @@ namespace System.Net.Security
 
         protected override bool ReleaseHandle()
         {
-            Interop.Crypt32.CertFreeCertificateContext(handle);
+            Crypt32.CertFreeCertificateContext(handle);
             return true;
         }
     }

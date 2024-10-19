@@ -12,5 +12,8 @@
 	  <Folder Include="Interop\Windows\Handles\" />
 	  <Folder Include="Interop\Windows\SspiCli\" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="Interop\Windows\Crypt32\Interop.certificates_types.netcore.cs" />
+	</ItemGroup>
 
 </Project>
