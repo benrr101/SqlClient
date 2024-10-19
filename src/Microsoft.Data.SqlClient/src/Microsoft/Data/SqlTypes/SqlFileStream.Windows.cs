@@ -14,6 +14,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading;
 using Interop_TEMP.Windows;
+using Interop_TEMP.Windows.Kernel32;
 using Microsoft.Data.Common;
 using Microsoft.Data.SqlClient;
 using Microsoft.Win32.SafeHandles;
@@ -683,7 +684,7 @@ namespace Microsoft.Data.SqlTypes
                 int retval = 0;
                 IntPtr handle;
 
-                Interop.Kernel32.SetThreadErrorMode(Interop.Kernel32.SEM_FAILCRITICALERRORS, out uint oldMode);
+                Kernel32.SetThreadErrorMode(Kernel32.SEM_FAILCRITICALERRORS, out uint oldMode);
 
                 try
                 {
@@ -723,7 +724,7 @@ namespace Microsoft.Data.SqlTypes
                 }
                 finally
                 {
-                    Interop.Kernel32.SetThreadErrorMode(oldMode, out oldMode);
+                    Kernel32.SetThreadErrorMode(oldMode, out oldMode);
                 }
 
                 switch (retval)
