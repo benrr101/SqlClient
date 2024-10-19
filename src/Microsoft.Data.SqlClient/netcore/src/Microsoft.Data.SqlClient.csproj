@@ -701,9 +701,6 @@
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\Interop.Libraries.cs">
       <Link>Common\Interop\Windows\Interop.Libraries.cs</Link>
     </Compile>
-    <Compile Include="$(CommonSourceRoot)\Interop\Windows\Interop.UNICODE_STRING.cs">
-      <Link>Common\Interop\Windows\Interop.UNICODE_STRING.cs</Link>
-    </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\Kernel32\Interop.GetProcAddress.netcore.cs">
       <Link>Common\Interop\Windows\Kernel32\Interop.GetProcAddress.netcore.cs</Link>
     </Compile>
@@ -808,6 +805,9 @@
     </Compile>
     <Compile Include="$(CommonSourceRoot)\Interop\Windows\SspiCli\SSPIWrapper.netcore.cs">
       <Link>Common\Interop\Windows\SspiCli\SSPIWrapper.netcore.cs</Link>
+    </Compile>
+    <Compile Include="$(CommonSourceRoot)\Interop\Windows\UnicodeString.cs">
+      <Link>Common\Interop\Windows\UnicodeString.cs</Link>
     </Compile>
     <Compile Include="$(CommonSourceRoot)Microsoft\Data\Common\AdapterUtil.Windows.cs">
       <Link>Microsoft\Data\Common\AdapterUtil.Windows.cs</Link>
